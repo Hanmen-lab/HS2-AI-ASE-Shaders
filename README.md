@@ -9,10 +9,6 @@ This shader is ASE replicated vanilla AIT/Clothes True
 
 Featured all main features of the original + additional features.
 
-(!) NOT WOKING YET:
--Translucency
--Weathering Textures
-
 ### NEW Additional Features:
 
 - Roughness1
@@ -52,3 +48,7 @@ If checked overrides _EmissionColor with _Color, _Color2, _Color3. This making p
 
 **OcclusionMap:** This packed map, R - Occlusion map, B - Tearing mask for controlling the clothing break state in char maker. G is not used here.
 
+### TODO (NOT WORKING FEATURES)
+
+- Translucency
+- Weathering Textures
