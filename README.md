@@ -34,7 +34,7 @@ This properties controls the level of metallic map contribution, if you want you
  
 If checked overrides _EmissionColor with _Color, _Color2, _Color3. This making possible to control the emission color in char maker. However, you still SHOULD set the MetalliGlossMap G channel mask for emission.
 
-###### Packing textures
+### Packing textures
 
 MainTex: Basically diffuse map, if you want it to be colorable than make it grayscale.
 
