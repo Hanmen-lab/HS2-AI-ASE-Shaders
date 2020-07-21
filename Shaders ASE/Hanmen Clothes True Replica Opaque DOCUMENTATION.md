@@ -40,9 +40,9 @@ If checked overrides _EmissionColor with _Color, _Color2, _Color3. This making p
 
 **DetailMask:** This texture used for adding DetailGlossMap masks. R - Detail Mask 1, G - Detail Mask 2, B - Detail Mask 3 (not used currently). The black parts are not affected, leave empty if you don't need detail bumps.
 
-**DetailGlossMap:** Grayscale height map (bump map). Same as vanilla. The shader automatically generates and blends normal from it. UV scaling controlled by DetailUV & DetailUV2.
+**DetailGlossMap:** Grayscale height map (bump map). Same as vanilla. The shader automatically generates and blends normal from it. UV scaling controlled by DetailUV.
 
-**DetailGlossMap2:** <same as above>
+**DetailGlossMap2:** Grayscale height map (bump map). Same as vanilla. The shader automatically generates and blends normal from it. UV scaling controlled by DetailUV2.
 
 **MetallicGlossMap:** This is very important map, it's packed R channel for Glossiness, G for Emission Mask, B for Metallic.
 
