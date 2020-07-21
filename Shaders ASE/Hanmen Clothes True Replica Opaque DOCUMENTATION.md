@@ -5,7 +5,7 @@ Featured all main features of the original + additional features.
 
 ### Render Queue:
 2450
-
+### Render Queue:
 
 ### NEW Additional Features:
 
@@ -33,7 +33,7 @@ If checked overrides _EmissionColor with _Color, _Color2, _Color3. This making p
  
 ### Packing textures
 
-**MainTex:** Basically diffuse map, if you want it to be colorable than make it grayscale.
+**MainTex:** Basically diffuse map, if you want it to be colorable than make it grayscale. Alpha channel is also supported for cutoff.
 
 **ColorMask:** This is basically the same as vanilla. Color is black, Color2 is Red, Color3 is Green. It has additional Blue option, that cannot be changed in char maker, actually I reccomend to reserve it as a color protector, for example you can mark some colored parts on the diffuse map to make it maintain original diffuse colors like seams, prints, etc
 
