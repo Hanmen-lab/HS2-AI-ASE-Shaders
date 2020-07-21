@@ -32,4 +32,10 @@ This properties controls the level of metallic map contribution, if you want you
 - #EmissionColor2 (Color2 is Emissive)
 - #EmissionColor3 (Color3 is Emissive)
  
-If checked overrides _EmissionColor with _Color, _Color2, _Color3. This making possible to control the emission color in char maker.
+If checked overrides _EmissionColor with _Color, _Color2, _Color3. This making possible to control the emission color in char maker. However, you still SHOULD set the MetalliGlossMap G channel mask for emission.
+
+###### Packing textures
+
+MainTex: Basically diffuse map, if you want it to be colorable than make it grayscale.
+
+ColorMask: This is basically the same as vanilla. Color is black, Color2 is Red, Color3 is Green. It has additional Blue option, that cannot be changed in char maker, actually I reccomend to reserve it as a color protector, for example you can mark some colored parts on the diffuse map to make it maintain original diffuse colors like seams, prints, etc
