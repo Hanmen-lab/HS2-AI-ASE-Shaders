@@ -16,11 +16,15 @@ Featured all main features of the original + additional features.
 Additional Features:
 
 Roughness1
+
 Roughness2
+
 Roughness3
 
 MetallicMask1
+
 MetallicMask2
+
 MetallicMask3
 
 ###### SHADER KEYWORDS:
