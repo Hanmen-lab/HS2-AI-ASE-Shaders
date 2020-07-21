@@ -3,7 +3,8 @@ This shader is ASE replicated vanilla AIT/Clothes True
 
 Featured all main features of the original + additional features.
 
-
+### Render Queue:
+2450
 
 
 ### NEW Additional Features:
@@ -37,6 +38,8 @@ If checked overrides _EmissionColor with _Color, _Color2, _Color3. This making p
 **ColorMask:** This is basically the same as vanilla. Color is black, Color2 is Red, Color3 is Green. It has additional Blue option, that cannot be changed in char maker, actually I reccomend to reserve it as a color protector, for example you can mark some colored parts on the diffuse map to make it maintain original diffuse colors like seams, prints, etc
 
 **BumpMap:** Ordinary OpenGL normal map.
+
+**DetailMask:** This texture used for adding DetailGlossMap masks. R - Detail Mask 1, G - Detail Mask 2, B - Detail Mask 3 (not used currently). The black parts are not affected, leave empty if you don't need detail bumps.
 
 **DetailGlossMap:** Grayscale height map (bump map). Same as vanilla. The shader automatically generates and blends normal from it.
 
