@@ -13,7 +13,7 @@ Featured all main features of the original + additional features.
 -Translucency
 -Weathering Textures
 
-### Additional Features:
+### NEW Additional Features:
 
 - Roughness1
 - Roughness2
@@ -33,9 +33,10 @@ This properties is separated from Metallic! Controls the level of metallic map c
 - #EmissionColor2 (Color2 is Emissive)
 - #EmissionColor3 (Color3 is Emissive)
  
-If checked overrides _EmissionColor with _Color, _Color2, _Color3. This making possible to control the emission color in char maker. However, you still SHOULD set the MetalliGlossMap G channel mask for emission.
+If checked overrides _EmissionColor with _Color, _Color2, _Color3. This making possible to control the emission color in char maker. However, you still SHOULD set the MetalliGlossMap G channel mask to enable emission. 
 
 ### Packing textures
+
 
 **MainTex:** Basically diffuse map, if you want it to be colorable than make it grayscale.
 
