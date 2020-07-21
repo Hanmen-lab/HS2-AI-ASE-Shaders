@@ -7,9 +7,10 @@ ASE-Ready shader for Unity, mainly for modding AI&Girl & HS2. Can be edited in A
 - [Hanmen Clothes True Replica](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Shaders%20ASE/Hanmen%20Clothes%20True%20Replica%20Opaque%20DOCUMENTATION.md)
 
 
-### HOW TO USE
+### HOW TO USE:
+
 Just put in Unity folder and then you can apply it in material.
----
+
 [![N|Solid](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/3.png)]
----
+
 [![N|Solid](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/2.png)]
