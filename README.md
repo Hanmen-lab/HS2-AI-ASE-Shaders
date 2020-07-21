@@ -15,17 +15,17 @@ Featured all main features of the original + additional features.
 
 ### Additional Features:
 
-Roughness1
+- Roughness1
+- Roughness2
+- Roughness3
 
-Roughness2
+This properties controls the level of glossiness map contribution, if you want your material to be solid glossy turn corresponding Roughness level to 0, however if your material has roughness in MetallicGlossMap R channel set it to 1.
 
-Roughness3
+- MetallicMask1
+- MetallicMask2
+- MetallicMask3
 
-MetallicMask1
-
-MetallicMask2
-
-MetallicMask3
+This properties controls the level of metallic map contribution, if you want your material to be full metallic turn corresponding Roughness level to 0, however if your material has metallic roughness in MetallicGlossMap B channel set it to 1.
 
 ###### SHADER KEYWORDS:
 - #EmissionColor1 (Color1 is Emissive)
