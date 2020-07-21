@@ -32,4 +32,4 @@ This properties controls the level of metallic map contribution, if you want you
 - #EmissionColor2 (Color2 is Emissive)
 - #EmissionColor3 (Color3 is Emissive)
  
-If checked overrides _EmissionColor with _Color, _Color2, _Color3. 
+If checked overrides _EmissionColor with _Color, _Color2, _Color3. This making possible to control the emission color in char maker.
