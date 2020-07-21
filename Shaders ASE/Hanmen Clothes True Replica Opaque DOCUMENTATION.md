@@ -5,7 +5,6 @@ Featured all main features of the original + additional features.
 
 ### Render Queue:
 2450
-### Render Queue:
 
 ### NEW Additional Features:
 
