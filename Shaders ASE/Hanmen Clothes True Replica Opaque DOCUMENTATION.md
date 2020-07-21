@@ -52,3 +52,4 @@ If checked overrides _EmissionColor with _Color, _Color2, _Color3. This making p
 
 - Translucency
 - Weathering Textures
+- Dithering
