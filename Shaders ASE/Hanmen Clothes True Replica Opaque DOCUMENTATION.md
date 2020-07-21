@@ -34,15 +34,15 @@ If checked overrides _EmissionColor with _Color, _Color2, _Color3. This making p
 
 **MainTex:** Basically this is a diffuse map, colorable parts should be grayscale. Alpha channel is also supported for cutoff.
 
-**ColorMask:** This is basically the same as vanilla. Color is black, Color2 is Red, Color3 is Green. It has additional Blue option, that cannot be changed in char maker, actually I reccomend to reserve it as a color protector, for example you can mark some colored parts on the diffuse map to make it maintain original diffuse colors like seams, prints, etc
+**ColorMask:** This is basically the same as vanilla. _Color_ is black, _Color2_ is Red, _Color3_ is Green. It has additional Blue option, that cannot be changed in char maker, actually I reccomend to reserve it as a color protector, for example you can mark some colored parts on the diffuse map to make it maintain original diffuse colors like seams, prints, etc
 
-**BumpMap:** Ordinary OpenGL normal map.
+**BumpMap:** Ordinary OpenGL normal map. The strength is controlled by _BumpScale_ 
 
-**DetailMask:** This texture used for adding DetailGlossMap masks. R - Detail Mask 1, G - Detail Mask 2, B - Detail Mask 3 (not used currently). The black parts are not affected, leave empty if you don't need detail bumps.
+**DetailMask:** This texture used for adding _DetailGlossMap_ masks. R - Detail Mask 1, G - Detail Mask 2, B - Detail Mask 3 (not used currently). The black parts are not affected, leave empty if you don't need detail bumps.
 
 **DetailGlossMap:** Grayscale height map (bump map). Same as vanilla. The shader automatically generates and blends normal from it. UV scaling controlled by _DetailUV_. Masked by _DetailMask_ R channel. The strength is controlled by _DetailNormalMapScale_ 
 
-**DetailGlossMap2:** Grayscale height map (bump map). Same as vanilla. The shader automatically generates and blends normal from it. UV scaling controlled by DetailUV2. Masked by DetailMask G channel. 
+**DetailGlossMap2:** Grayscale height map (bump map). Same as vanilla. The shader automatically generates and blends normal from it. UV scaling controlled by _DetailUV2_. Masked by _DetailMask_ G channel.  The strength is controlled by _DetailNormalMapScale2_ 
 
 **MetallicGlossMap:** This is very important map, it's packed R channel for Glossiness, G for Emission Mask, B for Metallic.
 
