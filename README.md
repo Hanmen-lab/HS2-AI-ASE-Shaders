@@ -9,6 +9,9 @@ This shader is ASE replicated vanilla AIT/Clothes True
 
 Featured all main features of the original + additional features.
 
+
+
+
 ### NEW Additional Features:
 
 - Roughness1
@@ -34,6 +37,7 @@ If checked overrides _EmissionColor with _Color, _Color2, _Color3. This making p
 ### Packing textures
 
 
+
 **MainTex:** Basically diffuse map, if you want it to be colorable than make it grayscale.
 
 **ColorMask:** This is basically the same as vanilla. Color is black, Color2 is Red, Color3 is Green. It has additional Blue option, that cannot be changed in char maker, actually I reccomend to reserve it as a color protector, for example you can mark some colored parts on the diffuse map to make it maintain original diffuse colors like seams, prints, etc
@@ -47,6 +51,8 @@ If checked overrides _EmissionColor with _Color, _Color2, _Color3. This making p
 **MetallicGlossMap:** This is very important map, it's packed R channel for Glossiness, G for Emission Mask, B for Metallic.
 
 **OcclusionMap:** This packed map, R - Occlusion map, B - Tearing mask for controlling the clothing break state in char maker. G is not used here.
+
+
 
 ### TODO (NOT WORKING FEATURES)
 
