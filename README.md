@@ -24,7 +24,7 @@ MetallicMask2
 MetallicMask3
 
 SHADER KEYWORDS:
-#EmissionColor1 - 
-#EmissionColor2
-#EmissionColor3
+- #EmissionColor1 - 
+- #EmissionColor2
+- #EmissionColor3
 if checked overrides _EmissionColor with _Color, _Color2, _Color3. 
