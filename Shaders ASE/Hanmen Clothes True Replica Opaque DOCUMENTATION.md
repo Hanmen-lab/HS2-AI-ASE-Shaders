@@ -54,6 +54,3 @@ If checked overrides _EmissionColor with _Color, _Color2, _Color3. This making p
 - Weathering Textures
 - Dithering
 
-<div class="text-blue mb-2">
-  .text-blue on white
-</div>
