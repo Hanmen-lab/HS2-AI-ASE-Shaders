@@ -8,7 +8,7 @@ Featured all main features of the original + additional features.
 
 ### NEW Additional Features:
 
-This additional properties aims for implement full and easy PBR control over your materials that is lacked in the original shaders.
+This additional properties aims to implement full and easy PBR control over your materials that is lacked in the original shaders.
 
 - Roughness1
 - Roughness2
