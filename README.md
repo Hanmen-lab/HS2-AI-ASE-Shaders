@@ -11,6 +11,6 @@ ASE-Ready shader for Unity, mainly for modding AI&Girl & HS2. Can be edited in A
 
 Just put the .shader file in any Unity project folder and then you can apply it in your materials.
 
-[![N|Solid](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/3.png)]
+![N|Solid](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/3.png)
 
-[![N|Solid](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/2.png)]
+![N|Solid](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/2.png)
