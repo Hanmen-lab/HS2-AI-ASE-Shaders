@@ -33,10 +33,10 @@ This properties is separated from Metallic! Controls the level of metallic map c
 - #EmissionColor3 (Color3 is Emissive)
  
 If checked overrides _EmissionColor with _Color, _Color2, _Color3. This making possible to control the emission color in char maker. However, you still SHOULD set the MetalliGlossMap G channel mask to enable emission. 
-
+ 
+ 
+ 
 ### Packing textures
-
-
 
 **MainTex:** Basically diffuse map, if you want it to be colorable than make it grayscale.
 
