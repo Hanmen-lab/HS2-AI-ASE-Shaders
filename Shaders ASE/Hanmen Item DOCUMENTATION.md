@@ -12,7 +12,7 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 
 ###### NEW Additional Features:
 
-**Noise Texture:** The noise texture can be used to generate special dithering. 
+**Noise Texture:** The noise texture can be used to generate special dithering. Only in Cutoff versions.
 
 ###### SHADER KEYWORDS:
 
