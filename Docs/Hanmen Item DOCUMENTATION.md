@@ -10,6 +10,39 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 
 **Iridescent/Item Transparent** - A transparent specular version of the shader that has iridescent specularity.
 
+###### Packing textures:
+
+**MainTex:** Basically this is a diffuse map, colorable parts should be grayscale. Alpha channel is also supported for cutoff.
+
+**ColorMask:** This is basically the same as vanilla. Color is black, Color2 is Red, Color3 is Green, Color4 is Blue.
+
+**BumpMap:** Ordinary OpenGL normal map. The strength is controlled by BumpScale.
+
+**DetailMask:** This texture used for adding DetailGlossMap masks. R - Detail Mask 1, G - Detail Mask 2. The black parts are not affected, leave empty if you don't need detail bumps.
+
+**DetailGlossMap:** Grayscale height map (bump map). Same as vanilla. The shader automatically generates and blends normal from it. UV scaling controlled by DetailUV. Masked by DetailMask R channel. The strength is controlled by DetailNormalMapScale
+
+**DetailGlossMap2:** Grayscale height map (bump map). Same as vanilla. The shader automatically generates and blends normal from it. UV scaling controlled by DetailUV2. Masked by DetailMask G channel. The strength is controlled by DetailNormalMapScale2
+
+**MetallicGlossMap:** This is very important map, it's packed R channel for Glossiness, G for Emission Mask, B for Metallic.
+
+**OcclusionMap:** This packed map, R - Occlusion map.
+
+
+###### Colors:
+
+**BaseColor:** Basically master color, leave 1,1,1,1 in most cases.
+
+**Color1:** Color 1. Masked by black channel in the colormask texture. Alpha value controls transparency.
+
+**Color2:** Color 2. Masked by red channel in the colormask texture. Alpha value controls transparency.
+
+**Color3:** Color 3. Masked by green channel in the colormask texture. Alpha value controls transparency.
+
+**Color4:** Color 4. Masked by blue channel in the colormask texture. Alpha value controls transparency.
+
+**EmissionColor:** Controls emission, Masked by MetallicGlossMap green channel.
+
 ###### NEW Additional Features:
 
 **Noise Texture:** The noise texture can be used to generate special dithering. Only in Cutoff versions. 
@@ -31,21 +64,5 @@ By default it's using internal Unity algorithm bayer 8x8. If you want to use blu
 
 If checked overrides EmissionColor with Color, Color2, Color3. This making possible to control the emission color in char maker. However, you still should set the MetalliGlossMap G channel mask to enable emission.
 
-###### Packing textures:
 
-**MainTex:** Basically this is a diffuse map, colorable parts should be grayscale. Alpha channel is also supported for cutoff.
-
-**ColorMask:** This is basically the same as vanilla. Color is black, Color2 is Red, Color3 is Green, Color4 is Blue.
-
-**BumpMap:** Ordinary OpenGL normal map. The strength is controlled by BumpScale.
-
-**DetailMask:** This texture used for adding DetailGlossMap masks. R - Detail Mask 1, G - Detail Mask 2. The black parts are not affected, leave empty if you don't need detail bumps.
-
-**DetailGlossMap:** Grayscale height map (bump map). Same as vanilla. The shader automatically generates and blends normal from it. UV scaling controlled by DetailUV. Masked by DetailMask R channel. The strength is controlled by DetailNormalMapScale
-
-**DetailGlossMap2:** Grayscale height map (bump map). Same as vanilla. The shader automatically generates and blends normal from it. UV scaling controlled by DetailUV2. Masked by DetailMask G channel. The strength is controlled by DetailNormalMapScale2
-
-**MetallicGlossMap:** This is very important map, it's packed R channel for Glossiness, G for Emission Mask, B for Metallic.
-
-**OcclusionMap:** This packed map, R - Occlusion map.
 
