@@ -76,13 +76,13 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 
 **OcclusionStrength** Controls occlusion power. 
 
-**DetailOcclusionScale** Controls detail1 occlusion power. 
+**DetailOcclusionScale** Controls detail1 occlusion power. DetailOcclusion checkbox should be set ON.
 
-**DetailOcclusionScale2** Controls detail2 occlusion power. 
+**DetailOcclusionScale2** Controls detail2 occlusion power. DetailOcclusion checkbox should be set ON.
 
-**DetailOcclusionContrast** Controls detail1 occlusion contrast. 
+**DetailOcclusionContrast** Controls detail1 occlusion contrast. DetailOcclusion checkbox should be set ON.
 
-**DetailOcclusionContrast2** Controls detail1 occlusion contrast. 
+**DetailOcclusionContrast2** Controls detail1 occlusion contrast. DetailOcclusion checkbox should be set ON.
 
 **Glossiness** Controls the glossiness level, contributes by MetallicGlossMap Red channel. Masked by Color1 on the ColorMask.
 
@@ -139,5 +139,6 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 
 However, you still should set the MetalliGlossMap G channel mask to enable emission.
 
+**DetailOcclusion:** Enables the contribution from detail texture to occlusion layer.
 
 
