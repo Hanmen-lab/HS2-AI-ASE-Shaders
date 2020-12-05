@@ -14,6 +14,7 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 
 ![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/iri.gif)
 
+###### Iridescent specularity
 
 # Textures:
 
