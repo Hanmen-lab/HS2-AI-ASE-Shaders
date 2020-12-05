@@ -34,6 +34,7 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 
 **OcclusionMap:** This packed map, R - Occlusion map.
 
+**Noise Texture:** The noise texture can be used to generate special dithering. Only in Cutoff versions. 
 
 
 # Colors:
@@ -58,7 +59,6 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 
 
 
-**Noise Texture:** The noise texture can be used to generate special dithering. Only in Cutoff versions. 
 By default it's using internal Unity algorithm bayer 8x8. If you want to use bluenoise dithering check the BlueNoiseDither checkbox at the bottom, then set the [bluenoise.dds](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Shaders%20ASE/bluenoise.dds)
 
 **Bayer**
