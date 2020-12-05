@@ -56,7 +56,7 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 
 # Properties:
 
-**Cutoff** Controls opacity. 
+**Cutoff** Controls opacity clipping threshold. 
 
 **DetailUV** Controls detail1 texture UV scale. 
 
