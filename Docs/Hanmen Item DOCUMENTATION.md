@@ -122,7 +122,7 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 
 **BlueNoiseDither** By default the shaders using internal Unity algorithm bayer 8x8 fro the dithering transparency. If you want to use bluenoise dithering check the BlueNoiseDither checkbox at the bottom, then set the [bluenoise.dds](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Shaders%20ASE/bluenoise.dds)
 
-###### Bayer
+###### Bayer 8x8 (Default)
 
 ![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/bayer.gif)
 
