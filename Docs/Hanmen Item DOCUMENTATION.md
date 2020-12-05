@@ -10,7 +10,11 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 
 **Iridescent/Item Transparent** - A transparent specular version of the shader that has iridescent specularity.
 
+
+
 ###### Packing textures:
+
+
 
 **MainTex:** Basically this is a diffuse map, colorable parts should be grayscale. Alpha channel is also supported for cutoff.
 
@@ -29,7 +33,10 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 **OcclusionMap:** This packed map, R - Occlusion map.
 
 
+
 ###### Colors:
+
+
 
 **BaseColor:** Basically master color, leave 1,1,1,1 in most cases.
 
@@ -43,7 +50,11 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 
 **EmissionColor:** Controls emission, Masked by MetallicGlossMap green channel.
 
+
+
 ###### NEW Additional Features:
+
+
 
 **Noise Texture:** The noise texture can be used to generate special dithering. Only in Cutoff versions. 
 By default it's using internal Unity algorithm bayer 8x8. If you want to use bluenoise dithering check the BlueNoiseDither checkbox at the bottom, then set the [bluenoise.dds](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Shaders%20ASE/bluenoise.dds)
