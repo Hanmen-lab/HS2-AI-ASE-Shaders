@@ -1,5 +1,7 @@
 This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorable studio objects or accessories.
 
+# Variants
+
 **Hanmen/Item Cutoff** - An opaque standard shader with the dithering transparency, opacity can be controlled by each Color alpha
  value directly. It has Cutoff value for clipping function.
  
