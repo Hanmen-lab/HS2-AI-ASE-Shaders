@@ -68,13 +68,14 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 
 ![2](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/bluenoise.gif)
 
-###### SHADER KEYWORDS:
 
-    #EmissionColor1 (Color1 is Emissive)
-    #EmissionColor2 (Color2 is Emissive)
-    #EmissionColor3 (Color3 is Emissive)
+**EmissionColor1** (Color1 is Emissive) Overrides EmissionColor with Color1 for easy control from the game or studio.
+ 
+**EmissionColor2** (Color2 is Emissive) Overrides EmissionColor with Color2 for easy control from the game or studio.
+ 
+**EmissionColor3** (Color3 is Emissive) Overrides EmissionColor with Color3 for easy control from the game or studio.
 
-If checked overrides EmissionColor with Color, Color2, Color3. This making possible to control the emission color in char maker. However, you still should set the MetalliGlossMap G channel mask to enable emission.
+However, you still should set the MetalliGlossMap G channel mask to enable emission.
 
 
 
