@@ -12,7 +12,7 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 
 
 
-###### Packing textures:
+# Textures:
 
 
 
@@ -34,7 +34,7 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 
 
 
-###### Colors:
+# Colors:
 
 
 
