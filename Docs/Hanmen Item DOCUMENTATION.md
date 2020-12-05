@@ -54,6 +54,68 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 **EmissionColor:** Controls emission, Masked by MetallicGlossMap green channel.
 
 
+# Properties:
+
+**Cutoff** Controls opacity. 
+
+**DetailUV** Controls detail1 texture UV scale. 
+
+**DetailUV2** Controls detail2 texture UV scale. 
+
+**DetailUVRotator** Controls detail1 texture UV rotation. 
+
+**DetailUVRotator2** Controls detail2 texture UV rotation. 
+
+**BumpScale** Controls normal map bump power.
+
+**DetailNormalMapScale** Controls detail1 bump power. 
+
+**DetailNormalMapScale2** Controls detail2 bump power. 
+
+**EmissionStrength** Controls emission power.
+
+**OcclusionStrength** Controls occlusion power. 
+
+**DetailOcclusionScale** Controls detail1 occlusion power. 
+
+**DetailOcclusionScale2** Controls detail2 occlusion power. 
+
+**DetailOcclusionContrast** Controls detail1 occlusion contrast. 
+
+**DetailOcclusionContrast2** Controls detail1 occlusion contrast. 
+
+**Glossiness** Controls the glossiness level, contributes by MetallicGlossMap Red channel. Masked by Color1 on the ColorMask.
+
+**Glossiness2** Controls the glossiness level, contributes by MetallicGlossMap Red channel. Masked by Color2 on the ColorMask.
+
+**Glossiness3** Controls the glossiness level, contributes by MetallicGlossMap Red channel. Masked by Color3 on the ColorMask.
+
+**Glossiness4** Controls the glossiness level, contributes by MetallicGlossMap Red channel. Masked by Color4 on the ColorMask.
+
+**Roughness** Controls the glossiness level independantly on the by MetallicGlossMap Red channel. Masked by Color1 on the ColorMask.
+
+**Roughness2** Controls the glossiness level independantly on the by MetallicGlossMap Red channel. Masked by Color2 on the ColorMask.
+
+**Roughness3** Controls the glossiness level independantly on the by MetallicGlossMap Red channel. Masked by Color3 on the ColorMask.
+
+**Roughness4** Controls the glossiness level independantly on the by MetallicGlossMap Red channel. Masked by Color4 on the ColorMask.
+
+**Metallic** Controls the metallic level, contributes by MetallicGlossMap Blue channel. Masked by Color1 on the ColorMask.
+
+**Metallic2** Controls the metallic level, contributes by MetallicGlossMap Blue channel. Masked by Color2 on the ColorMask.
+
+**Metallic3** Controls the metallic level, contributes by MetallicGlossMap Blue channel. Masked by Color3 on the ColorMask.
+
+**Metallic4** Controls the metallic level, contributes by MetallicGlossMap Blue channel. Masked by Color4 on the ColorMask.
+
+**MetallicMask** Controls the metallic level independantly on the by MetallicGlossMap Blue channel. Masked by Color1 on the ColorMask.
+
+**MetallicMask2** Controls the metallic level independantly on the by MetallicGlossMap Blue channel. Masked by Color2 on the ColorMask.
+
+**MetallicMask3** Controls the metallic level independantly on the by MetallicGlossMap Blue channel. Masked by Color3 on the ColorMask.
+
+**MetallicMask4** Controls the metallic level independantly on the by MetallicGlossMap Blue channel. Masked by Color4 on the ColorMask.
+
 
 # Keywords (Static Switches):
 
