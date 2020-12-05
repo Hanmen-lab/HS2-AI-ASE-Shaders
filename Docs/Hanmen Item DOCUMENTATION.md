@@ -14,9 +14,9 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 
 **Noise Texture:** The noise texture can be used to generate special dithering. Only in Cutoff versions.
 
-[![N|](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/bayer.gif)]
+[(https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/bayer.gif)]
 
-[![N|](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/bluenoise.gif)]
+[(https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/bluenoise.gif)]
 
 ###### SHADER KEYWORDS:
 
