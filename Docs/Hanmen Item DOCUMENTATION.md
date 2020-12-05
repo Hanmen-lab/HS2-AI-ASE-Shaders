@@ -36,6 +36,9 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 
 **Noise Texture:** The noise texture can be used to generate special dithering. Only in Cutoff versions. 
 
+**ColorRamp:** Color texture for the iridescent specularity. Reccommend to use my [raindbowColorRamp.png](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Shaders%20ASE/Iridescent/raindbowColorRamp.png)
+
+
 
 # Colors:
 
