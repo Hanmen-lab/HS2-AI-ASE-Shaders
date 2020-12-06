@@ -76,8 +76,6 @@ Before using the noise texture check the **BlueNoiseDither** checkbox.
 
 # Properties:
 
-**Cutoff** Controls opacity clipping threshold. 
-
 **DetailUV** Controls detail1 texture UV scale. 
 
 **DetailUV2** Controls detail2 texture UV scale. 
@@ -136,6 +134,8 @@ Before using the noise texture check the **BlueNoiseDither** checkbox.
 
 **MetallicMask4** Controls the metallic level independantly on the by MetallicGlossMap Blue channel. Masked by Color4 on the ColorMask.
 
+<br>
+
 >Only for Iridescent shader variants:
 
 **IriHue:** Controls color shift of the iridescent specularity.
@@ -145,6 +145,12 @@ Before using the noise texture check the **BlueNoiseDither** checkbox.
 **IriBrightness:** Controls brightness of the iridescent specularity.
 
 **IriContrast:** Controls contrast of the iridescent specularity.
+
+<br>
+
+>Only for Cutoff shader variants:
+
+**Cutoff** Controls opacity clipping threshold. 
 
 
 # Keywords (Static Switches):
