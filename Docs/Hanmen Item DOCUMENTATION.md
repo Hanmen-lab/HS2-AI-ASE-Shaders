@@ -136,6 +136,16 @@ Before using the noise texture check the **BlueNoiseDither** checkbox.
 
 **MetallicMask4** Controls the metallic level independantly on the by MetallicGlossMap Blue channel. Masked by Color4 on the ColorMask.
 
+>Only for Iridescent shader variants:
+
+**IriHue:** Controls color shift of the iridescent specularity.
+
+**IriSaturation:** Controls saturation of the iridescent specularity.
+
+**IriBrightness:** Controls brightness of the iridescent specularity.
+
+**IriContrast:** Controls contrast of the iridescent specularity.
+
 
 # Keywords (Static Switches):
 
