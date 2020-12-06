@@ -15,3 +15,6 @@ Just put the .shader file in any Unity project folder and then you can apply it 
 
 ![](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/3.png)
 ![](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/2.png)
+
+### DOWNLOAD:
+- [Hanmen/Clothes True Replica](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Shaders%20ASE/Hanmen%20Clothes%20True%20Cutoff%20v0.9.shader)
