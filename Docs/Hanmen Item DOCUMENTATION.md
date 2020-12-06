@@ -35,6 +35,7 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 **MetallicGlossMap:** This is very important map, it's packed R channel for Glossiness, G for Emission Mask, B for Metallic. Linear colorspace.
 
 **OcclusionMap:** This packed map, R - Occlusion map. Linear colorspace.
+<br />
 
 ###### Only for Cutoff shader variants:
 
