@@ -38,6 +38,7 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 
 
 <br>
+
 ###### Only for Cutoff shader variants:
 
 **Noise Texture:** The noise texture can be used to generate special dithering. Only in Cutoff versions. 
