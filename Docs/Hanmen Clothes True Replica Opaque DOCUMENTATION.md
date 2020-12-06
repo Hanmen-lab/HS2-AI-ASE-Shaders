@@ -43,10 +43,13 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 
 **WeatheringMap:** Contains weathering information. Reccommend to use original one from the game.
 
-**WeatheringMask:** Contains body parts information. Red - Front-Top, Green - Front-Bottom, Blue - Back-Top, Yellow(R+G) - Back-Bottom, Magenta(R+B) - Arms, Cyan(G+B) - Face.
+**WeatheringMask:** Contains body parts information. Red - Front-Top, Green - Front-Bottom, Blue - Back-Top, Yellow(R+G) - Back-Bottom, Magenta(R+B) - Arms, Cyan(G+B) - Face. Linear colorspace.
 
 ![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/weathering.jpg)
 
+**WetnessMap:** R- Wetness Gloss, G - Wetness Bumps.
+
+Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/rita_maincos2_Mat_1_BaseColor.png)
 
 <br>
 
