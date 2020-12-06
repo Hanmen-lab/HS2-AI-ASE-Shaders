@@ -48,6 +48,8 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 
 Before using the noise texture check the **BlueNoiseDither** checkbox.
 
+<br>
+
 >Only for Iridescent shader variants:
 
 **ColorRamp:** Only for iridescent shaders. Color texture for the iridescent specularity. Reccommend to use my [raindbowColorRamp.png](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Shaders%20ASE/Iridescent/raindbowColorRamp.png)
