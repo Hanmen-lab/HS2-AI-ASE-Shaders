@@ -1,60 +1,190 @@
-## Hanmen/Clothes True Replica Opaque
-This shader is ASE replicated vanilla AIT/Clothes True
+This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorable studio objects or accessories.
 
-Featured all main features of the original + additional features.
+# Variants
 
-### Render Queue:
-2450
-
-### NEW Additional Features:
-
-This additional properties aims to implement full and easy PBR control over your materials that is lacked in the original shaders.
-
-- Roughness1
-- Roughness2
-- Roughness3
-
-This properties is separated from _Glossiness_ It controls the level of glossiness map contribution, if you want your material to be solid glossy turn corresponding Roughness level to 0, however if your material has the roughness in _MetallicGlossMap_ R channel, then set it to 1.
-
-- MetallicMask1
-- MetallicMask2
-- MetallicMask3
-
-This properties is separated from _Metallic_. Controls the level of metallic map contribution, if you want your material to be full metallic turn corresponding Metallic Roughness level to 0, however if your material has metallic roughness in _MetallicGlossMap_ B, then set it to 1.
-
-###### SHADER KEYWORDS:
-
-- #EmissionColor1 (Color1 is Emissive)
-- #EmissionColor2 (Color2 is Emissive)
-- #EmissionColor3 (Color3 is Emissive)
+**Hanmen/Clothes True Cutoff** - An opaque standard shader with the dithering transparency, opacity can be controlled by each Color alpha
+ value directly. It has Cutoff value for clipping function.
  
-If checked overrides _EmissionColor_ with _Color_, _Color2_, _Color3_. This making possible to control the emission color in char maker. However, you still should set the _MetalliGlossMap_ G channel mask to enable emission. 
+**Hanmen/Clothes True Transparent** - A standard transparent version of the shader, opacity can be controlled by each Color alpha
+ value directly.
  
+**Iridescent/Clothes True Cutoff** - An opaque specular shader that has iridescent specularity, with the dithering transparency. The specular color depends on screen position. opacity can be controlled by each Color alpha value directly. It has Cutoff value for clipping function.
+
+**Iridescent/Clothes True Transparent** - A transparent specular version of the shader that has iridescent specularity.
+
+![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/iri.gif)
+
+###### Iridescent specularity
+
+# Textures:
+
+
+
+**MainTex:** Basically this is a diffuse map, colorable parts should be grayscale. Alpha channel is also supported for cutoff. sRGB colorspace.
+
+NOTE: MainTex should be set in the list. Can be leave empty in the Unity.
+
+**ColorMask:** This is basically the same as vanilla. Color is black, Color2 is Red, Color3 is Green, Color4 is Blue. Default is black (All Color1). Linear colorspace. 
+
+NOTE: ColorMask should be set in the list. Can be leave empty in the Unity.
+
+
+**BumpMap:** Ordinary OpenGL normal map. The strength is controlled by BumpScale.
+
+**DetailMask:** This texture used for adding DetailGlossMap masks. R - Detail Mask 1, G - Detail Mask 2. The black parts are not affected, leave empty if you don't need detail bumps. Linear colorspace.
+
+**DetailGlossMap:** Grayscale height map (bump map). Same as vanilla. The shader automatically generates and blends normal from it. UV scaling controlled by DetailUV. Masked by DetailMask R channel. The strength is controlled by DetailNormalMapScale
+
+**DetailGlossMap2:** Grayscale height map (bump map). Same as vanilla. The shader automatically generates and blends normal from it. UV scaling controlled by DetailUV2. Masked by DetailMask G channel. The strength is controlled by DetailNormalMapScale2
+
+**MetallicGlossMap:** This is very important map, it's packed R channel for Glossiness, G for Emission Mask, B for Metallic. Linear colorspace.
+
+**OcclusionMap:** This packed map, R - Occlusion map. G- Not used yet B - Tearings Mask. Linear colorspace.
+
+**WeatheringMap:** Contains weathering information. Reccommend to use original one from the game.
+
+**WeatheringMask:** Contains body parts information. Red - Front-Top, Green - Front-Bottom, Blue - Back-Top, Yellow(R+G) - Back-Bottom, Magenta(R+B) - Arms, Cyan(G+B) - Face.
+
+![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/weathering.jpg)
+
+
+<br>
+
+>Only for Cutoff shader variants:
+
+**Noise Texture:** Optional feature. Only in Cutoff versions. The noise texture can be used to generate special dithering. I reccommend to use [bluenoise.dds](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Shaders%20ASE/bluenoise.dds)
+
+Very important to not using any compression or filtering
+
+![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/bn.jpg)
+
+Before using the noise texture check the **BlueNoiseDither** checkbox.
+
+<br>
+
+>Only for Iridescent shader variants:
+
+**ColorRamp:** Only for iridescent shaders. Color texture for the iridescent specularity. Reccommend to use my [raindbowColorRamp.png](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Shaders%20ASE/Iridescent/raindbowColorRamp.png)
+
+
+
+# Colors:
+
+
+
+**BaseColor:** Basically master color, leave 1,1,1,1 in most cases.
+
+**Color:**  Color 1. Masked by black channel in the colormask texture. Alpha value controls transparency.
+
+**Color2:** Color 2. Masked by red channel in the colormask texture. Alpha value controls transparency.
+
+**Color3:** Color 3. Masked by green channel in the colormask texture. Alpha value controls transparency.
+
+**Color4:** Color 4. Masked by blue channel in the colormask texture. Alpha value controls transparency.
+
+**EmissionColor:** Controls emission, Masked by MetallicGlossMap green channel.
+
+
+# Properties:
+
+**DetailUV** Controls detail1 texture UV scale. 
+
+**DetailUV2** Controls detail2 texture UV scale. 
+
+**DetailUVRotator** Controls detail1 texture UV rotation. 
+
+**DetailUVRotator2** Controls detail2 texture UV rotation. 
+
+**BumpScale** Controls normal map bump power.
+
+**DetailNormalMapScale** Controls detail1 bump power. 
+
+**DetailNormalMapScale2** Controls detail2 bump power. 
+
+**EmissionStrength** Controls emission power.
+
+**OcclusionStrength** Controls occlusion power. 
+
+**DetailOcclusionScale** Controls detail1 occlusion power. DetailOcclusion checkbox should be set ON.
+
+**DetailOcclusionScale2** Controls detail2 occlusion power. DetailOcclusion checkbox should be set ON.
+
+**DetailOcclusionContrast** Controls detail1 occlusion contrast. DetailOcclusion checkbox should be set ON.
+
+**DetailOcclusionContrast2** Controls detail1 occlusion contrast. DetailOcclusion checkbox should be set ON.
+
+**Glossiness** Controls the glossiness level, contributes by MetallicGlossMap Red channel. Masked by Color1 on the ColorMask.
+
+**Glossiness2** Controls the glossiness level, contributes by MetallicGlossMap Red channel. Masked by Color2 on the ColorMask.
+
+**Glossiness3** Controls the glossiness level, contributes by MetallicGlossMap Red channel. Masked by Color3 on the ColorMask.
+
+**Glossiness4** Controls the glossiness level, contributes by MetallicGlossMap Red channel. Masked by Color4 on the ColorMask.
+
+**Roughness** Controls the glossiness level independantly on the by MetallicGlossMap Red channel. Masked by Color1 on the ColorMask.
+
+**Roughness2** Controls the glossiness level independantly on the by MetallicGlossMap Red channel. Masked by Color2 on the ColorMask.
+
+**Roughness3** Controls the glossiness level independantly on the by MetallicGlossMap Red channel. Masked by Color3 on the ColorMask.
+
+**Roughness4** Controls the glossiness level independantly on the by MetallicGlossMap Red channel. Masked by Color4 on the ColorMask.
+
+**Metallic** Controls the metallic level, contributes by MetallicGlossMap Blue channel. Masked by Color1 on the ColorMask.
+
+**Metallic2** Controls the metallic level, contributes by MetallicGlossMap Blue channel. Masked by Color2 on the ColorMask.
+
+**Metallic3** Controls the metallic level, contributes by MetallicGlossMap Blue channel. Masked by Color3 on the ColorMask.
+
+**Metallic4** Controls the metallic level, contributes by MetallicGlossMap Blue channel. Masked by Color4 on the ColorMask.
+
+**MetallicMask** Controls the metallic level independantly on the by MetallicGlossMap Blue channel. Masked by Color1 on the ColorMask.
+
+**MetallicMask2** Controls the metallic level independantly on the by MetallicGlossMap Blue channel. Masked by Color2 on the ColorMask.
+
+**MetallicMask3** Controls the metallic level independantly on the by MetallicGlossMap Blue channel. Masked by Color3 on the ColorMask.
+
+**MetallicMask4** Controls the metallic level independantly on the by MetallicGlossMap Blue channel. Masked by Color4 on the ColorMask.
+
+<br>
+
+>Only for Iridescent shader variants:
+
+**IriHue:** Controls color shift of the iridescent specularity.
+
+**IriSaturation:** Controls saturation of the iridescent specularity.
+
+**IriBrightness:** Controls brightness of the iridescent specularity.
+
+**IriContrast:** Controls contrast of the iridescent specularity.
+
+<br>
+
+>Only for Cutoff shader variants:
+
+**Cutoff** Controls opacity clipping threshold. 
+
+
+# Keywords (Static Switches):
+
+
+**BlueNoiseDither** By default the shaders using internal Unity algorithm bayer 8x8 fro the dithering transparency. If you want to use bluenoise dithering check the BlueNoiseDither checkbox at the bottom, then set the [bluenoise.dds](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Shaders%20ASE/bluenoise.dds)
+
+###### Bayer 8x8 (Default)
+
+![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/bayer.gif)
+
+###### Bluenoise
+
+![2](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/bluenoise.gif)
+
+
+**EmissionColor1** (Color1 is Emissive) Overrides EmissionColor with Color1 for easy control from the game or studio.
  
+**EmissionColor2** (Color2 is Emissive) Overrides EmissionColor with Color2 for easy control from the game or studio.
  
-### Packing textures
+**EmissionColor3** (Color3 is Emissive) Overrides EmissionColor with Color3 for easy control from the game or studio.
 
-**MainTex:** Basically this is a diffuse map, colorable parts should be grayscale. Alpha channel is also supported for cutoff.
+However, you still should set the MetalliGlossMap G channel mask to enable emission.
 
-**ColorMask:** This is basically the same as vanilla. _Color_ is black, _Color2_ is Red, _Color3_ is Green. It has additional Blue option, that cannot be changed in char maker, actually I reccomend to reserve it as a color protector, for example you can mark some colored parts on the diffuse map to make it maintain original diffuse colors like seams, prints, etc
-
-**BumpMap:** Ordinary OpenGL normal map. The strength is controlled by _BumpScale_ 
-
-**DetailMask:** This texture used for adding _DetailGlossMap_ masks. R - Detail Mask 1, G - Detail Mask 2, B - Detail Mask 3 (not used currently). The black parts are not affected, leave empty if you don't need detail bumps.
-
-**DetailGlossMap:** Grayscale height map (bump map). Same as vanilla. The shader automatically generates and blends normal from it. UV scaling controlled by _DetailUV_. Masked by _DetailMask_ R channel. The strength is controlled by _DetailNormalMapScale_ 
-
-**DetailGlossMap2:** Grayscale height map (bump map). Same as vanilla. The shader automatically generates and blends normal from it. UV scaling controlled by _DetailUV2_. Masked by _DetailMask_ G channel.  The strength is controlled by _DetailNormalMapScale2_ 
-
-**MetallicGlossMap:** This is very important map, it's packed R channel for Glossiness, G for Emission Mask, B for Metallic.
-
-**OcclusionMap:** This packed map, R - Occlusion map, B - Tearing mask for controlling the clothing break state in char maker. G is not used here. Controlled by _OcclusionStrength_.
-
-
-
-### TODO (NOT WORKING FEATURES)
-
-- Translucency
-- Weathering Textures
-- Dithering
+**DetailOcclusion:** Enables the contribution from detail texture to occlusion layer.
 
