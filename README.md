@@ -4,9 +4,7 @@
 ASE-Ready shaders for Unity, mainly for modding 【AI Girl】 & 【HoneySelect2】. Can be edited in Amplify Shader Editor.
 
 ### DOCUMENTATION:
-- [Hanmen/Clothes True Replica](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/Hanmen%20Clothes%20True%20Replica%20Opaque%20DOCUMENTATION.md)
-- [Hanmen/Clothes True Replica Iridescence](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/Hanmen%20Clothes%20True%20Iridescent%20DOCUMENTATION.md)
-- [Hanmen/Item](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/Hanmen%20Item%20DOCUMENTATION.md)
+- [Item Shaders](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/Hanmen%20Item%20DOCUMENTATION.md)
 
 
 ### HOW TO USE:
