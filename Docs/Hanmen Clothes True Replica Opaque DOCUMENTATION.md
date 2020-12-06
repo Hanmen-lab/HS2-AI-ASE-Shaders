@@ -48,7 +48,6 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 ![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/weathering.jpg)
 
 **WetnessMap:** R- Wetness Gloss, G - Wetness Bumps.
-
 Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/rita_maincos2_Mat_1_BaseColor.png)
 
 <br>
