@@ -22,11 +22,11 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 
 **MainTex:** Basically this is a diffuse map, colorable parts should be grayscale. Alpha channel is also supported for cutoff. sRGB colorspace.
 
-NOTE: MainTex should be set in the list. Can be leave empty in the Unity.
+>MainTex should be set in the list. Can be leave empty in the Unity.
 
 **ColorMask:** This is basically the same as vanilla. Color is black, Color2 is Red, Color3 is Green, Color4 is Blue. Default is black (All Color1). Linear colorspace. 
 
-NOTE: ColorMask should be set in the list. Can be leave empty in the Unity.
+>ColorMask should be set in the list. Can be leave empty in the Unity.
 
 
 **BumpMap:** Ordinary OpenGL normal map. The strength is controlled by BumpScale.
