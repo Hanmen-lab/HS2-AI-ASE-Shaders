@@ -22,7 +22,7 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 
 **MainTex:** Basically this is a diffuse map, colorable parts should be grayscale. Alpha channel is also supported for cutoff.
 
-**ColorMask:** This is basically the same as vanilla. Color is black, Color2 is Red, Color3 is Green, Color4 is Blue.
+**ColorMask:** This is basically the same as vanilla. Color is black, Color2 is Red, Color3 is Green, Color4 is Blue. Default is black (Color).
 
 **BumpMap:** Ordinary OpenGL normal map. The strength is controlled by BumpScale.
 
@@ -48,7 +48,7 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 
 **BaseColor:** Basically master color, leave 1,1,1,1 in most cases.
 
-**Color1:** Color 1. Masked by black channel in the colormask texture. Alpha value controls transparency.
+**Color:**  Color 1. Masked by black channel in the colormask texture. Alpha value controls transparency.
 
 **Color2:** Color 2. Masked by red channel in the colormask texture. Alpha value controls transparency.
 
