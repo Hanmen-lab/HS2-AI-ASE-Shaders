@@ -37,7 +37,7 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 **OcclusionMap:** This packed map, R - Occlusion map. Linear colorspace.
 
 
-
+\
 ###### Only for Cutoff shader variants:
 
 **Noise Texture:** The noise texture can be used to generate special dithering. Only in Cutoff versions. 
