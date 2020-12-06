@@ -72,17 +72,7 @@ Before using the noise texture check the **BlueNoiseDither** checkbox.
 
 # Colors:
 
-
-
 **BaseColor:** Basically master color, leave 1,1,1,1 in most cases.
-
-**Color:**  Color 1. Masked by black channel in the colormask texture. Alpha value controls transparency.
-
-**Color2:** Color 2. Masked by red channel in the colormask texture. Alpha value controls transparency.
-
-**Color3:** Color 3. Masked by green channel in the colormask texture. Alpha value controls transparency.
-
-**Color4:** Color 4. Masked by blue channel in the colormask texture. Alpha value controls transparency.
 
 **EmissionColor:** Controls emission, Masked by MetallicGlossMap green channel.
 
