@@ -101,6 +101,8 @@ Before using the noise texture check the **BlueNoiseDither** checkbox.
 
 **EmissionStrength** Controls emission power.
 
+**AlphaEx:** Controls the cloth tearings effect according to OcclusionMap B channel.
+
 **ExGloss:** Controls the wetness level. It can react to wetness slider in the studio.
 
 **WetnessPower:** Controls the wetness gloss level. Better leave default 0.8.
@@ -193,3 +195,5 @@ However, you still should set the MetalliGlossMap G channel mask to enable emiss
 >Only for Transparent shader variants:
 
 **DetailAlpha:** Allows to contribute the detail textures to the alpha channel.
+
+**AlphaFresnel:** Adds the fresnel effect to the transparency.
