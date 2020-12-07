@@ -26,7 +26,7 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 
 **ColorMask:** This is basically the same as vanilla. Color is black, Color2 is Red, Color3 is Green, Color4 is Blue. Default is black (All Color1). Linear colorspace. 
 
->ColorMask should be set in the list. Can be leave empty in the Unity.
+>ColorMask should be set in the list. Can be leave empty in the Unity, unless you need Color4.
 
 
 **BumpMap:** Ordinary OpenGL normal map. The strength is controlled by BumpScale.
