@@ -186,6 +186,8 @@ However, you still should set the MetalliGlossMap G channel mask to enable emiss
 
 **EnableAlphaMask:** Allows to use Occlusion Alpha channel mask to mask the fully opaque parts.
 
+![2](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/opacitymask.gif)
+
 <br>
 
 >Only for Transparent shader variants:
