@@ -39,7 +39,7 @@ This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorab
 
 **MetallicGlossMap:** This is very important map, it's packed R channel for Glossiness, G for Emission Mask, B for Metallic. Linear colorspace.
 
-**OcclusionMap:** This packed map, R - Occlusion map. G- Not used yet B - Tearings Mask. Linear colorspace.
+**OcclusionMap:** This packed map, R - Occlusion map. G- Not used yet B - Tearings Mask, Alpha - Alpha mask for opaque parts. Linear colorspace.
 
 **WeatheringMap:** Contains weathering information. Reccommend to use original one from the game.
 
@@ -74,18 +74,24 @@ Before using the noise texture check the **BlueNoiseDither** checkbox.
 
 **BaseColor:** Basically master color, leave 1,1,1,1 in most cases.
 
+**Color:** Basically master color, leave 1,1,1,1 in most cases.
+
 **EmissionColor:** Controls emission, Masked by MetallicGlossMap green channel.
+
+**WeatheringAlbedo:** Controls weathering color. Leave default in most cases.
 
 
 # Properties:
 
-**DetailUV** Controls detail1 texture UV scale. 
+**DetailUV** Controls detail1 texture UV scale. R - Scale X, G - Scale Y.
 
-**DetailUV2** Controls detail2 texture UV scale. 
+**DetailUV2** Controls detail2 texture UV scale. R - Scale X, G - Scale Y.
 
-**DetailUVRotator** Controls detail1 texture UV rotation. 
+**DetailUVRotator** Controls detail1 texture UV rotation. -1 to 1. (-180 to 180 radians).
 
-**DetailUVRotator2** Controls detail2 texture UV rotation. 
+**DetailUVRotator2** Controls detail2 texture UV rotation. -1 to 1. (-180 to 180 radians).
+
+**WeatheringUV:** Controls weathering texture UV coordinates. R - Scale X, G - Scale Y, B - Offset X, A - Offset Y.
 
 **BumpScale** Controls normal map bump power.
 
@@ -94,6 +100,12 @@ Before using the noise texture check the **BlueNoiseDither** checkbox.
 **DetailNormalMapScale2** Controls detail2 bump power. 
 
 **EmissionStrength** Controls emission power.
+
+**ExGloss:** Controls the wetness level. It can react to wetness slider in the studio.
+
+**WetnessPower:** Controls the wetness gloss level. Better leave default 0.8.
+
+**WetnessPower2:** Controls the wetness metallic level. Better leave default 0.2
 
 **OcclusionStrength** Controls occlusion power. 
 
@@ -105,37 +117,29 @@ Before using the noise texture check the **BlueNoiseDither** checkbox.
 
 **DetailOcclusionContrast2** Controls detail1 occlusion contrast. DetailOcclusion checkbox should be set ON.
 
-**Glossiness** Controls the glossiness level, contributes by MetallicGlossMap Red channel. Masked by Color1 on the ColorMask.
+**Roughness** Controls the glossiness level independantly on the by MetallicGlossMap. This basically used to make an object fully gloss in ME, even if you set the map.
 
-**Glossiness2** Controls the glossiness level, contributes by MetallicGlossMap Red channel. Masked by Color2 on the ColorMask.
+**MetallicMask:** Controls the metallic level independantly on the by MetallicGlossMap Blue channel. This basically used to make an object fully gloss in ME, even if you set the map.
 
-**Glossiness3** Controls the glossiness level, contributes by MetallicGlossMap Red channel. Masked by Color3 on the ColorMask.
+**Glossiness4:** Controls the glossiness level of Color4. Working only if the ColorMask texture has been set,  masked by Blue channel.
 
-**Glossiness4** Controls the glossiness level, contributes by MetallicGlossMap Red channel. Masked by Color4 on the ColorMask.
-
-**Roughness** Controls the glossiness level independantly on the by MetallicGlossMap Red channel. Masked by Color1 on the ColorMask.
-
-**Roughness2** Controls the glossiness level independantly on the by MetallicGlossMap Red channel. Masked by Color2 on the ColorMask.
-
-**Roughness3** Controls the glossiness level independantly on the by MetallicGlossMap Red channel. Masked by Color3 on the ColorMask.
+**Metallic4:** Controls the metallic level of Color4. Working only if the ColorMask texture has been set,  masked by Blue channel.
 
 **Roughness4** Controls the glossiness level independantly on the by MetallicGlossMap Red channel. Masked by Color4 on the ColorMask.
 
-**Metallic** Controls the metallic level, contributes by MetallicGlossMap Blue channel. Masked by Color1 on the ColorMask.
+**MetallicMask4:** Controls the metallic level independantly on the by MetallicGlossMap Blue channel. Masked by Color4 on the ColorMask.
 
-**Metallic2** Controls the metallic level, contributes by MetallicGlossMap Blue channel. Masked by Color2 on the ColorMask.
+**WeatheringAll:** Controls the weathering level for all body parts. 
 
-**Metallic3** Controls the metallic level, contributes by MetallicGlossMap Blue channel. Masked by Color3 on the ColorMask.
+**WeatheringRange1:** Controls the weathering level for the front-top body part. Masked by Red channel on the WeatheringMask.
 
-**Metallic4** Controls the metallic level, contributes by MetallicGlossMap Blue channel. Masked by Color4 on the ColorMask.
+**WeatheringRange2:** Controls the weathering level for the front-bottom body part. Masked by Green channel on the WeatheringMask.
 
-**MetallicMask** Controls the metallic level independantly on the by MetallicGlossMap Blue channel. Masked by Color1 on the ColorMask.
+**WeatheringRange3:** Controls the weathering level for the back-top body part. Masked by Blue channel on the WeatheringMask.
 
-**MetallicMask2** Controls the metallic level independantly on the by MetallicGlossMap Blue channel. Masked by Color2 on the ColorMask.
+**WeatheringRange4:** Controls the weathering level for the back-bottom body part. Masked by Red+Green channel on the WeatheringMask.
 
-**MetallicMask3** Controls the metallic level independantly on the by MetallicGlossMap Blue channel. Masked by Color3 on the ColorMask.
-
-**MetallicMask4** Controls the metallic level independantly on the by MetallicGlossMap Blue channel. Masked by Color4 on the ColorMask.
+**WeatheringRange5:** Controls the weathering level for the arms. Masked by Red+Blue channel on the WeatheringMask.
 
 <br>
 
@@ -180,3 +184,10 @@ However, you still should set the MetalliGlossMap G channel mask to enable emiss
 
 **DetailOcclusion:** Enables the contribution from detail texture to occlusion layer.
 
+**EnableAlphaMask:** Allows to use Occlusion Alpha channel mask to mask the fully opaque parts.
+
+<br>
+
+>Only for Transparent shader variants:
+
+**DetailAlpha:** Allows to contribute the detail textures to the alpha channel.
