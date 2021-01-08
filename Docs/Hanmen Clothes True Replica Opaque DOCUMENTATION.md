@@ -1,4 +1,4 @@
-This shaders are ASE replicated vanilla AIT/Item. Can be used for making colorable studio objects or accessories.
+This shaders are ASE replicated vanilla AIT/Clothes True. Can be used for making colorable studio objects or accessories.
 
 # Variants
 
