@@ -46,10 +46,17 @@ Now lets adss some more environment lighting. The good way to simulate it to use
 I set the intensity pretty low, since I don't need a strong light here.
 
 [7]
-We also have Sky Dummy light, which is basically a directional light which represent the environment lighting bounced from the floor. The intensity is also pretty low here.
+We also have Sky Dummy light, which is basically a directional light which represent the environment lighting bounced from the floor. The intensity is also pretty low here. 
+And I also disabled the shadows from it.
 
 Now we have a basic map lighting done. Now we need to place a character.
 
 The character lighting looks pretty dark with our setup, so we will be using a separate directional light that only affects the character here.
 
+First I'll add a rim lighting, I'll be using two directional light with different colors and strong intensity placed on the back with some side angles.
 
+Now lets add a main light from the front-side. I reccomend to start with the white color, strong intesity and some angle to have nicer shadows on the character.
+
+And the final touch I'll add some environmental light from the side to smooth the overall look. You can adjust the tone and the intensity to settle it right.
+
+For some extra steps I'll be using the Fog to imitate the volumetric lighting plus the particle FX - Sunlight on the top.
