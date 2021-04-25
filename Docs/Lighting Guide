@@ -1,0 +1,18 @@
+Honey Select 2 StudioNeo Lighting Tutorial.
+
+I decided to write this, since many people struggling with lighting in their scenes.
+In fact StudioNeoV2 has Graphicss plugin which is very powerful tools to adjust the visuals.
+Since any good raytracing options are not available right now, I'll be using only easily available Directional lights, Point lights and Spot Lights to imitate soft lighting.
+
+Before we start, I wanted to admit some options:
+1. Always use Deferred rendering. It supports multiple light sources, and potentially can provide more correct lighting.
+2. Color grading. By default the main game and studio using LDR (Low Dynamic Range) colors. Which may looks cartoonish and saturated. 
+I always reccomend to switch to HDR - Neutral color preset, and disable all the color corrections. 
+With this you will get linear colors and overall cleaner look best for the fresh start the new scene.
+
+For this example I'll be using hooh's Rome Map with baked probs.
+
+First off you need to understand that there is 2 types of lighting:
+1. Realtime Lighting (Directional lights, Point lights and Spot Light)
+2. Baked Reflection Probes. Which can be tricky to find.
+
