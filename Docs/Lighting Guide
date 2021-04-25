@@ -16,3 +16,40 @@ First off you need to understand that there is 2 types of lighting:
 1. Realtime Lighting (Directional lights, Point lights and Spot Light)
 2. Baked Reflection Probes. Which can be tricky to find.
 
+[1]
+
+This how the map looks without any Relatime lights, only with reflection probes. Since this map has baked probs, I will be switching the probes in the Graphics from Realtime to Baked.
+
+[2]
+
+Now it's using the baked probe, to enable it, you need to set Importance to 1000 and now you can control the Intensity. 
+The one thing to admit, some of the Baked lights cannot be adjusted this way. And, when choosing the probe, I reccomend to choose the one that has less affect to character. 
+Some maps may be using too bright reflections that may be hard to adjust the light.
+
+[3]
+
+Now lets add the Realtime lights to the scene. I reccomend to start with the sky light. In my scene the skylights comes from the top of the building, so I will be adding a spotlight.
+Now the floor has a nice environment lighting. It cannot bounce to the walls, since there is no raytracing technology used, but don't worry, 
+we will be simulating it with directional lights.
+
+[4]
+
+I have a bunch of candles on the floor that has point lights, so I will be enabling it. They don't have any special adjustements.
+
+[5]
+
+I also added the strong Point light near the front wall, it's not have an emitter and I put here just for artistic tase. I guess it adds a lot to the scene volume.
+
+[6]
+
+Now lets adss some more environment lighting. The good way to simulate it to use **Cam light** that follow your vield of fiew. 
+I set the intensity pretty low, since I don't need a strong light here.
+
+[7]
+We also have Sky Dummy light, which is basically a directional light which represent the environment lighting bounced from the floor. The intensity is also pretty low here.
+
+Now we have a basic map lighting done. Now we need to place a character.
+
+The character lighting looks pretty dark with our setup, so we will be using a separate directional light that only affects the character here.
+
+
