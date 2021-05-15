@@ -16,7 +16,7 @@ First off you need to understand that there is 2 types of lighting:
 1. Realtime Lighting (Directional lights, Point lights and Spot Light)
 2. Baked Reflection Probes. Which can be tricky to find.
 
-[1]<img src="https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/lt_01.jpg" alt="alt text" width="1280" height="720">
+<img src="https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/lt_01.jpg" alt="alt text" width="1280" height="720">
 
 This how the map looks without any Relatime lights, only with reflection probes. Since this map has baked probs, I will be switching the probes in the Graphics from Realtime to Baked.
 
