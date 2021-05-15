@@ -11,6 +11,7 @@ Before we start, I wanted to admit some options:
 2. Color grading. By default the main game and studio using LDR (Low Dynamic Range) colors. Which may looks cartoonish and saturated. 
 I always reccomend to switch to HDR - Neutral color preset, and disable all the color corrections. 
 With this you will get linear colors and overall cleaner look best for the fresh start the new scene.
+3. Right now the Graphics plugin cannot save some light states into the scene, so if you close the Studio you'll need to adjust some lights and also it's layers again. This probably will be fixed in the future Graphics updates.
 
 For this example I'll be using hooh's Rome Map with baked probs.
 
