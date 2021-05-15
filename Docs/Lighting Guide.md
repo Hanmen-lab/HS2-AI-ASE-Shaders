@@ -53,8 +53,16 @@ First I'll add a rim lighting, I'll be using two directional light with differen
 
 ![8](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/lt_08.jpg)
 
-Now lets add a main light from the front-side. I reccomend to start with the white color, strong intesity and some angle to have nicer shadows on the character.
+Now lets add a main light from the front-side. I reccomend to start with the soft white colors, mid intesity and some angle to have nicer shadows on the character.
 
-And the final touch I'll add some environmental light from the side to smooth the overall look. You can adjust the tone and the intensity to settle it right.
+![9](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/lt_09.jpg)
+
+And the final touch I'll add some environmental light from the front-side to smooth the overall look. You can adjust the tone and the intensity to settle it right.
+
+![10](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/lt_10.jpg)
 
 For some extra steps I'll be using the Fog to imitate the volumetric lighting plus the particle FX - Sunlight on the top.
+
+![11](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/lt_11.jpg)
+![12](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/lt_12.jpg)
+
