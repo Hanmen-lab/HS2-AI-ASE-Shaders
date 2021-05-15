@@ -7,7 +7,7 @@ You can see the example MMD made with similar lighting: https://youtu.be/Xe2OjcT
 
 I decided to write this, since many people struggling with lighting in their scenes.
 In fact StudioNeoV2 has Graphicss plugin which is very powerful tools to adjust the visuals.
-Since any good raytracing options are not available right now, I'll be using only easily available Directional lights, Point lights and Spot Lights to imitate soft lighting.
+Since any good raytracing options are not available right now, I'll be using only available Directional lights, Point lights and Spot Lights to imitate Global illumination.
 
 Before we start, I wanted to admit some options:
 * Always use **Deferred rendering.** It supports multiple light sources, and potentially can provide more correct lighting.
