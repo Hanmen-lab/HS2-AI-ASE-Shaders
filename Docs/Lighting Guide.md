@@ -66,3 +66,7 @@ For some extra steps I'll be using the Fog to imitate the volumetric lighting pl
 ![11](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/lt_11.jpg)
 ![12](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/lt_12.jpg)
 
+Now this pretty much it.
+
+![13](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/lt_13.jpg)
+![14](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/lt_14.jpg)
