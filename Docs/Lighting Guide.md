@@ -49,8 +49,9 @@ Now we have a basic map lighting done. Now we need to place a character.
 The character lighting looks pretty dark with our setup, so we will be using a separate lighting that only affects the character. This can be set in the Graphics plugin - Setting - Advanced Settings checkbox. Now under the every light we have a layers it's affect. From now on we can add lights, then disable the Map layer.
 First I'll add a rim lighting, I'll be using two directional light with different colors and strong intensity placed on the back with some side angles.
 
-![7](https://cdn.discordapp.com/attachments/446574389689974786/835924254020993046/unknown.png)
-![8](https://cdn.discordapp.com/attachments/446574389689974786/835924254020993046/unknown.png)
+![7](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/lt_07.jpg)
+
+![8](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/lt_08.jpg)
 
 Now lets add a main light from the front-side. I reccomend to start with the white color, strong intesity and some angle to have nicer shadows on the character.
 
