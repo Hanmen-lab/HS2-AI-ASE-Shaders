@@ -3,7 +3,7 @@ Honey Select 2 StudioNeo Lighting Tutorial.
 
 ![lt](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/lt_final.gif)
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Xe2OjcTOxd0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+You can see the example MMD made with similar lighting: https://youtu.be/Xe2OjcTOxd0
 
 I decided to write this, since many people struggling with lighting in their scenes.
 In fact StudioNeoV2 has Graphicss plugin which is very powerful tools to adjust the visuals.
