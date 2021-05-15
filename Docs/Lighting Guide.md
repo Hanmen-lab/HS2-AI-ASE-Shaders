@@ -16,25 +16,27 @@ First off you need to understand that there is 2 types of lighting:
 1. Realtime Lighting (Directional lights, Point lights and Spot Light)
 2. Baked Reflection Probes. Which can be tricky to find.
 
-![test image size](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/lt_01.jpg){:height="50%" width="50%"}
-
 This how the map looks without any Relatime lights, only with reflection probes. Since this map has baked probs, I will be switching the probes in the Graphics from Realtime to Baked.
 
-[2]
+![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/lt_01.jpg)
 
 Now it's using the baked probe, to enable it, you need to set Importance to 1000 and now you can control the Intensity. 
 The one thing to admit, some of the Baked lights cannot be adjusted this way. And, when choosing the probe, I reccomend to choose the one that has less affect to character. 
 Some maps may be using too bright reflections that may be hard to adjust the light.
 
-[3]
+![2](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/lt_02.jpg)
 
 Now lets add the Realtime lights to the scene. I reccomend to start with the sky light. In my scene the skylights comes from the top of the building, so I will be adding a spotlight.
 Now the floor has a nice environment lighting. It cannot bounce to the walls, since there is no raytracing technology used, but don't worry, 
 we will be simulating it with directional lights.
 
-[4]
+![3](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/lt_03.jpg)
 
-I have a bunch of candles on the floor that has point lights, so I will be enabling it. They don't have any special adjustements.
+
+We also have Sky Dummy light, which is basically a directional light which represent the environment lighting bounced from the floor. The intensity is also pretty low here. 
+And I also disabled the shadows from it. I have a bunch of candles on the floor that has point lights, so I will be enabling it. They don't have any special adjustements.
+
+![4](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/lt_04.jpg)
 
 [5]
 
@@ -46,8 +48,7 @@ Now lets adss some more environment lighting. The good way to simulate it to use
 I set the intensity pretty low, since I don't need a strong light here.
 
 [7]
-We also have Sky Dummy light, which is basically a directional light which represent the environment lighting bounced from the floor. The intensity is also pretty low here. 
-And I also disabled the shadows from it.
+
 
 Now we have a basic map lighting done. Now we need to place a character.
 
