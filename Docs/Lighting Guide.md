@@ -8,8 +8,8 @@ In fact StudioNeoV2 has Graphicss plugin which is very powerful tools to adjust 
 Since any good raytracing options are not available right now, I'll be using only easily available Directional lights, Point lights and Spot Lights to imitate soft lighting.
 
 Before we start, I wanted to admit some options:
-* Always use Deferred rendering. It supports multiple light sources, and potentially can provide more correct lighting.
-* Color grading. By default the main game and studio using LDR (Low Dynamic Range) colors. Which may looks cartoonish and saturated. 
+* Always use **Deferred rendering.** It supports multiple light sources, and potentially can provide more correct lighting.
+* **Color grading.** By default the main game and studio using LDR (Low Dynamic Range) colors. Which may looks cartoonish and saturated. 
 I always reccomend to switch to HDR - Neutral color preset, and disable all the color corrections. 
 With this you will get linear colors and overall cleaner look best for the fresh start the new scene.
 * Right now the Graphics plugin cannot save some light states into the scene, so if you close the Studio you'll need to adjust some lights and also it's layers again. This probably will be fixed in the future Graphics updates.
@@ -17,8 +17,8 @@ With this you will get linear colors and overall cleaner look best for the fresh
 For this example I'll be using hooh's Rome Map with baked probs.
 
 First off you need to understand that there is 2 types of lighting:
-- Realtime Lighting (Directional lights, Point lights and Spot Light)
-- Baked Reflection Probes. Which can be tricky to find.
+- **Realtime Lighting** (Directional lights, Point lights and Spot Light)
+- **Baked Reflection Probes.** Which can be tricky to find.
 
 This how the map looks without any Relatime lights, only with reflection probes. Since this map has baked probs, I will be switching the probes in the Graphics from Realtime to Baked.
 
