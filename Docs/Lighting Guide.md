@@ -1,5 +1,7 @@
 Honey Select 2 StudioNeo Lighting Tutorial.
 
+![lt](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/lt_final.gif)
+
 I decided to write this, since many people struggling with lighting in their scenes.
 In fact StudioNeoV2 has Graphicss plugin which is very powerful tools to adjust the visuals.
 Since any good raytracing options are not available right now, I'll be using only easily available Directional lights, Point lights and Spot Lights to imitate soft lighting.
