@@ -20,9 +20,9 @@ For this example I'll be using hooh's Rome Map with baked probs.
 
 First off you need to understand that there is 2 types of lighting:
 - **Realtime Lighting** (Directional lights, Point lights and Spot Light)
-- **Baked Reflection Probes.** Which can be tricky to find.
+- **Baked Reflection Probes.** Which can be tricky to find. You can find it in the first Lighting Tab, at the bottom (Reflection Probes). The maps with the baked light usually has many reflection probes with the type (Baked)
 
-This how the map looks without any Relatime lights, only with reflection probes. Since this map has baked probs, I will be switching the probes in the Graphics from Realtime to Baked.
+This how the map looks without any Relatime lights, only with reflection probes. Since this map has baked probs, I will be switching the probes in the Graphics from Realtime to Baked. To switch probes you need to change it's importance.
 
 ![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/lt_01.jpg)
 
