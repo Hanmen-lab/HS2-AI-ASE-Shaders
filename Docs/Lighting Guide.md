@@ -38,23 +38,19 @@ And I also disabled the shadows from it. I have a bunch of candles on the floor 
 
 ![4](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/lt_04.jpg)
 
-[5]
-
 I also added the strong Point light near the front wall, it's not have an emitter and I put here just for artistic tase. I guess it adds a lot to the scene volume.
 
-[6]
-
-Now lets adss some more environment lighting. The good way to simulate it to use **Cam light** that follow your vield of fiew. 
-I set the intensity pretty low, since I don't need a strong light here.
-
-[7]
-
+[5](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/lt_05.jpg)
 
 Now we have a basic map lighting done. Now we need to place a character.
 
-The character lighting looks pretty dark with our setup, so we will be using a separate directional light that only affects the character here.
+[6](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/lt_06.jpg)
 
+The character lighting looks pretty dark with our setup, so we will be using a separate lighting that only affects the character. This can be set in the Graphics plugin - Setting - Advanced Settings checkbox. Now under the every light we have a layers it's affect. From now on we can add lights, then disable the Map layer.
 First I'll add a rim lighting, I'll be using two directional light with different colors and strong intensity placed on the back with some side angles.
+
+[7](https://cdn.discordapp.com/attachments/446574389689974786/835924254020993046/unknown.png)
+[8](https://cdn.discordapp.com/attachments/446574389689974786/835924254020993046/unknown.png)
 
 Now lets add a main light from the front-side. I reccomend to start with the white color, strong intesity and some angle to have nicer shadows on the character.
 
