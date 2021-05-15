@@ -15,6 +15,7 @@ Before we start, I wanted to admit some options:
 I always reccomend to switch to HDR - Neutral color preset, and disable all the color corrections. 
 With this you will get linear colors and overall cleaner look best for the fresh start the new scene and use color correction at the end.
 * Right now the Graphics plugin cannot save some light states into the scene, so if you close the Studio you'll need to adjust some lights and also it's layers again. This probably will be fixed in the future Graphics updates.
+* Not reccomend to use a Cam light - this may ruin your light composition, and cause a moving shadow bugs in the video. Either use low intensity Cam light - like 0.1-0.2.
 
 For this example I'll be using hooh's Rome Map with baked probs.
 
