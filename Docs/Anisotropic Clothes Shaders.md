@@ -4,6 +4,8 @@ https://docs.unity3d.com/Manual/SL-SurfaceShaderLighting.html
 All shaders Forward Only. Based on this asset:
 https://assetstore.unity.com/packages/vfx/shaders/sas-standard-anisotropic-shader-51663
 
+The main goal of this shader is to make possible to create more realistic materials simulating different cloth properties.
+
 # Variants
 
 **Hanmen/Anisotropic Clothes Cutoff** - An opaque version of the anisotropic shader with the dithering transparency.
