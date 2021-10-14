@@ -222,9 +222,3 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 
 However, you still should set the MetalliGlossMap G channel mask to enable emission.
 
-
-<br>
-
-
-
-**AlphaFresnel:** Adds the fresnel effect to the transparency.
