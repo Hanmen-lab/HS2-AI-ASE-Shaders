@@ -48,7 +48,7 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 
 **TangentMap:** Anisotropic map used for specular direction. R - horizontal direction. G - vertical direction.
 
-[tangentmap](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/TangentMap.png)
+![tangentmap](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/TangentMap.png)
 
 <br>
 
