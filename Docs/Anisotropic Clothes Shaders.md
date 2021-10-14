@@ -73,11 +73,13 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 
 # Properties:
 
-**Anisotropy** Anisotropy reflection direction.
+**Anisotropy** Anisotropy reflection direction. Defines anisotropy reflection angle by UV.
 
 ![anisotropy](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/anisotropy.gif)
 
 **AnisotropyContrast** TangentMap scale.
+
+![anisocont](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/anisocont.gif)
 
 **DetailUV** Controls detail1 texture UV scale. R - Scale X, G - Scale Y.
 
