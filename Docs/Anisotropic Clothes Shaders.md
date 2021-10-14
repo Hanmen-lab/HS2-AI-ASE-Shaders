@@ -50,6 +50,8 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 
 ![tangentmap](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/TangentMap.png)
 
+###### TangentMap Example
+
 <br>
 
 >Only for Iridescent shader variants:
@@ -73,7 +75,7 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 
 **Anisotropy** Anisotropy reflection direction.
 
-[!gif](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/anisotropy.gif)
+(https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/anisotropy.gif)
 
 **AnisotropyContrast** TangentMap scale.
 
