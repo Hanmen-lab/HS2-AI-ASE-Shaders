@@ -47,7 +47,9 @@ https://assetstore.unity.com/packages/vfx/shaders/sas-standard-anisotropic-shade
 
 ![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/weathering.jpg)
 
-###### WeatheringMap scheme:
+###### WeatheringMap scheme
+
+<br>
 
 **FuzzTex:** Grayscale map used for rendering fuzz lighting.
 
