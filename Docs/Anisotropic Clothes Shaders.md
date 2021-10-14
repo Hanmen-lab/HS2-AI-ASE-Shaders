@@ -45,9 +45,11 @@ https://assetstore.unity.com/packages/vfx/shaders/sas-standard-anisotropic-shade
 
 **WeatheringMask:** Contains body parts information. Red - Front-Top, Green - Front-Bottom, Blue - Back-Top, Yellow(R+G) - Back-Bottom, Magenta(R+B) - Arms, Cyan(G+B) - Face. Linear colorspace.
 
-**FuzzTex:** Grayscale map used for rendering fuzz lighting.
-
 ![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/weathering.jpg)
+
+###### WeatheringMap scheme:
+
+**FuzzTex:** Grayscale map used for rendering fuzz lighting.
 
 **WetnessMap:** R- Wetness Gloss, G - Wetness Bumps.
 Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/rita_maincos2_Mat_1_BaseColor.png)
