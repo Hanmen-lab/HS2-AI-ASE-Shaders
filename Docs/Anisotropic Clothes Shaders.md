@@ -92,9 +92,23 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 
 **Reflection** Reflection part of specular highlights. Default is 1. You can turn it off in some cases.
 
-FuzzUV
+**FuzzUV:** Controls FuzzTex UV. 
 
-FuzzWrap
+**FuzzWrap:** Controls Fuzz lighting parameters.
+
+**FuzzRange:**
+
+**FuzzBias:**
+
+>Only for Alpha shader variants:
+
+**AlphaMaster:** Controls the transparency level of the material independantly from game slider. Basically used for making transparent clothings that initially don't have the Alpha slider in the color picker.
+
+**FresnelPower:** Alpha fresnel power.
+
+**FresnelScale:** Alpha fresnel scale.
+
+**FresnelBias:** Alpha fresnel bias.
 
 
 <br>
