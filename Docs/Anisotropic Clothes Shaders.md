@@ -29,9 +29,9 @@ This shaders are ASE replicated vanilla AIT/Clothes True. Can be used for only f
 
 **DetailMask:** This texture used for adding DetailGlossMap masks. R - Detail Mask 1, G - Detail Mask 2. The black parts are not affected, leave empty if you don't need detail bumps. Linear colorspace.
 
-**DetailGlossMap:** Grayscale height map (bump map). Same as vanilla. The shader automatically generates and blends normal from it. UV scaling controlled by DetailUV. Masked by DetailMask R channel. The strength is controlled by DetailNormalMapScale
+**DetailGlossMap:** Grayscale detail map. Used as height map for normals (DetailNormalMapScale), also used in glossiness and metallic layers (DetailGlossScale, DetailMetallicScale).
 
-**DetailGlossMap2:** Grayscale height map (bump map). Same as vanilla. The shader automatically generates and blends normal from it. UV scaling controlled by DetailUV2. Masked by DetailMask G channel. The strength is controlled by DetailNormalMapScale2
+**DetailGlossMap2:** Grayscale detail map. Used as height map for normals (DetailNormalMapScale), also used in glossiness and metallic layers (DetailGlossScale, DetailMetallicScale).
 
 **MetallicGlossMap:** Packed Map. R - MetallicMap, G-Emission, B-Roughness. Can be leaved empty in most cases.
 
