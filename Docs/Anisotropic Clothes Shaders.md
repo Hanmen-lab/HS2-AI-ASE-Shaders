@@ -82,6 +82,10 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 
 **FuzzColor:** Controls fuzz lighting color.
 
+**WetColor:** Controls Wetness color when ExGloss is turned ON.
+
+
+
 # Properties:
 
 ###### New properties:
@@ -214,6 +218,24 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 
 **Cutoff** Controls opacity clipping threshold. 
 
+
+###### Wetness properties: Works only when ExGloss is > 0. Or the character wetness slider is used.
+
+**WetAlpha:** Controls the transparency level of OcclusionMap alpha.
+
+**WetAlbedoOffset:** Controls the albedo offset of wetness. Darkens the wet areas.
+
+**WetSplatsAlbedoOffset:** Controls the splats albedo levels.
+
+**WetGlossBase:** Controls the glossiness levels of wetness.
+
+**WetGlossSplats:** Controls the Splats glossiness levels.
+
+**WetOpacitySplats:** Controls the splats overall scale. Can be turned off by setting it 0.
+
+**WetBumpOffset:** Adds additional bump strenght when wetness is used.
+
+<br>
 
 # Keywords (Static Switches):
 
