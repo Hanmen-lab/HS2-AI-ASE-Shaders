@@ -77,9 +77,11 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 
 ![anisotropy](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/anisotropy.gif)
 
-**AnisotropyContrast** TangentMap scale.
+**AnisotropyContrast** TangentMap scale. Default value is 0.5
 
 ![anisocont](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/anisocont.gif)
+
+**Reflection** Reflection part of specular highlights. Default is 1. You can turn it off in some cases.
 
 **DetailUV** Controls detail1 texture UV scale. R - Scale X, G - Scale Y.
 
