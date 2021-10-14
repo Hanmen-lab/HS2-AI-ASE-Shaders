@@ -59,6 +59,7 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 **TangentMap:** Anisotropic map used for specular direction. R - horizontal direction. G - vertical direction. Controlled by TangentUV + UVScalePattern. Since it only using the R and G channel it's possible to use ordinary normal maps as tangentmap.
 
 ![tangentmap](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/TangentMap.png)
+![cone](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/Cone_T.png)
 
 ###### TangentMap Example
 
