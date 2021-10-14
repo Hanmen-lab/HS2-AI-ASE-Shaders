@@ -46,6 +46,10 @@ This shaders are ASE replicated vanilla AIT/Clothes True. Can be used for only f
 **WetnessMap:** R- Wetness Gloss, G - Wetness Bumps.
 Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/rita_maincos2_Mat_1_BaseColor.png)
 
+**TangentMap:** Anisotropic map used for specular direction. R - horizontal direction. G - vertical direction.
+
+[tangentmap](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/TangentMap.png)
+
 <br>
 
 >Only for Cutoff shader variants:
