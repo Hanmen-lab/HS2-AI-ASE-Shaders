@@ -73,6 +73,8 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 
 # Properties:
 
+###### New properties:
+
 **Anisotropy** Anisotropy reflection direction. Defines anisotropy reflection angle by UV.
 
 ![anisotropy](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/anisotropy.gif)
@@ -83,6 +85,11 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 
 **Reflection** Reflection part of specular highlights. Default is 1. You can turn it off in some cases.
 
+
+###### Detail properties:
+
+**UVScalePattern** Defines master value for DetailUV, DetailUV2, TangentUV. Used in some vanilla clothing.
+
 **DetailUV** Controls detail1 texture UV scale. R - Scale X, G - Scale Y.
 
 **DetailUV2** Controls detail2 texture UV scale. R - Scale X, G - Scale Y.
@@ -91,13 +98,17 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 
 **DetailUVRotator2** Controls detail2 texture UV rotation. -1 to 1. (-180 to 180 radians).
 
+**DetailNormalMapScale** Controls detail1 bump power. 
+**DetailNormalMapScale2** Controls detail2 bump power. 
+**DetailGlossScale** Controls the glossiness controbution from Detail1
+**DetailGlossScale2** Controls the glossiness controbution from Detail2
+**DetailMetallicScale** Controls the glossiness controbution from Detail1
+**DetailMetallicScale2** Controls the glossiness controbution from Detail2
+
+
 **WeatheringUV:** Controls weathering texture UV coordinates. R - Scale X, G - Scale Y, B - Offset X, A - Offset Y.
 
 **BumpScale** Controls normal map bump power.
-
-**DetailNormalMapScale** Controls detail1 bump power. 
-
-**DetailNormalMapScale2** Controls detail2 bump power. 
 
 **EmissionStrength** Controls emission power.
 
