@@ -114,6 +114,8 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 
 **DetailOcclusionScale2** Controls the occlusion controbution from Detail1.
 
+<br>
+
 **WeatheringUV:** Controls weathering texture UV coordinates. R - Scale X, G - Scale Y, B - Offset X, A - Offset Y.
 
 **BumpScale** Controls normal map bump power.
@@ -124,19 +126,7 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 
 **ExGloss:** Controls the wetness level. It can react to wetness slider in the studio.
 
-**WetnessPower:** Controls the wetness gloss level. Better leave default 0.8.
-
-**WetnessPower2:** Controls the wetness metallic level. Better leave default 0.2
-
 **OcclusionStrength** Controls occlusion power. 
-
-**DetailOcclusionScale** Controls detail1 occlusion power. DetailOcclusion checkbox should be set ON.
-
-**DetailOcclusionScale2** Controls detail2 occlusion power. DetailOcclusion checkbox should be set ON.
-
-**DetailOcclusionContrast** Controls detail1 occlusion contrast. DetailOcclusion checkbox should be set ON.
-
-**DetailOcclusionContrast2** Controls detail1 occlusion contrast. DetailOcclusion checkbox should be set ON.
 
 **Roughness** Controls the glossiness level independantly on the by MetallicGlossMap. This basically used to make an object fully gloss in ME, even if you set the map.
 
