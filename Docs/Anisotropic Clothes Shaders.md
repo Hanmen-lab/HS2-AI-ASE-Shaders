@@ -107,6 +107,10 @@ FuzzWrap
 
 **DetailUV2** Controls detail2 texture UV scale. R - Scale X, G - Scale Y.
 
+**DetailTangent1:** Used for masking tangent to DetailMask Red.
+
+**DetailTangent2:** Used for masking tangent to DetailMask Green.
+
 **DetailUVRotator** Controls detail1 texture UV rotation. -1 to 1. (-180 to 180 radians).
 
 **DetailUVRotator2** Controls detail2 texture UV rotation. -1 to 1. (-180 to 180 radians).
@@ -126,6 +130,12 @@ FuzzWrap
 **DetailOcclusionScale** Controls the occlusion controbution from Detail1.
 
 **DetailOcclusionScale2** Controls the occlusion controbution from Detail1.
+
+>Only for Pantyhose shader variants:
+
+**DetailAlpha1:** Allows to contribute the detail1 texture to the alpha channel.
+
+**DetailAlpha2:** Allows to contribute the detail2 texture to the alpha channel.
 
 <br>
 
@@ -198,8 +208,6 @@ However, you still should set the MetalliGlossMap G channel mask to enable emiss
 
 <br>
 
->Only for Pantyhose shader variants:
 
-**DetailAlpha:** Allows to contribute the detail textures to the alpha channel.
 
 **AlphaFresnel:** Adds the fresnel effect to the transparency.
