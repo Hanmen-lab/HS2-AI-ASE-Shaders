@@ -56,7 +56,7 @@ https://assetstore.unity.com/packages/vfx/shaders/sas-standard-anisotropic-shade
 **WetnessMap:** R- Wetness Gloss, G - Wetness Bumps.
 Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/rita_maincos2_Mat_1_BaseColor.png)
 
-**TangentMap:** Anisotropic map used for specular direction. R - horizontal direction. G - vertical direction. Controlled by TangentUV + UVScalePattern.
+**TangentMap:** Anisotropic map used for specular direction. R - horizontal direction. G - vertical direction. Controlled by TangentUV + UVScalePattern. Since it only using the R and G channel it's possible to use ordinary normal maps as tangentmap.
 
 ![tangentmap](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/TangentMap.png)
 
