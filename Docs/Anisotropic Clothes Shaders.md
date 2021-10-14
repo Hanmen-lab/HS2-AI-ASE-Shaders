@@ -52,18 +52,6 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 
 <br>
 
->Only for Cutoff shader variants:
-
-**Noise Texture:** Optional feature. Only in Cutoff versions. The noise texture can be used to generate special dithering. I reccommend to use [bluenoise.dds](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Shaders%20ASE/bluenoise.dds)
-
-Very important to not using any compression or filtering
-
-![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/bn.jpg)
-
-Before using the noise texture check the **BlueNoiseDither** checkbox.
-
-<br>
-
 >Only for Iridescent shader variants:
 
 **ColorRamp:** Only for iridescent shaders. Color texture for the iridescent specularity. Reccommend to use my [raindbowColorRamp.png](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Shaders%20ASE/Iridescent/raindbowColorRamp.png)
