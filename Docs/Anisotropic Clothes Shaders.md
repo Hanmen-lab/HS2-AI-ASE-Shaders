@@ -106,10 +106,13 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 
 **DetailGlossScale2** Controls the glossiness controbution from Detail2.
 
-**DetailMetallicScale** Controls the glossiness controbution from Detail1.
+**DetailMetallicScale** Controls the metallic controbution from Detail1.
 
-**DetailMetallicScale2** Controls the glossiness controbution from Detail2.
+**DetailMetallicScale2** Controls the metallic controbution from Detail2.
 
+**DetailOcclusionScale** Controls the occlusion controbution from Detail1.
+
+**DetailOcclusionScale2** Controls the occlusion controbution from Detail1.
 
 **WeatheringUV:** Controls weathering texture UV coordinates. R - Scale X, G - Scale Y, B - Offset X, A - Offset Y.
 
