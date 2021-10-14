@@ -71,6 +71,10 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 
 # Properties:
 
+**Anisotropy** Anisotropy reflection direction.
+
+**AnisotropyContrast** TangentMap scale.
+
 **DetailUV** Controls detail1 texture UV scale. R - Scale X, G - Scale Y.
 
 **DetailUV2** Controls detail2 texture UV scale. R - Scale X, G - Scale Y.
@@ -153,17 +157,6 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 # Keywords (Static Switches):
 
 
-**BlueNoiseDither** By default the shaders using internal Unity algorithm bayer 8x8 fro the dithering transparency. If you want to use bluenoise dithering check the BlueNoiseDither checkbox at the bottom, then set the [bluenoise.dds](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Shaders%20ASE/bluenoise.dds)
-
-###### Bayer 8x8 (Default)
-
-![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/bayer.gif)
-
-###### Bluenoise
-
-![2](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/bluenoise.gif)
-
-
 **EmissionColor1** (Color1 is Emissive) Overrides EmissionColor with Color1 for easy control from the game or studio.
  
 **EmissionColor2** (Color2 is Emissive) Overrides EmissionColor with Color2 for easy control from the game or studio.
@@ -172,15 +165,10 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 
 However, you still should set the MetalliGlossMap G channel mask to enable emission.
 
-**DetailOcclusion:** Enables the contribution from detail texture to occlusion layer.
-
-**EnableAlphaMask:** Allows to use Occlusion Alpha channel mask to mask the fully opaque parts.
-
-![2](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/opacitymask.gif)
 
 <br>
 
->Only for Transparent shader variants:
+>Only for Pantyhose shader variants:
 
 **DetailAlpha:** Allows to contribute the detail textures to the alpha channel.
 
