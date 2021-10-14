@@ -12,9 +12,6 @@ This shaders are ASE replicated vanilla AIT/Clothes True. Can be used for only f
 
 **Hanmen/Anisotropic Iridescent Pantyhose** - Special anisotropic transparent shader made for pantyhose and lace clothings. It has integrated DetailGlossMap texture and few new properties.
 
-![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/iri.gif)
-
-###### Iridescent specularity
 
 # Textures:
 
@@ -37,7 +34,7 @@ This shaders are ASE replicated vanilla AIT/Clothes True. Can be used for only f
 
 **DetailGlossMap2:** Grayscale height map (bump map). Same as vanilla. The shader automatically generates and blends normal from it. UV scaling controlled by DetailUV2. Masked by DetailMask G channel. The strength is controlled by DetailNormalMapScale2
 
-**MetallicGlossMap:** This is very important map, it's packed R channel for Glossiness, G for Emission Mask, B for Metallic. Linear colorspace.
+**MetallicGlossMap:** Packed Map. R - MetallicMap, G-Emission, B-Roughness. Can be leaved empty in most cases.
 
 **OcclusionMap:** This packed map, R - Occlusion map. G- Not used yet B - Tearings Mask, Alpha - Alpha mask for opaque parts. Linear colorspace.
 
