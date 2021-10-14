@@ -4,7 +4,7 @@ https://docs.unity3d.com/Manual/SL-SurfaceShaderLighting.html
 All shaders Forward Only. Based on this asset:
 https://assetstore.unity.com/packages/vfx/shaders/sas-standard-anisotropic-shader-51663
 
-The main goal of this shader is to make possible to create more realistic materials simulating different cloth properties.
+The main goal of this shader is to make possible to create more realistic materials simulating different fabric types like satin, carbon fiber or any type of sequins.
 
 # Variants
 
