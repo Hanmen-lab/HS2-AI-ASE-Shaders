@@ -110,6 +110,9 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 
 **FresnelBias:** Alpha fresnel bias.
 
+>Only for Pantyhose shader variants:
+
+**AlphaMin:** Used for masking alpha layer. Default is 0.75 The values higher than this will remain opaque, lower controls by AlphaMaster. Used for clothings that has static alpha channel.
 
 <br>
 
