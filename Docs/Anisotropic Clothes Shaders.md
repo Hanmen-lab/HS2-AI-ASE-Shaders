@@ -15,7 +15,7 @@ This shaders are ASE replicated vanilla AIT/Clothes True. Can be used for only f
 
 # Textures:
 
-
+![scheme](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/shader-aniso-scheme.png)
 
 **MainTex:** Basically this is a diffuse map, colorable parts should be grayscale. Alpha channel is also supported for cutoff. sRGB colorspace.
 
@@ -24,7 +24,6 @@ This shaders are ASE replicated vanilla AIT/Clothes True. Can be used for only f
 **ColorMask:** This is basically the same as vanilla. Color is black, Color2 is Red, Color3 is Green, Color4 is Blue. Default is black (All Color1). Linear colorspace. 
 
 >ColorMask should be set in the list. Can be leave empty in the Unity, unless you need Color4.
-
 
 **BumpMap:** Ordinary OpenGL normal map. The strength is controlled by BumpScale.
 
