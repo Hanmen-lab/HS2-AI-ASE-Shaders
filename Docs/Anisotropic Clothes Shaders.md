@@ -1,4 +1,8 @@
-This shaders are ASE replicated vanilla AIT/Clothes True. Can be used for only for the clothings.
+This shaders are ASE replicated vanilla AIT/Clothes True. Can be used for only for the clothings. This shaders using Custom Lighting model.
+https://docs.unity3d.com/Manual/SL-SurfaceShaderLighting.html
+
+All shaders Forward Only. Based on this asset:
+https://assetstore.unity.com/packages/vfx/shaders/sas-standard-anisotropic-shader-51663
 
 # Variants
 
@@ -41,6 +45,8 @@ This shaders are ASE replicated vanilla AIT/Clothes True. Can be used for only f
 
 **WeatheringMask:** Contains body parts information. Red - Front-Top, Green - Front-Bottom, Blue - Back-Top, Yellow(R+G) - Back-Bottom, Magenta(R+B) - Arms, Cyan(G+B) - Face. Linear colorspace.
 
+**FuzzTex:** Grayscale map used for rendering fuzz lighting.
+
 ![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/weathering.jpg)
 
 **WetnessMap:** R- Wetness Gloss, G - Wetness Bumps.
@@ -70,6 +76,7 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 
 **WeatheringAlbedo:** Controls weathering color. Leave default in most cases.
 
+**FuzzColor:** Controls fuzz lighting color.
 
 # Properties:
 
@@ -85,6 +92,12 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 
 **Reflection** Reflection part of specular highlights. Default is 1. You can turn it off in some cases.
 
+FuzzUV
+
+FuzzWrap
+
+
+<br>
 
 ###### Detail properties:
 
