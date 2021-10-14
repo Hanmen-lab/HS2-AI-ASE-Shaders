@@ -202,23 +202,6 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 
 <br>
 
->Only for Iridescent shader variants:
-
-**IriHue:** Controls color shift of the iridescent specularity.
-
-**IriSaturation:** Controls saturation of the iridescent specularity.
-
-**IriBrightness:** Controls brightness of the iridescent specularity.
-
-**IriContrast:** Controls contrast of the iridescent specularity.
-
-<br>
-
->Only for Cutoff shader variants:
-
-**Cutoff** Controls opacity clipping threshold. 
-
-
 ###### Wetness properties: Works only when ExGloss is > 0. Or the character wetness slider is used.
 
 **WetAlpha:** Controls the transparency level of OcclusionMap alpha.
@@ -234,6 +217,25 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 **WetOpacitySplats:** Controls the splats overall scale. Can be turned off by setting it 0.
 
 **WetBumpOffset:** Adds additional bump strenght when wetness is used.
+
+
+<br>
+
+>Only for Iridescent shader variants:
+
+**IriHue:** Controls color shift of the iridescent specularity.
+
+**IriSaturation:** Controls saturation of the iridescent specularity.
+
+**IriBrightness:** Controls brightness of the iridescent specularity.
+
+**IriContrast:** Controls contrast of the iridescent specularity.
+
+<br>
+
+>Only for Cutoff shader variants:
+
+**Cutoff** Controls opacity clipping threshold. 
 
 <br>
 
