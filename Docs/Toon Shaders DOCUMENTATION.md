@@ -1,10 +1,10 @@
-This shaders substitute standard AIT shaders. 
+This shaders substitute standard AIT shaders. This documentation will be covering only toon specified features.
 
 # Variants
 
-**Hanmen/Toon Body/Toon Body (Cartoon)** - shaders for body.
+**Hanmen/Toon Body/Toon Body** - shaders for body.
 
-**Hanmen/Toon Head/Toon Head (Cartoon)** - shaders for the head.
+**Hanmen/Toon Head/Toon Head** - shaders for the head.
 
 **Hanmen/Toon Hair** - shader for the hair.
 
@@ -16,8 +16,20 @@ This shaders substitute standard AIT shaders.
 
 **Hanmen/Toon Item Alpha** - Transparent shader for the accessory and studio items.
 
-**Hanmen/Toon Eye** - shader for eyes. (NEW)
+**Hanmen/Toon Eye** - shader for eyes.
 
-**Hanmen/Toon Tongue** - shader for tongue (NEW)
+**Hanmen/Toon Tongue** - shader for tongue
 
-**Hanmen/Toon Teeth** - shader for teeth. (NEW)
+**Hanmen/Toon Teeth** - shader for teeth.
+
+
+# Shading:
+
+Shading depends on several properties:
+
+**1st_ShadeColor:** First shading color.
+
+**2nd_ShadeColor:** Second shading color.
+
+![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/tg01.jpg)
+
