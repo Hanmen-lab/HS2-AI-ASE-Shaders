@@ -62,6 +62,8 @@ In non-photorealistic styles that includes Toon Shader, highlights are also plac
 
 **RimLight_InsideMask** Adjusts the power of the inside masking of the RimLight.
 
+![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/tg05.gif)
+
 **RimLight_FeatherOff** Rimlight smoothing. Can be used to make smooth or hard rimlight.
 
 **Rimlight_LightDirection** when set 1 only shows RimLight in the light’s direction.
