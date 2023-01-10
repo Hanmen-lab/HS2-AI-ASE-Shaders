@@ -40,3 +40,5 @@ Shading depends on several properties:
 **Shade2_Step:** Second shade step position. Default is 0.5 (center).
 
 **Shade2_Feather:** Second shade smoothness amount.  Can be used to make hard shading or smooth shading.
+
+![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/tg02.gif)
