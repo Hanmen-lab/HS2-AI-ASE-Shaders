@@ -45,6 +45,8 @@ Shading depends on several properties:
 
 # Rimlight:
 
+![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/tg03.jpg)
+
 RimLight is a technique in which light is set to shine on the rims of the object.
 In non-photorealistic styles that includes Toon Shader, highlights are also placed on the edges of objects to make it more visible, and it is also called RimLight.
 
@@ -64,4 +66,4 @@ In non-photorealistic styles that includes Toon Shader, highlights are also plac
 
 **Rimlight_LightDirection_MaskLevel** Adjusts the rim mask level in the light’s direction.
 
-![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/tg03.gif)
+
