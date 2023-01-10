@@ -49,10 +49,19 @@ RimLight is a technique in which light is set to shine on the rims of the object
 In non-photorealistic styles that includes Toon Shader, highlights are also placed on the edges of objects to make it more visible, and it is also called RimLight.
 
 **Rimlight** Toggles the rimlight strength. Linear from 0 to 1.
+
 **RimlightColor** Color of the rimlight. However if the object's metallic value is 1, the rimlight color will be matched the albedo.
+
 **Rimlight_NormalBlend** Set 1 when you want the normal map to influence the RimLight.
+
 **Rimlight_Power** Adjusts the RimLight’s power.
+
 **RimLight_InsideMask** Adjusts the power of the inside masking of the RimLight.
+
 **RimLight_FeatherOff** Rimlight smoothing. Can be used to make smooth or hard rimlight.
+
 **Rimlight_LightDirection** when set 1 only shows RimLight in the light’s direction.
+
 **Rimlight_LightDirection_MaskLevel** Adjusts the rim mask level in the light’s direction.
+
+![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/tg03.gif)
