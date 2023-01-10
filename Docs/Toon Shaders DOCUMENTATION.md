@@ -66,6 +66,8 @@ In non-photorealistic styles that includes Toon Shader, highlights are also plac
 
 **RimLight_FeatherOff** Rimlight smoothing. Can be used to make smooth or hard rimlight.
 
+![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/tg06.gif)
+
 **Rimlight_LightDirection** when set 1 only shows RimLight in the light’s direction.
 
 **Rimlight_LightDirection_MaskLevel** Adjusts the rim mask level in the light’s direction.
