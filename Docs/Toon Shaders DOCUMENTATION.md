@@ -56,6 +56,8 @@ In non-photorealistic styles that includes Toon Shader, highlights are also plac
 
 **Rimlight_NormalBlend** Set 1 when you want the normal map to influence the RimLight.
 
+![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/tg04.gif)
+
 **Rimlight_Power** Adjusts the RimLight’s power.
 
 **RimLight_InsideMask** Adjusts the power of the inside masking of the RimLight.
