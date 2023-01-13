@@ -78,16 +78,16 @@ In non-photorealistic styles that includes Toon Shader, highlights are also plac
 
 **SpecColor** Specular color. Can be set 1+
 
-**Specular_NormalBlend** 
+**Specular_NormalBlend** Normal Map level.
 
 ![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/tg08.gif)
 
 
-**Specular_Power** 
+**Specular_Power** Specular scale level
 
 ![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/tg09.gif)
 
 
-**Specular_Blur**
+**Specular_Blur** Specular blur amount. This setting essential for hard shading.
 
 ![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/tg10.gif)
