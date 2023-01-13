@@ -73,3 +73,21 @@ In non-photorealistic styles that includes Toon Shader, highlights are also plac
 **Rimlight_LightDirection_MaskLevel** Adjusts the rim mask level in the light’s direction.
 
 ![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/tg07.gif)
+
+# Specular:
+
+**SpecColor** Specular color. Can be set 1+
+
+**Specular_NormalBlend** 
+
+![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/tg08.gif)
+
+
+**Specular_Power** 
+
+![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/tg09.gif)
+
+
+**Specular_Blur**
+
+![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/tg10.gif)
