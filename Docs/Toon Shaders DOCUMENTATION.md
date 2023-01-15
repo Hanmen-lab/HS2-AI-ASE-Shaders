@@ -95,3 +95,11 @@ In non-photorealistic styles that includes Toon Shader, highlights are also plac
 **Lighting_GI** How much the cubemap or indirect lighting affects the shader.
 
 ![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/tg11.gif)
+
+# Outline:
+
+No outline for transparent shader variants. Outline depends on several properties:
+
+**Outline_Width** Width of the outline.
+
+**Outline_Color** Color of the outline.
