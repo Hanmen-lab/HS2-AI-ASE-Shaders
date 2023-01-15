@@ -82,12 +82,16 @@ In non-photorealistic styles that includes Toon Shader, highlights are also plac
 
 ![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/tg08.gif)
 
-
 **Specular_Power** Specular scale level
 
 ![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/tg09.gif)
 
-
 **Specular_Blur** Specular blur amount. This setting essential for hard shading.
 
 ![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/tg10.gif)
+
+# Indirect Lighting:
+
+**Lighting_GI** How much the cubemap or indirect lighting affects the shader.
+
+![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/tg11.gif)
