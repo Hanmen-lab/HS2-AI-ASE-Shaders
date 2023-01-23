@@ -1,5 +1,4 @@
-[![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/toon banner.jpg)](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/1f9e31632ca1fd39ebedede19776e7c8706ed256/Docs/toon%20banner.jpg)
-
+[![1]((https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/1f9e31632ca1fd39ebedede19776e7c8706ed256/Docs/toon%20banner.jpg))]
 This shaders substitute standard AIT shaders. This documentation will be covering only toon specified features.
 
 # Variants
