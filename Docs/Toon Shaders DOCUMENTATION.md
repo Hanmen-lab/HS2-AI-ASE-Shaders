@@ -1,7 +1,8 @@
-# Toon Shaders Guide
+# [Honey Select 2] Toon Shaders Guide
 
 ![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/1f9e31632ca1fd39ebedede19776e7c8706ed256/Docs/toon%20banner.jpg)
-This shaders substitute standard AIT shaders. This documentation will be covering only toon specified features.
+This shaders substitute standard AIT shaders. This documentation will be covering only toon specified features. 
+Can be obtained on my gumroad page: https://hanmen.gumroad.com/l/ilywp
 
 # Variants
 
