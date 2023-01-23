@@ -92,7 +92,7 @@ In non-photorealistic styles that includes Toon Shader, highlights are also plac
 
 # Indirect Lighting:
 
-**Lighting_GI** How much the cubemap or indirect lighting affects the shader.
+**Lighting_GI** How much the cubemap or indirect lighting affects the shader. Basically I reccomend to keep it 0 to maintain the cartoonish looks and easy shading tuning. Otherwise, for some scenes use about 0.2.
 
 ![1](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/Docs/tg11.gif)
 
