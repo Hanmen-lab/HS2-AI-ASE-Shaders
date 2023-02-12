@@ -10,7 +10,6 @@ In fact StudioNeoV2 has Graphicss plugin which is very powerful tools to adjust 
 Since any good raytracing options are not available right now, I'll be using only available Directional lights, Point lights and Spot Lights to imitate Global illumination.
 
 Before we start, I wanted to admit some options:
-* Always use **Deferred rendering.** It supports multiple light sources, and potentially can provide more correct lighting.
 * **Color grading.** By default the main game and studio using LDR (Low Dynamic Range) colors. Which may looks cartoonish and saturated. 
 I always reccomend to switch to HDR - Neutral color preset, and disable all the color corrections. 
 With this you will get linear colors and overall cleaner look best for the fresh start the new scene and use color correction at the end.
