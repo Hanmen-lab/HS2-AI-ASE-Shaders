@@ -14,8 +14,5 @@ Supports most of the game features, like color masks, textures, and properties p
 
 Just put the .shader file in any Unity project folder and then you can apply it in your materials.
 
-![](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/3.png)
-![](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob/master/2.png)
-
 ### DOWNLOAD:
 - [Shader Pack Master](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/archive/master.zip)
