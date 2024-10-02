@@ -1,7 +1,5 @@
-# 【HS2/AI】 ASE Shaders
-[![N|Solid](http://amplify.pt/wp-content/uploads/2016/08/icon_precise_v1_90.png)](http://amplify.pt/unity/amplify-shader-editor/)
 
-ASE-Ready shaders for Unity, mainly for modding 【AI Girl】 & 【HoneySelect2】. Can be edited in Amplify Shader Editor. 
+Shaders for Unity, mainly for modding 【AI Girl】 & 【HoneySelect2】. 
 
 Supports most of the game features, like color masks, textures, and properties plus some additional features.
 
