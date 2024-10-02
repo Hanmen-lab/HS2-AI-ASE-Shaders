@@ -44,13 +44,13 @@ Example: [wetness_texture](https://github.com/Hanmen-lab/HS2-AI-ASE-Shaders/blob
 
 # Colors:
 
-**BaseColor:** Basically master color, leave 1,1,1,1 in most cases.
+- **BaseColor:** Basically master color, leave 1,1,1,1 in most cases.
 
-**Color:** Basically master color, leave 1,1,1,1 in most cases.
+- **Color:** Basically master color, leave 1,1,1,1 in most cases.
 
-**EmissionColor:** Controls emission, Masked by MetallicGlossMap green channel.
+- **EmissionColor:** Controls emission, Masked by MetallicGlossMap green channel.
 
-**WeatheringAlbedo:** Controls weathering color. Leave default in most cases.
+- **WeatheringAlbedo:** Controls weathering color. Leave default in most cases.
 
 
 # Properties:
