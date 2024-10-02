@@ -225,7 +225,6 @@ Shader "Hanmen/Clothes True Alpha"
 		UNITY_DECLARE_TEX2D_NOSAMPLER(_DetailMask);
 		SamplerState sampler_DetailMask;
 		uniform float _WeatheringGloss;
-		uniform float4 _Color4;
 		uniform float _DetailMetallicScale2;
 		UNITY_DECLARE_TEX2D_NOSAMPLER(_MainTex);
 		SamplerState sampler_MainTex;
@@ -239,6 +238,7 @@ Shader "Hanmen/Clothes True Alpha"
 		uniform float _EmissionStrength;
 		UNITY_DECLARE_TEX2D_NOSAMPLER(_MetallicGlossMap);
 		SamplerState sampler_MetallicGlossMap;
+		uniform float4 _Color4;
 		uniform float _CullMode;
 		uniform float _NormalBackDirInvert;
 		SamplerState sampler_trilinear_repeat;
@@ -487,7 +487,7 @@ Shader "Hanmen/Clothes True Alpha"
 			float outAlpha1663 = saturate( ( fresnelNode1664 + saturate( ( ( AlphaInput195_g200 * _AlphaMaster * saturate( pow( OccAlpha219_g200 , ( _WetAlpha * ExGloss298_g200 ) ) ) ) + WeatheringAlpha2466_g200 ) ) ) );
 			float2 uv_ColorMask304_g200 = i.uv_texcoord;
 			float ColorMask4347_g200 = SAMPLE_TEXTURE2D( _ColorMask, sampler_linear_repeat, uv_ColorMask304_g200 ).b;
-			float3 lerpResult815_g200 = lerp( (tex2DNode576_g200).rgb , (_Color4).rgb , ( _Color4.a * ColorMask4347_g200 ));
+			float3 lerpResult815_g200 = lerp( (tex2DNode576_g200).rgb , (tex2DNode576_g200).rgb , ( _Color4.a * ColorMask4347_g200 ));
 			float3 temp_cast_1 = (1.0).xxx;
 			float Carvature270_g200 = tex2DNode196_g200.r;
 			float3 lerpResult331_g200 = lerp( ( lerpResult815_g200 * (_BaseColor).rgb ) , temp_cast_1 , ( Carvature270_g200 * _CarvatureStrength ));
@@ -811,7 +811,7 @@ Shader "Hanmen/Clothes True Alpha"
 }
 /*ASEBEGIN
 Version=18935
-228;90;1221;718;-6532.552;1674.275;1;True;False
+283.6;226;1221;706;-5978.468;2080.914;2.190818;True;False
 Node;AmplifyShaderEditor.FunctionNode;1595;5851.836,-2626.556;Inherit;False;Iridiscence;86;;195;70fe6a1ace0a29b439fe6d71982b6fe0;0;1;1;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1611;6175.968,-2151.94;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.ComponentMaskNode;1608;6495.265,-2283.345;Inherit;False;True;True;True;False;1;0;COLOR;0,0,0,0;False;1;FLOAT3;0
@@ -874,9 +874,9 @@ Node;AmplifyShaderEditor.SaturateNode;1669;6654.888,-1494.96;Inherit;False;1;0;F
 Node;AmplifyShaderEditor.RangedFloatNode;1670;5824.217,-1201.951;Inherit;False;Property;_FresnelBias;FresnelBias;75;0;Create;True;0;0;0;True;0;False;0;0;0;1;0;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;1671;5829.225,-1118.279;Inherit;False;Property;_FresnelScale;FresnelScale;76;0;Create;True;0;0;0;True;0;False;0;1.37;0;10;0;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;1672;5830.705,-1037.22;Inherit;False;Property;_FresnelPower;FresnelPower;74;1;[Header];Create;True;1;Fresnel Settings;0;0;True;0;False;3;3.48;0;10;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RegisterLocalVarNode;1663;6840.496,-1501.047;Inherit;False;outAlpha;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1632;8767.474,-1668.435;Inherit;False;1663;outAlpha;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.StaticSwitch;1673;6919.552,-1181.275;Inherit;False;Property;_SHADERTYPE_CLOTHING;SHADERTYPE_CLOTHING;94;0;Create;False;0;0;0;True;1;HideInInspector;False;0;1;1;True;_SHADERTYPE_CLOTHING;Toggle;2;Key0;Key1;Create;False;False;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode;1663;6899.648,-1503.238;Inherit;False;outAlpha;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
 WireConnection;1595;1;1650;557
 WireConnection;1611;0;1595;0
 WireConnection;1608;0;1607;0
@@ -947,4 +947,4 @@ WireConnection;1668;1;1621;0
 WireConnection;1669;0;1668;0
 WireConnection;1663;0;1669;0
 ASEEND*/
-//CHKSM=496E822DD7307323F763B2C8DEA2B772A355FC52
+//CHKSM=D8FE840265B28F6174F657022CDAD4F0B59DA1AC
