@@ -691,7 +691,7 @@ Shader "Hanmen/Clothes True Alpha"
 			float sin850_g200 = sin( ( _UVScrollRotator * UNITY_PI ) );
 			float2 rotator850_g200 = mul( panner841_g200 - float2( 0.5,0.5 ) , float2x2( cos850_g200 , -sin850_g200 , sin850_g200 , cos850_g200 )) + float2( 0.5,0.5 );
 			float WeatheringBumpMask718_g200 = tex2DNode177_g200.b;
-			float3 outEmission1625 = ( ( EmissionMask799_g200 * staticSwitch837_g200 * _EmissionStrength * SAMPLE_TEXTURE2D( _EffectMap, sampler_MainTex, rotator850_g200 ).r ) + ( ( WeatheringAlpha2466_g200 * WeatheringBumpMask718_g200 ) * _WeatheringEmission ) );
+			float3 outEmission1625 = ( ( EmissionMask799_g200 * staticSwitch837_g200 * _EmissionStrength * (SAMPLE_TEXTURE2D( _EffectMap, sampler_MainTex, rotator850_g200 )).rgb ) + ( ( WeatheringAlpha2466_g200 * WeatheringBumpMask718_g200 ) * _WeatheringEmission ) );
 			float3 normalizeResult61_g196 = normalize( (WorldNormalVector( i , outNormal1623 )) );
 			float3 normal2_g197 = normalizeResult61_g196;
 			float3 localGI2_g197 = GI2_g197( normal2_g197 );
@@ -811,7 +811,7 @@ Shader "Hanmen/Clothes True Alpha"
 }
 /*ASEBEGIN
 Version=18935
-283.6;226;1221;706;-5978.468;2080.914;2.190818;True;False
+283.6;194;1221;738;-4139.014;3405.76;3.741413;True;False
 Node;AmplifyShaderEditor.FunctionNode;1595;5851.836,-2626.556;Inherit;False;Iridiscence;86;;195;70fe6a1ace0a29b439fe6d71982b6fe0;0;1;1;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1611;6175.968,-2151.94;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.ComponentMaskNode;1608;6495.265,-2283.345;Inherit;False;True;True;True;False;1;0;COLOR;0,0,0,0;False;1;FLOAT3;0
@@ -829,7 +829,6 @@ Node;AmplifyShaderEditor.WireNode;1610;6103.462,-2773.03;Inherit;False;1;0;FLOAT
 Node;AmplifyShaderEditor.DiffuseAndSpecularFromMetallicNode;1606;6673.288,-2560.237;Inherit;False;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;3;FLOAT3;0;FLOAT3;1;FLOAT;2
 Node;AmplifyShaderEditor.StaticSwitch;1602;7477.574,-2540.774;Inherit;False;Property;_SpecularSetup;SpecularSetup;91;0;Create;True;0;0;0;False;0;False;1;0;0;True;;Toggle;2;Key0;Key1;Create;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.StaticSwitch;1603;6996.55,-2825.649;Inherit;False;Property;_SpecularSetup2;SpecularSetup;91;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;1602;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.RegisterLocalVarNode;1604;7287.419,-2825.826;Inherit;False;OutAlbedo;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1627;5917.078,-2186.828;Inherit;False;outSmoothness;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1605;7767.688,-2537.081;Inherit;False;OutSpecular;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1623;5911.21,-2356.282;Inherit;False;outNormal;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
@@ -877,6 +876,7 @@ Node;AmplifyShaderEditor.RangedFloatNode;1672;5830.705,-1037.22;Inherit;False;Pr
 Node;AmplifyShaderEditor.GetLocalVarNode;1632;8767.474,-1668.435;Inherit;False;1663;outAlpha;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.StaticSwitch;1673;6919.552,-1181.275;Inherit;False;Property;_SHADERTYPE_CLOTHING;SHADERTYPE_CLOTHING;94;0;Create;False;0;0;0;True;1;HideInInspector;False;0;1;1;True;_SHADERTYPE_CLOTHING;Toggle;2;Key0;Key1;Create;False;False;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1663;6899.648,-1503.238;Inherit;False;outAlpha;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode;1604;7399.661,-2822.084;Inherit;False;OutAlbedo;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 WireConnection;1595;1;1650;557
 WireConnection;1611;0;1595;0
 WireConnection;1608;0;1607;0
@@ -903,7 +903,6 @@ WireConnection;1602;1;1606;1
 WireConnection;1602;0;1601;1
 WireConnection;1603;1;1606;0
 WireConnection;1603;0;1610;0
-WireConnection;1604;0;1603;0
 WireConnection;1627;0;1650;560
 WireConnection;1605;0;1602;0
 WireConnection;1623;0;1650;557
@@ -946,5 +945,6 @@ WireConnection;1668;0;1664;0
 WireConnection;1668;1;1621;0
 WireConnection;1669;0;1668;0
 WireConnection;1663;0;1669;0
+WireConnection;1604;0;1603;0
 ASEEND*/
-//CHKSM=D8FE840265B28F6174F657022CDAD4F0B59DA1AC
+//CHKSM=099D5071956892E1814D5757F876FDFAFDC0D644

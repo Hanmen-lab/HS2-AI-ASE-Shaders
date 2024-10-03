@@ -620,7 +620,7 @@ Shader "Hanmen/Item Alpha"
 			float sin421_g185 = sin( ( _UVScrollRotator * UNITY_PI ) );
 			float2 rotator421_g185 = mul( panner412_g185 - float2( 0.5,0.5 ) , float2x2( cos421_g185 , -sin421_g185 , sin421_g185 , cos421_g185 )) + float2( 0.5,0.5 );
 			float EmissionMask384_g185 = tex2DNode139_g185.g;
-			float3 outEmission1463 = ( ( staticSwitch404_g185 * _EmissionStrength * SAMPLE_TEXTURE2D( _EffectMap, sampler_OcclusionMap, rotator421_g185 ).r ) * EmissionMask384_g185 );
+			float3 outEmission1463 = ( ( staticSwitch404_g185 * _EmissionStrength * (SAMPLE_TEXTURE2D( _EffectMap, sampler_OcclusionMap, rotator421_g185 )).rgb ) * EmissionMask384_g185 );
 			float3 normalizeResult61_g183 = normalize( (WorldNormalVector( i , outNormal1461 )) );
 			float3 normal2_g184 = normalizeResult61_g183;
 			float3 localGI2_g184 = GI2_g184( normal2_g184 );
@@ -739,7 +739,7 @@ Shader "Hanmen/Item Alpha"
 }
 /*ASEBEGIN
 Version=18935
-103.6;164.4;1221;718;4461.895;1985.849;2.44503;True;False
+283.6;207.6;1221;725;4461.895;1987.072;2.44503;True;False
 Node;AmplifyShaderEditor.FunctionNode;1433;-4200.16,-2821.338;Inherit;False;Iridiscence;85;;180;70fe6a1ace0a29b439fe6d71982b6fe0;0;1;1;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.ColorNode;1441;-3816.678,-2408.3;Inherit;False;Property;_SpecColor;SpecColor;91;0;Fetch;True;0;0;0;True;0;False;0.5,0.5,0.5,1;0,0,0,0;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.WireNode;1448;-3949.412,-2279.099;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
@@ -807,7 +807,7 @@ Node;AmplifyShaderEditor.ClipNode;1455;-4318.84,-2063.123;Inherit;False;3;0;FLOA
 Node;AmplifyShaderEditor.RangedFloatNode;1485;-4571.473,-2011.529;Inherit;False;Constant;_Float21;Float 21;9;0;Create;True;0;0;0;False;0;False;0.002;0;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;1505;-4058.18,-1990.171;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;1506;-4371.706,-1892.308;Inherit;False;Property;_alpha;alpha;2;0;Create;True;0;0;0;False;0;False;0;0;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;1507;-2999.767,-1445.497;Inherit;False;Property;_SHADERTYPE_ITEM;SHADERTYPE_ITEM;93;0;Create;False;0;0;0;True;1;HideInInspector;False;0;1;1;True;_SHADERTYPE_ITEM;Toggle;2;Key0;Key1;Create;False;False;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch;1507;-2747.929,-1386.816;Inherit;False;Property;_SHADERTYPE_ITEM;SHADERTYPE_ITEM;93;0;Create;False;0;0;0;True;1;HideInInspector;False;0;1;1;True;_SHADERTYPE_ITEM;Toggle;2;Key0;Key1;Create;False;False;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
 WireConnection;1433;1;1482;342
 WireConnection;1448;0;1433;0
 WireConnection;1449;0;1448;0
@@ -880,4 +880,4 @@ WireConnection;1455;2;1485;0
 WireConnection;1505;0;1455;0
 WireConnection;1505;1;1506;0
 ASEEND*/
-//CHKSM=20625C49853A3B41A64FE6D69A954206863CC82A
+//CHKSM=5D4F7DBED1FFF18ECAC2C5019BEA799B6461C720
