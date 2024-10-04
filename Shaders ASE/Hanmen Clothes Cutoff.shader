@@ -125,7 +125,6 @@ Shader "Hanmen/Clothes True Cutoff"
 			ColorMask RGBA
 			ZWrite On
 			ZTest LEqual
-			Offset 0 , 0
 			
 			CGPROGRAM
 			#if defined(SHADER_API_GLCORE) || defined(SHADER_API_GLES) || defined(SHADER_API_GLES3) || defined(SHADER_API_D3D9)
@@ -341,12 +340,12 @@ Shader "Hanmen/Clothes True Cutoff"
 				return inVec* rsqrt( dp3);
 			}
 			
-			float getInterleavedGradientNoise8Bit9_g486( int x, int y )
+			float getInterleavedGradientNoise8Bit9_g547( int x, int y )
 			{
 				return frac(52.9829189*frac(0.06711056*x + 0.00583715*y));
 			}
 			
-			float IGNAnimated12_g485( float2 uv, float iFrame )
+			float IGNAnimated12_g546( float2 uv, float iFrame )
 			{
 				    uint frame = uint(iFrame);
 				    
@@ -826,25 +825,26 @@ Shader "Hanmen/Clothes True Cutoff"
 				float4 screenPos = i.ase_texcoord9;
 				float4 ase_screenPosNorm = screenPos / screenPos.w;
 				ase_screenPosNorm.z = ( UNITY_NEAR_CLIP_VALUE >= 0 ) ? ase_screenPosNorm.z : ase_screenPosNorm.z * 0.5 + 0.5;
-				float2 temp_output_1_0_g486 = ( (ase_screenPosNorm).xy * (_ScreenParams).xy );
-				int x9_g486 = (int)(temp_output_1_0_g486).x;
-				int y9_g486 = (int)(temp_output_1_0_g486).y;
-				float localgetInterleavedGradientNoise8Bit9_g486 = getInterleavedGradientNoise8Bit9_g486( x9_g486 , y9_g486 );
-				float3 tanNormal1968 = OutNormal1684;
+				float2 temp_output_1_0_g547 = ( (ase_screenPosNorm).xy * (_ScreenParams).xy );
+				int x9_g547 = (int)(temp_output_1_0_g547).x;
+				int y9_g547 = (int)(temp_output_1_0_g547).y;
+				float localgetInterleavedGradientNoise8Bit9_g547 = getInterleavedGradientNoise8Bit9_g547( x9_g547 , y9_g547 );
+				ase_worldViewDir = Unity_SafeNormalize( ase_worldViewDir );
+				float3 tanNormal1968 = NormalFace1945;
 				float3 worldNormal1968 = normalize( float3(dot(tanToWorld0,tanNormal1968), dot(tanToWorld1,tanNormal1968), dot(tanToWorld2,tanNormal1968)) );
 				float OccAlpha219_g545 = tex2DNode196_g545.a;
 				float OutAlpha1871 = saturate( ( ( AlphaInput195_g545 * _AlphaMaster * saturate( pow( OccAlpha219_g545 , ( _WetAlpha * ExGloss298_g545 ) ) ) ) + WeatheringAlpha2466_g545 ) );
-				float fresnelNdotV1964 = dot( worldNormal1968, ase_worldViewDir );
-				float fresnelNode1964 = ( OutAlpha1871 + _FresnelScale * pow( 1.0 - fresnelNdotV1964, _FresnelPower ) );
-				float2 temp_output_1_0_g485 = ( (ase_screenPosNorm).xy * (_ScreenParams).xy );
-				float2 uv12_g485 = temp_output_1_0_g485;
-				float mulTime15_g485 = _Time.y * 60.0;
-				float iFrame12_g485 = mulTime15_g485;
-				float localIGNAnimated12_g485 = IGNAnimated12_g485( uv12_g485 , iFrame12_g485 );
+				float fresnelNdotV1964 = dot( normalize( worldNormal1968 ), ase_worldViewDir );
+				float fresnelNode1964 = ( OutAlpha1871 + _FresnelScale * pow( max( 1.0 - fresnelNdotV1964 , 0.0001 ), _FresnelPower ) );
+				float2 temp_output_1_0_g546 = ( (ase_screenPosNorm).xy * (_ScreenParams).xy );
+				float2 uv12_g546 = temp_output_1_0_g546;
+				float mulTime15_g546 = _Time.y * 60.0;
+				float iFrame12_g546 = mulTime15_g546;
+				float localIGNAnimated12_g546 = IGNAnimated12_g546( uv12_g546 , iFrame12_g546 );
 				#ifdef _TEMPORALFILTER_ON
-				float staticSwitch1888 = step( localIGNAnimated12_g485 , fresnelNode1964 );
+				float staticSwitch1888 = step( localIGNAnimated12_g546 , fresnelNode1964 );
 				#else
-				float staticSwitch1888 = step( localgetInterleavedGradientNoise8Bit9_g486 , fresnelNode1964 );
+				float staticSwitch1888 = step( localgetInterleavedGradientNoise8Bit9_g547 , fresnelNode1964 );
 				#endif
 				clip( ( OutOp1691 * staticSwitch1888 ) - _Cutoff);
 				float Clip1873 = 1.0;
@@ -1079,12 +1079,12 @@ Shader "Hanmen/Clothes True Cutoff"
 				return inVec* rsqrt( dp3);
 			}
 			
-			float getInterleavedGradientNoise8Bit9_g486( int x, int y )
+			float getInterleavedGradientNoise8Bit9_g547( int x, int y )
 			{
 				return frac(52.9829189*frac(0.06711056*x + 0.00583715*y));
 			}
 			
-			float IGNAnimated12_g485( float2 uv, float iFrame )
+			float IGNAnimated12_g546( float2 uv, float iFrame )
 			{
 				    uint frame = uint(iFrame);
 				    
@@ -1563,25 +1563,26 @@ Shader "Hanmen/Clothes True Cutoff"
 				float4 screenPos = i.ase_texcoord9;
 				float4 ase_screenPosNorm = screenPos / screenPos.w;
 				ase_screenPosNorm.z = ( UNITY_NEAR_CLIP_VALUE >= 0 ) ? ase_screenPosNorm.z : ase_screenPosNorm.z * 0.5 + 0.5;
-				float2 temp_output_1_0_g486 = ( (ase_screenPosNorm).xy * (_ScreenParams).xy );
-				int x9_g486 = (int)(temp_output_1_0_g486).x;
-				int y9_g486 = (int)(temp_output_1_0_g486).y;
-				float localgetInterleavedGradientNoise8Bit9_g486 = getInterleavedGradientNoise8Bit9_g486( x9_g486 , y9_g486 );
-				float3 tanNormal1968 = OutNormal1684;
+				float2 temp_output_1_0_g547 = ( (ase_screenPosNorm).xy * (_ScreenParams).xy );
+				int x9_g547 = (int)(temp_output_1_0_g547).x;
+				int y9_g547 = (int)(temp_output_1_0_g547).y;
+				float localgetInterleavedGradientNoise8Bit9_g547 = getInterleavedGradientNoise8Bit9_g547( x9_g547 , y9_g547 );
+				ase_worldViewDir = Unity_SafeNormalize( ase_worldViewDir );
+				float3 tanNormal1968 = NormalFace1945;
 				float3 worldNormal1968 = normalize( float3(dot(tanToWorld0,tanNormal1968), dot(tanToWorld1,tanNormal1968), dot(tanToWorld2,tanNormal1968)) );
 				float OccAlpha219_g545 = tex2DNode196_g545.a;
 				float OutAlpha1871 = saturate( ( ( AlphaInput195_g545 * _AlphaMaster * saturate( pow( OccAlpha219_g545 , ( _WetAlpha * ExGloss298_g545 ) ) ) ) + WeatheringAlpha2466_g545 ) );
-				float fresnelNdotV1964 = dot( worldNormal1968, ase_worldViewDir );
-				float fresnelNode1964 = ( OutAlpha1871 + _FresnelScale * pow( 1.0 - fresnelNdotV1964, _FresnelPower ) );
-				float2 temp_output_1_0_g485 = ( (ase_screenPosNorm).xy * (_ScreenParams).xy );
-				float2 uv12_g485 = temp_output_1_0_g485;
-				float mulTime15_g485 = _Time.y * 60.0;
-				float iFrame12_g485 = mulTime15_g485;
-				float localIGNAnimated12_g485 = IGNAnimated12_g485( uv12_g485 , iFrame12_g485 );
+				float fresnelNdotV1964 = dot( normalize( worldNormal1968 ), ase_worldViewDir );
+				float fresnelNode1964 = ( OutAlpha1871 + _FresnelScale * pow( max( 1.0 - fresnelNdotV1964 , 0.0001 ), _FresnelPower ) );
+				float2 temp_output_1_0_g546 = ( (ase_screenPosNorm).xy * (_ScreenParams).xy );
+				float2 uv12_g546 = temp_output_1_0_g546;
+				float mulTime15_g546 = _Time.y * 60.0;
+				float iFrame12_g546 = mulTime15_g546;
+				float localIGNAnimated12_g546 = IGNAnimated12_g546( uv12_g546 , iFrame12_g546 );
 				#ifdef _TEMPORALFILTER_ON
-				float staticSwitch1888 = step( localIGNAnimated12_g485 , fresnelNode1964 );
+				float staticSwitch1888 = step( localIGNAnimated12_g546 , fresnelNode1964 );
 				#else
-				float staticSwitch1888 = step( localgetInterleavedGradientNoise8Bit9_g486 , fresnelNode1964 );
+				float staticSwitch1888 = step( localgetInterleavedGradientNoise8Bit9_g547 , fresnelNode1964 );
 				#endif
 				clip( ( OutOp1691 * staticSwitch1888 ) - _Cutoff);
 				float Clip1873 = 1.0;
@@ -1610,7 +1611,6 @@ Shader "Hanmen/Clothes True Cutoff"
 			ColorMask RGBA
 			ZWrite On
 			ZTest LEqual
-			Offset 0 , 0
 			
 			CGPROGRAM
 			#if defined(SHADER_API_GLCORE) || defined(SHADER_API_GLES) || defined(SHADER_API_GLES3) || defined(SHADER_API_D3D9)
@@ -1824,12 +1824,12 @@ Shader "Hanmen/Clothes True Cutoff"
 				return ShadeSH9(half4(normal, 1.0));
 			}
 			
-			float getInterleavedGradientNoise8Bit9_g486( int x, int y )
+			float getInterleavedGradientNoise8Bit9_g547( int x, int y )
 			{
 				return frac(52.9829189*frac(0.06711056*x + 0.00583715*y));
 			}
 			
-			float IGNAnimated12_g485( float2 uv, float iFrame )
+			float IGNAnimated12_g546( float2 uv, float iFrame )
 			{
 				    uint frame = uint(iFrame);
 				    
@@ -2192,25 +2192,26 @@ Shader "Hanmen/Clothes True Cutoff"
 				float4 screenPos = i.ase_texcoord6;
 				float4 ase_screenPosNorm = screenPos / screenPos.w;
 				ase_screenPosNorm.z = ( UNITY_NEAR_CLIP_VALUE >= 0 ) ? ase_screenPosNorm.z : ase_screenPosNorm.z * 0.5 + 0.5;
-				float2 temp_output_1_0_g486 = ( (ase_screenPosNorm).xy * (_ScreenParams).xy );
-				int x9_g486 = (int)(temp_output_1_0_g486).x;
-				int y9_g486 = (int)(temp_output_1_0_g486).y;
-				float localgetInterleavedGradientNoise8Bit9_g486 = getInterleavedGradientNoise8Bit9_g486( x9_g486 , y9_g486 );
-				float3 tanNormal1968 = OutNormal1684;
+				float2 temp_output_1_0_g547 = ( (ase_screenPosNorm).xy * (_ScreenParams).xy );
+				int x9_g547 = (int)(temp_output_1_0_g547).x;
+				int y9_g547 = (int)(temp_output_1_0_g547).y;
+				float localgetInterleavedGradientNoise8Bit9_g547 = getInterleavedGradientNoise8Bit9_g547( x9_g547 , y9_g547 );
+				ase_worldViewDir = Unity_SafeNormalize( ase_worldViewDir );
+				float3 tanNormal1968 = NormalFace1945;
 				float3 worldNormal1968 = normalize( float3(dot(tanToWorld0,tanNormal1968), dot(tanToWorld1,tanNormal1968), dot(tanToWorld2,tanNormal1968)) );
 				float OccAlpha219_g545 = tex2DNode196_g545.a;
 				float OutAlpha1871 = saturate( ( ( AlphaInput195_g545 * _AlphaMaster * saturate( pow( OccAlpha219_g545 , ( _WetAlpha * ExGloss298_g545 ) ) ) ) + WeatheringAlpha2466_g545 ) );
-				float fresnelNdotV1964 = dot( worldNormal1968, ase_worldViewDir );
-				float fresnelNode1964 = ( OutAlpha1871 + _FresnelScale * pow( 1.0 - fresnelNdotV1964, _FresnelPower ) );
-				float2 temp_output_1_0_g485 = ( (ase_screenPosNorm).xy * (_ScreenParams).xy );
-				float2 uv12_g485 = temp_output_1_0_g485;
-				float mulTime15_g485 = _Time.y * 60.0;
-				float iFrame12_g485 = mulTime15_g485;
-				float localIGNAnimated12_g485 = IGNAnimated12_g485( uv12_g485 , iFrame12_g485 );
+				float fresnelNdotV1964 = dot( normalize( worldNormal1968 ), ase_worldViewDir );
+				float fresnelNode1964 = ( OutAlpha1871 + _FresnelScale * pow( max( 1.0 - fresnelNdotV1964 , 0.0001 ), _FresnelPower ) );
+				float2 temp_output_1_0_g546 = ( (ase_screenPosNorm).xy * (_ScreenParams).xy );
+				float2 uv12_g546 = temp_output_1_0_g546;
+				float mulTime15_g546 = _Time.y * 60.0;
+				float iFrame12_g546 = mulTime15_g546;
+				float localIGNAnimated12_g546 = IGNAnimated12_g546( uv12_g546 , iFrame12_g546 );
 				#ifdef _TEMPORALFILTER_ON
-				float staticSwitch1888 = step( localIGNAnimated12_g485 , fresnelNode1964 );
+				float staticSwitch1888 = step( localIGNAnimated12_g546 , fresnelNode1964 );
 				#else
-				float staticSwitch1888 = step( localgetInterleavedGradientNoise8Bit9_g486 , fresnelNode1964 );
+				float staticSwitch1888 = step( localgetInterleavedGradientNoise8Bit9_g547 , fresnelNode1964 );
 				#endif
 				clip( ( OutOp1691 * staticSwitch1888 ) - _Cutoff);
 				float Clip1873 = 1.0;
@@ -2229,7 +2230,7 @@ Shader "Hanmen/Clothes True Cutoff"
 		Pass
 		{
 			CGINCLUDE
-			#pragma target 3.0
+			#pragma target 5.0
 			ENDCG
 			Blend Off
 			AlphaToMask Off
@@ -2241,6 +2242,13 @@ Shader "Hanmen/Clothes True Cutoff"
 			ZWrite On
 			ZTest LEqual
 			CGPROGRAM
+			#if defined(SHADER_API_GLCORE) || defined(SHADER_API_GLES) || defined(SHADER_API_GLES3) || defined(SHADER_API_D3D9)
+			#define FRONT_FACE_SEMANTIC VFACE
+			#define FRONT_FACE_TYPE float
+			#else
+			#define FRONT_FACE_SEMANTIC SV_IsFrontFace
+			#define FRONT_FACE_TYPE bool
+			#endif
 			#define ASE_USING_SAMPLING_MACROS 1
 
 			#pragma vertex vert
@@ -2257,6 +2265,7 @@ Shader "Hanmen/Clothes True Cutoff"
 			#include "UnityCG.cginc"
             #include "UnityShaderVariables.cginc"
 			#include "UnityStandardUtils.cginc"
+			#include "UnityStandardBRDF.cginc"
 			#define ASE_NEEDS_VERT_NORMAL
 			#pragma shader_feature _SHADERTYPE_CLOTHING
 			#pragma multi_compile __ _EMISSIONCOLORTEXBASE_ON
@@ -2350,6 +2359,7 @@ Shader "Hanmen/Clothes True Cutoff"
 			UNITY_DECLARE_TEX2D_NOSAMPLER(_MetallicGlossMap);
 			SamplerState sampler_MetallicGlossMap;
 			uniform float4 _Color4;
+			uniform float _NormalBackDirInvert;
 			SamplerState sampler_trilinear_repeat;
 			SamplerState sampler_linear_repeat;
 			uniform float _FresnelScale;
@@ -2417,7 +2427,7 @@ Shader "Hanmen/Clothes True Cutoff"
 				return o;
 			}
 			
-			float4 frag (v2f i 
+			float4 frag (v2f i , FRONT_FACE_TYPE ase_vface : FRONT_FACE_SEMANTIC
 			#if !defined( CAN_SKIP_VPOS )
 			, UNITY_VPOS_TYPE vpos : VPOS
 			#endif			
@@ -2434,7 +2444,7 @@ Shader "Hanmen/Clothes True Cutoff"
 				float OutOp1691 = ( step( pow( ( 1.0 - clampResult780_g545 ) , 0.2 ) , pow( TearingsMask340_g545 , 0.5 ) ) * AlphaInput195_g545 );
 				float3 ase_worldPos = i.ase_texcoord2.xyz;
 				float3 ase_worldViewDir = UnityWorldSpaceViewDir(ase_worldPos);
-				ase_worldViewDir = normalize(ase_worldViewDir);
+				ase_worldViewDir = Unity_SafeNormalize( ase_worldViewDir );
 				float2 uv_BumpMap402_g545 = i.ase_texcoord1.xy;
 				float WetBumpOffset303_g545 = _WetBumpOffset;
 				float ExGloss298_g545 = _ExGloss;
@@ -2544,19 +2554,21 @@ Shader "Hanmen/Clothes True Cutoff"
 				float3 normalizeResult564_g545 = normalize( lerpResult87_g545 );
 				float3 temp_output_1979_557 = normalizeResult564_g545;
 				float3 OutNormal1684 = temp_output_1979_557;
+				float3 switchResult1939 = (((ase_vface>0)?(OutNormal1684):(-OutNormal1684)));
+				float3 NormalFace1945 = ( _NormalBackDirInvert == 1.0 ? switchResult1939 : OutNormal1684 );
 				float3 ase_worldTangent = i.ase_texcoord3.xyz;
 				float3 ase_worldNormal = i.ase_texcoord4.xyz;
 				float3 ase_worldBitangent = i.ase_texcoord5.xyz;
 				float3 tanToWorld0 = float3( ase_worldTangent.x, ase_worldBitangent.x, ase_worldNormal.x );
 				float3 tanToWorld1 = float3( ase_worldTangent.y, ase_worldBitangent.y, ase_worldNormal.y );
 				float3 tanToWorld2 = float3( ase_worldTangent.z, ase_worldBitangent.z, ase_worldNormal.z );
-				float3 tanNormal1968 = OutNormal1684;
+				float3 tanNormal1968 = NormalFace1945;
 				float3 worldNormal1968 = normalize( float3(dot(tanToWorld0,tanNormal1968), dot(tanToWorld1,tanNormal1968), dot(tanToWorld2,tanNormal1968)) );
 				float OccAlpha219_g545 = tex2DNode196_g545.a;
 				float WeatheringAlpha2466_g545 = lerpResult313_g545;
 				float OutAlpha1871 = saturate( ( ( AlphaInput195_g545 * _AlphaMaster * saturate( pow( OccAlpha219_g545 , ( _WetAlpha * ExGloss298_g545 ) ) ) ) + WeatheringAlpha2466_g545 ) );
-				float fresnelNdotV1964 = dot( worldNormal1968, ase_worldViewDir );
-				float fresnelNode1964 = ( OutAlpha1871 + _FresnelScale * pow( 1.0 - fresnelNdotV1964, _FresnelPower ) );
+				float fresnelNdotV1964 = dot( normalize( worldNormal1968 ), ase_worldViewDir );
+				float fresnelNode1964 = ( OutAlpha1871 + _FresnelScale * pow( max( 1.0 - fresnelNdotV1964 , 0.0001 ), _FresnelPower ) );
 				float AlphaSC1912 = ( OutOp1691 * fresnelNode1964 );
 				
 				
@@ -2579,25 +2591,25 @@ Shader "Hanmen/Clothes True Cutoff"
 }
 /*ASEBEGIN
 Version=18935
-44;82;1221;850;3017.803;1615.753;3.861213;True;False
-Node;AmplifyShaderEditor.FunctionNode;1730;-30.3289,-1187.185;Inherit;False;Iridiscence;87;;456;70fe6a1ace0a29b439fe6d71982b6fe0;0;1;1;FLOAT3;0,0,0;False;1;FLOAT3;0
+134.4;332.8;1221;926;1862.988;244.7332;1.369567;True;False
+Node;AmplifyShaderEditor.FunctionNode;1730;-30.3289,-1187.185;Inherit;False;Iridiscence;86;;456;70fe6a1ace0a29b439fe6d71982b6fe0;0;1;1;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1752;331.3885,-769.0536;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.ComponentMaskNode;1735;685.5889,-933.6452;Inherit;False;True;True;True;False;1;0;COLOR;0,0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.SamplerNode;1755;418.1014,-695.4373;Inherit;True;Property;_SpecularMap;SpecularMap;94;1;[NoScaleOffset];Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SamplerNode;1755;418.1014,-695.4373;Inherit;True;Property;_SpecularMap;SpecularMap;93;1;[NoScaleOffset];Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.WireNode;1753;391.0476,-745.1899;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1782;247.8937,-1006.199;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.BlendOpsNode;1717;262.4673,-1190.966;Inherit;False;Multiply;True;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT;1;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.ComponentMaskNode;1754;720.994,-693.3652;Inherit;False;True;True;True;False;1;0;COLOR;0,0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1722;708.7335,-1016.052;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;1739;947.3095,-807.3077;Inherit;False;Property;_Iridiscent1;Iridiscent;86;0;Create;True;0;0;0;True;0;False;1;0;0;True;;Toggle;2;Key0;Key1;Reference;1718;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.StaticSwitch;1739;947.3095,-807.3077;Inherit;False;Property;_Iridiscent1;Iridiscent;85;0;Create;True;0;0;0;True;0;False;1;0;0;True;;Toggle;2;Key0;Key1;Reference;1718;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;1756;1192.594,-709.9873;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1721;758.1564,-1049.002;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.WireNode;1745;11.12222,-1294.807;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.StaticSwitch;1718;523.5092,-1187.675;Inherit;False;Property;_Iridiscent;Iridiscent;86;0;Create;True;0;0;0;True;1;Header(Iridiscent);False;1;0;0;True;;Toggle;2;Key0;Key1;Create;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.StaticSwitch;1718;523.5092,-1187.675;Inherit;False;Property;_Iridiscent;Iridiscent;85;0;Create;True;0;0;0;True;1;Header(Iridiscent);False;1;0;0;True;;Toggle;2;Key0;Key1;Create;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.DiffuseAndSpecularFromMetallicNode;1642;844.0115,-1183.61;Inherit;False;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;3;FLOAT3;0;FLOAT3;1;FLOAT;2
 Node;AmplifyShaderEditor.WireNode;1746;75.58084,-1324.295;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.DiffuseAndSpecularFromMetallicNode;1740;1364.939,-551.4853;Inherit;False;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;3;FLOAT3;0;FLOAT3;1;FLOAT;2
-Node;AmplifyShaderEditor.StaticSwitch;1732;1212.62,-1385.844;Inherit;False;Property;_SpecularSetup1;SpecularSetup;92;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;1731;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.StaticSwitch;1732;1212.62,-1385.844;Inherit;False;Property;_SpecularSetup1;SpecularSetup;91;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;1731;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.CommentaryNode;1781;2676.393,-1560.824;Inherit;False;1652.311;667.9056;Comment;16;1713;1714;1696;1694;1695;1703;1702;1638;1652;1650;1649;1789;1841;1784;1913;1946;ForwardBase;1,1,1,1;0;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1683;1503.489,-1386.021;Inherit;False;OutAlbedo;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1713;2773.38,-1454.037;Inherit;False;1683;OutAlbedo;1;0;OBJECT;;False;1;FLOAT3;0
@@ -2629,21 +2641,16 @@ Node;AmplifyShaderEditor.RegisterLocalVarNode;1840;844.123,-1274.65;Inherit;Fals
 Node;AmplifyShaderEditor.GetLocalVarNode;1848;2805.873,-358.7381;Inherit;False;1683;OutAlbedo;1;0;OBJECT;;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1719;438.0094,-995.3347;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1720;401.1435,-981.6287;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.StaticSwitch;1731;1697.23,-1161.845;Inherit;False;Property;_SpecularSetup;SpecularSetup;92;0;Create;True;0;0;0;False;1;Header (Specularity);False;1;0;0;True;;Toggle;2;Key0;Key1;Create;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.StaticSwitch;1731;1697.23,-1161.845;Inherit;False;Property;_SpecularSetup;SpecularSetup;91;0;Create;True;0;0;0;False;1;Header (Specularity);False;1;0;1;True;;Toggle;2;Key0;Key1;Create;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1841;3014.403,-1058.491;Inherit;False;1683;OutAlbedo;1;0;OBJECT;;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1849;2807.915,-190.2279;Inherit;False;1788;th;1;0;OBJECT;;False;1;FLOAT;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1649;4095.903,-1302.9;Float;False;True;-1;2;ASEMaterialInspector;0;7;Hanmen/Clothes True Cutoff;e1de45c0d41f68c41b2cc20c8b9c05ef;True;ForwardBase;0;1;ForwardBase;3;False;False;False;False;False;False;False;False;False;False;False;False;False;True;True;2;True;1665;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;RenderType=TransparentCutout=RenderType;Queue=AlphaTest=Queue=-50;True;7;False;0;False;True;0;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;True;0;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;True;0;False;-1;True;True;2;True;1665;False;True;True;True;True;True;0;False;-1;False;False;False;False;False;False;False;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;True;3;False;-1;True;True;0;False;-1;0;False;-1;True;1;LightMode=ForwardBase;True;7;False;0;Legacy Shaders/Diffuse;0;0;Standard;0;0;5;False;True;True;True;True;False;;True;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1649;4095.903,-1302.9;Float;False;True;-1;2;ASEMaterialInspector;0;7;Hanmen/Clothes True Cutoff;e1de45c0d41f68c41b2cc20c8b9c05ef;True;ForwardBase;0;1;ForwardBase;3;False;False;False;False;False;False;False;False;False;False;False;False;False;True;True;2;True;1665;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;RenderType=TransparentCutout=RenderType;Queue=AlphaTest=Queue=-50;True;7;False;0;True;True;0;1;False;-1;10;False;-1;0;1;False;-1;0;False;-1;True;0;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;True;0;False;-1;True;True;2;True;1665;False;True;True;True;True;True;0;False;-1;False;False;False;False;False;False;False;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;True;True;1;False;-1;True;3;False;-1;True;False;0;False;-1;0;False;-1;True;1;LightMode=ForwardBase;True;7;False;0;Legacy Shaders/Diffuse;0;0;Standard;0;0;5;False;True;True;True;True;False;;True;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1712;1992.472,-1160.675;Inherit;False;OutSpecular;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.RegisterLocalVarNode;1871;46.03364,-398.179;Inherit;False;OutAlpha;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1688;48.38976,-628.7403;Inherit;False;OutAO;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.FunctionNode;1904;-209.0985,96.55823;Inherit;False;Dither IGN;-1;;485;85e67188977f34c48a0251ed94f05cf0;1,11,1;1;10;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.FunctionNode;1905;-213.1667,-53.87226;Inherit;False;Dither IGN;-1;;486;85e67188977f34c48a0251ed94f05cf0;1,11,0;1;10;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;1908;3649.871,-700.2784;Inherit;False;Constant;_Float23;Float 23;14;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1702;3635.26,-1177.038;Inherit;False;1873;Clip;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1874;272,-48;Inherit;False;1691;OutOp;1;0;OBJECT;;False;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;1876;480,-16;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1684;48.31251,-888.1824;Inherit;False;OutNormal;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.StaticSwitch;1888;-14.63464,6.37386;Inherit;False;Property;_TemporalFilter;TemporalFilter;78;0;Create;False;0;0;0;True;0;False;1;0;0;False;_TEMPORALFILTER_ON;Toggle;2;Key0;Key1;Create;False;False;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.SwitchByFaceNode;1939;2039.542,-879.9313;Inherit;False;2;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1940;2237.76,-921.5773;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.NegateNode;1942;1840.76,-859.1403;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
@@ -2653,35 +2660,39 @@ Node;AmplifyShaderEditor.RegisterLocalVarNode;1945;2517.247,-804.7195;Inherit;Fa
 Node;AmplifyShaderEditor.GetLocalVarNode;1695;2770.603,-1055.39;Inherit;False;1684;OutNormal;1;0;OBJECT;;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1789;2781.497,-981.6653;Inherit;False;1788;th;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1946;2761.857,-1371.584;Inherit;False;1945;NormalFace;1;0;OBJECT;;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.GetLocalVarNode;1853;3415.67,-353.2057;Inherit;False;1945;NormalFace;1;0;OBJECT;;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.FunctionNode;1950;3031.701,-295.4829;Inherit;False;Unity Translucency;78;;536;3081dbcb6ac8af842b2faa561ed4ff52;0;3;6;FLOAT3;0,0,0;False;26;FLOAT3;0,0,1;False;46;FLOAT;1;False;2;FLOAT3;0;FLOAT3;68
-Node;AmplifyShaderEditor.FunctionNode;1951;3244.805,-1175.581;Inherit;False;Unity Translucency;78;;538;3081dbcb6ac8af842b2faa561ed4ff52;0;3;6;FLOAT3;0,0,0;False;26;FLOAT3;0,0,1;False;46;FLOAT;1;False;2;FLOAT3;0;FLOAT3;68
-Node;AmplifyShaderEditor.RangedFloatNode;1872;293.42,133.6566;Inherit;False;Property;_Cutoff;Cutoff;2;1;[Header];Fetch;True;1;Alpha Clip Value;0;0;True;0;False;0.5;0.575;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.ColorNode;1734;478.722,-934.2843;Inherit;False;Property;_SpecColor;SpecColor;93;0;Fetch;True;0;0;0;False;0;False;0.5,0.5,0.5,1;0.5,0.5,0.5,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.FunctionNode;1950;3031.701,-295.4829;Inherit;False;Unity Translucency;77;;536;3081dbcb6ac8af842b2faa561ed4ff52;0;3;6;FLOAT3;0,0,0;False;26;FLOAT3;0,0,1;False;46;FLOAT;1;False;2;FLOAT3;0;FLOAT3;68
+Node;AmplifyShaderEditor.FunctionNode;1951;3244.805,-1175.581;Inherit;False;Unity Translucency;77;;538;3081dbcb6ac8af842b2faa561ed4ff52;0;3;6;FLOAT3;0,0,0;False;26;FLOAT3;0,0,1;False;46;FLOAT;1;False;2;FLOAT3;0;FLOAT3;68
+Node;AmplifyShaderEditor.RangedFloatNode;1872;293.42,133.6566;Inherit;False;Property;_Cutoff;Cutoff;2;1;[Header];Fetch;True;1;Alpha Clip Value;0;0;True;0;False;0.5;0.036;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.ColorNode;1734;478.722,-934.2843;Inherit;False;Property;_SpecColor;SpecColor;92;0;Fetch;True;0;0;0;False;0;False;0.5,0.5,0.5,1;0.5,0.5,0.5,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.RangedFloatNode;1943;1938.842,-1001.831;Inherit;False;Property;_NormalBackDirInvert;Normal Invert;1;1;[Toggle];Create;False;1;;0;0;True;0;False;1;1;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.GetLocalVarNode;1913;3698.598,-1023.926;Inherit;False;1912;AlphaSC;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1650;4095.903,-1197.1;Float;False;False;-1;2;ASEMaterialInspector;100;7;New Amplify Shader;e1de45c0d41f68c41b2cc20c8b9c05ef;True;ForwardAdd;0;2;ForwardAdd;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;RenderType=Opaque=RenderType;True;2;False;0;False;True;4;1;False;-1;1;False;-1;0;1;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;True;1;LightMode=ForwardAdd;False;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1652;4094.674,-1118.824;Float;False;False;-1;2;ASEMaterialInspector;100;7;New Amplify Shader;e1de45c0d41f68c41b2cc20c8b9c05ef;True;ShadowCaster;0;4;ShadowCaster;1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;RenderType=Opaque=RenderType;True;2;False;0;False;True;0;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;True;0;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;True;0;False;-1;True;True;0;False;-1;False;True;True;True;True;True;0;False;-1;False;False;False;False;False;False;False;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;True;3;False;-1;False;True;1;LightMode=ShadowCaster;True;2;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1651;4039.76,-325.8137;Float;False;False;-1;2;ASEMaterialInspector;100;7;New Amplify Shader;e1de45c0d41f68c41b2cc20c8b9c05ef;True;Deferred;0;3;Deferred;5;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;RenderType=Opaque=RenderType;True;2;False;0;False;True;0;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;True;0;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;True;0;False;-1;True;True;2;True;1665;False;True;True;True;True;True;0;False;-1;False;False;False;False;False;False;False;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;True;3;False;-1;True;True;0;False;-1;0;False;-1;True;1;LightMode=Deferred;True;7;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.RangedFloatNode;1665;293.0068,216.2109;Inherit;False;Property;_CullMode;CullMode;0;2;[Header];[IntRange];Create;False;1;Backface Settings;0;0;True;0;False;0;2;0;2;0;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;1977;2136.253,-84.73756;Inherit;False;Property;_SHADERTYPE_CLOTHING;SHADERTYPE_CLOTHING;95;0;Create;False;0;0;0;True;1;HideInInspector;False;0;1;1;True;_SHADERTYPE_CLOTHING;Toggle;2;Key0;Key1;Create;False;False;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;1665;293.0068,216.2109;Inherit;False;Property;_CullMode;CullMode;0;2;[Header];[IntRange];Create;False;1;Backface Settings;0;0;True;0;False;0;0;0;2;0;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch;1977;2136.253,-84.73756;Inherit;False;Property;_SHADERTYPE_CLOTHING;SHADERTYPE_CLOTHING;94;0;Create;False;0;0;0;True;1;HideInInspector;False;0;1;1;True;_SHADERTYPE_CLOTHING;Toggle;2;Key0;Key1;Create;False;False;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1691;41.54285,-473.2223;Inherit;False;OutOp;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.FunctionNode;1979;-351.9619,-1010.385;Inherit;False;AIT Clothes Function;3;;545;d0644e5becc3a6145ad3ab18b1d3f488;0;0;11;FLOAT3;0;FLOAT3;557;FLOAT3;558;FLOAT;559;FLOAT;560;FLOAT;812;FLOAT;561;SAMPLERSTATE;748;FLOAT;562;FLOAT;787;FLOAT;817
-Node;AmplifyShaderEditor.RegisterLocalVarNode;1912;671.6697,-205.6773;Inherit;False;AlphaSC;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.GetLocalVarNode;1879;3138.775,16.56055;Inherit;False;1873;Clip;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1873;951.2646,-39.32119;Inherit;False;Clip;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.ClipNode;1877;677.4983,-34.06299;Inherit;False;3;0;FLOAT;1;False;1;FLOAT;0;False;2;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1938;1876.403,-668.8412;Inherit;False;1684;OutNormal;1;0;OBJECT;;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;1910;-203.0458,-204.6141;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1909;-550.9557,-211.0247;Inherit;False;1691;OutOp;1;0;OBJECT;;False;1;FLOAT;0
-Node;AmplifyShaderEditor.FresnelNode;1964;-634.2521,101.7885;Inherit;False;Standard;WorldNormal;ViewDir;False;False;5;0;FLOAT3;0,0,1;False;4;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;1;False;3;FLOAT;5;False;1;FLOAT;0
-Node;AmplifyShaderEditor.ViewDirInputsCoordNode;1966;-950.9221,188.7809;Inherit;False;World;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
-Node;AmplifyShaderEditor.RangedFloatNode;1969;-1021.84,457.632;Inherit;False;Property;_FresnelScale;FresnelScale;77;0;Create;True;0;0;0;True;0;False;0;5.3;0;10;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;1960;-1020.36,538.691;Inherit;False;Property;_FresnelPower;FresnelPower;75;1;[Header];Create;True;1;Fresnel Settings;0;0;True;0;False;3;3.52;0;10;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;1970;-1026.849,373.9594;Inherit;False;Property;_FresnelBias;FresnelBias;76;0;Create;True;0;0;0;False;0;False;0;1;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.GetLocalVarNode;1875;-940.5232,652.9637;Inherit;False;1871;OutAlpha;1;0;OBJECT;;False;1;FLOAT;0
-Node;AmplifyShaderEditor.WorldNormalVector;1968;-966.1312,27.72584;Inherit;False;True;1;0;FLOAT3;0,0,1;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
-Node;AmplifyShaderEditor.GetLocalVarNode;1974;-1328.485,23.75095;Inherit;False;1684;OutNormal;1;0;OBJECT;;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.RangedFloatNode;1960;-1020.36,538.691;Inherit;False;Property;_FresnelPower;FresnelPower;75;1;[Header];Create;True;1;Fresnel Settings;0;0;True;0;False;3;2;0;10;0;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode;1853;3415.67,-355.2413;Inherit;False;1945;NormalFace;1;0;OBJECT;;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1651;4039.76,-325.8137;Float;False;False;-1;2;ASEMaterialInspector;100;7;New Amplify Shader;e1de45c0d41f68c41b2cc20c8b9c05ef;True;Deferred;0;3;Deferred;5;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;RenderType=Opaque=RenderType;True;2;False;0;True;True;0;1;False;-1;10;False;-1;0;1;False;-1;0;False;-1;True;0;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;True;0;False;-1;True;True;2;True;1665;True;True;True;True;True;True;0;False;-1;False;False;False;False;False;False;False;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;True;True;1;False;-1;True;3;False;-1;True;False;0;False;-1;0;False;-1;True;1;LightMode=Deferred;True;7;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.GetLocalVarNode;1879;3429.861,224.1887;Inherit;False;1873;Clip;1;0;OBJECT;;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode;1913;3698.598,-1023.926;Inherit;False;1912;AlphaSC;1;0;OBJECT;;False;1;FLOAT;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1652;4094.674,-1118.824;Float;False;False;-1;2;ASEMaterialInspector;100;7;New Amplify Shader;e1de45c0d41f68c41b2cc20c8b9c05ef;True;ShadowCaster;0;4;ShadowCaster;1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;RenderType=Opaque=RenderType;True;2;False;0;False;True;0;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;True;0;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;True;0;False;-1;True;True;0;False;-1;False;True;True;True;True;True;0;False;-1;False;False;False;False;False;False;False;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;True;3;False;-1;False;True;1;LightMode=ShadowCaster;True;7;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode;1912;669.4838,-214.4209;Inherit;False;AlphaSC;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.ClipNode;1877;687.852,-40.27519;Inherit;False;3;0;FLOAT;1;False;1;FLOAT;0;False;2;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;1876;491.0007,-15.5724;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.FunctionNode;1904;-209.0985,96.55823;Inherit;False;Dither IGN;-1;;546;85e67188977f34c48a0251ed94f05cf0;1,11,1;1;10;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.FunctionNode;1905;-213.1667,-53.87226;Inherit;False;Dither IGN;-1;;547;85e67188977f34c48a0251ed94f05cf0;1,11,0;1;10;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch;1888;-14.63464,6.37386;Inherit;False;Property;_TemporalFilter;TemporalFilter;78;0;Create;False;0;0;0;True;0;False;1;0;0;False;_TEMPORALFILTER_ON;Toggle;2;Key0;Key1;Create;False;False;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode;1871;39.93531,-385.9823;Inherit;False;OutAlpha;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;1910;335.6396,-200.5486;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;1969;-1029.971,455.5992;Inherit;False;Property;_FresnelScale;FresnelScale;76;0;Create;True;0;0;0;True;0;False;0;0.8;0;10;0;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode;1875;-958.8182,366.3424;Inherit;False;1871;OutAlpha;1;0;OBJECT;;False;1;FLOAT;0
+Node;AmplifyShaderEditor.WorldNormalVector;1968;-944.7285,-35.94226;Inherit;False;True;1;0;FLOAT3;0,0,1;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
+Node;AmplifyShaderEditor.FresnelNode;1964;-634.2521,101.7885;Inherit;False;Standard;WorldNormal;ViewDir;True;True;5;0;FLOAT3;0,0,1;False;4;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;1;False;3;FLOAT;5;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode;1974;-1201.602,96.34018;Inherit;False;1945;NormalFace;1;0;OBJECT;;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.ViewDirInputsCoordNode;1966;-946.9951,203.0404;Inherit;False;World;True;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
 WireConnection;1730;1;1979;557
 WireConnection;1752;0;1730;0
 WireConnection;1735;0;1734;0
@@ -2739,15 +2750,8 @@ WireConnection;1731;0;1740;1
 WireConnection;1649;0;1638;0
 WireConnection;1649;1;1702;0
 WireConnection;1712;0;1731;0
-WireConnection;1871;0;1979;817
 WireConnection;1688;0;1979;561
-WireConnection;1904;10;1964;0
-WireConnection;1905;10;1964;0
-WireConnection;1876;0;1874;0
-WireConnection;1876;1;1888;0
 WireConnection;1684;0;1979;557
-WireConnection;1888;1;1905;0
-WireConnection;1888;0;1904;0
 WireConnection;1939;0;1938;0
 WireConnection;1939;1;1942;0
 WireConnection;1940;0;1943;0
@@ -2763,24 +2767,31 @@ WireConnection;1950;46;1849;0
 WireConnection;1951;6;1841;0
 WireConnection;1951;26;1695;0
 WireConnection;1951;46;1789;0
-WireConnection;1652;0;1913;0
+WireConnection;1691;0;1979;787
+WireConnection;1873;0;1877;0
 WireConnection;1651;0;1865;0
 WireConnection;1651;1;1865;1
 WireConnection;1651;2;1865;12
 WireConnection;1651;3;1865;18
 WireConnection;1651;4;1879;0
-WireConnection;1691;0;1979;787
+WireConnection;1652;0;1913;0
 WireConnection;1912;0;1910;0
-WireConnection;1873;0;1877;0
 WireConnection;1877;1;1876;0
 WireConnection;1877;2;1872;0
+WireConnection;1876;0;1874;0
+WireConnection;1876;1;1888;0
+WireConnection;1904;10;1964;0
+WireConnection;1905;10;1964;0
+WireConnection;1888;1;1905;0
+WireConnection;1888;0;1904;0
+WireConnection;1871;0;1979;817
 WireConnection;1910;0;1909;0
 WireConnection;1910;1;1964;0
+WireConnection;1968;0;1974;0
 WireConnection;1964;0;1968;0
 WireConnection;1964;4;1966;0
 WireConnection;1964;1;1875;0
 WireConnection;1964;2;1969;0
 WireConnection;1964;3;1960;0
-WireConnection;1968;0;1974;0
 ASEEND*/
-//CHKSM=31C2556727CC64502250ACAAEC28112644532D85
+//CHKSM=DDB164A66A54EBCD85457A9E50F9C08962CD9745

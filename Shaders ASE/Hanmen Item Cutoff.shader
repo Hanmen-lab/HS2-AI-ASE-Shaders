@@ -750,8 +750,8 @@ Shader "Hanmen/Item Cutoff"
 				int x9_g474 = (int)(temp_output_1_0_g474).x;
 				int y9_g474 = (int)(temp_output_1_0_g474).y;
 				float localgetInterleavedGradientNoise8Bit9_g474 = getInterleavedGradientNoise8Bit9_g474( x9_g474 , y9_g474 );
-				float3 tanNormal1730 = OutNormal1457;
-				float3 worldNormal1730 = float3(dot(tanToWorld0,tanNormal1730), dot(tanToWorld1,tanNormal1730), dot(tanToWorld2,tanNormal1730));
+				float3 tanNormal1730 = NormalFace1715;
+				float3 worldNormal1730 = normalize( float3(dot(tanToWorld0,tanNormal1730), dot(tanToWorld1,tanNormal1730), dot(tanToWorld2,tanNormal1730)) );
 				float Color1Alpha101_g498 = _Color.a;
 				float Color2Alpha97_g498 = _Color2.a;
 				float lerpResult476_g498 = lerp( Color1Alpha101_g498 , Color2Alpha97_g498 , ColorMask296_g498);
@@ -761,8 +761,8 @@ Shader "Hanmen/Item Cutoff"
 				float lerpResult478_g498 = lerp( lerpResult477_g498 , Color4Alpha100_g498 , ColorMask494_g498);
 				float AlphaInput137_g498 = tex2DNode119_g498.a;
 				float OutOp1464 = ( saturate( ( lerpResult478_g498 * AlphaInput137_g498 ) ) * _alpha );
-				float fresnelNdotV1726 = dot( worldNormal1730, ase_worldViewDir );
-				float fresnelNode1726 = ( OutOp1464 + _FresnelScale * pow( 1.0 - fresnelNdotV1726, _FresnelPower ) );
+				float fresnelNdotV1726 = dot( normalize( worldNormal1730 ), ase_worldViewDir );
+				float fresnelNode1726 = ( OutOp1464 + _FresnelScale * pow( max( 1.0 - fresnelNdotV1726 , 0.0001 ), _FresnelPower ) );
 				float2 temp_output_1_0_g475 = ( (ase_screenPosNorm).xy * (_ScreenParams).xy );
 				float2 uv12_g475 = temp_output_1_0_g475;
 				float mulTime15_g475 = _Time.y * 60.0;
@@ -1418,8 +1418,8 @@ Shader "Hanmen/Item Cutoff"
 				int x9_g474 = (int)(temp_output_1_0_g474).x;
 				int y9_g474 = (int)(temp_output_1_0_g474).y;
 				float localgetInterleavedGradientNoise8Bit9_g474 = getInterleavedGradientNoise8Bit9_g474( x9_g474 , y9_g474 );
-				float3 tanNormal1730 = OutNormal1457;
-				float3 worldNormal1730 = float3(dot(tanToWorld0,tanNormal1730), dot(tanToWorld1,tanNormal1730), dot(tanToWorld2,tanNormal1730));
+				float3 tanNormal1730 = NormalFace1715;
+				float3 worldNormal1730 = normalize( float3(dot(tanToWorld0,tanNormal1730), dot(tanToWorld1,tanNormal1730), dot(tanToWorld2,tanNormal1730)) );
 				float Color1Alpha101_g498 = _Color.a;
 				float Color2Alpha97_g498 = _Color2.a;
 				float lerpResult476_g498 = lerp( Color1Alpha101_g498 , Color2Alpha97_g498 , ColorMask296_g498);
@@ -1429,8 +1429,8 @@ Shader "Hanmen/Item Cutoff"
 				float lerpResult478_g498 = lerp( lerpResult477_g498 , Color4Alpha100_g498 , ColorMask494_g498);
 				float AlphaInput137_g498 = tex2DNode119_g498.a;
 				float OutOp1464 = ( saturate( ( lerpResult478_g498 * AlphaInput137_g498 ) ) * _alpha );
-				float fresnelNdotV1726 = dot( worldNormal1730, ase_worldViewDir );
-				float fresnelNode1726 = ( OutOp1464 + _FresnelScale * pow( 1.0 - fresnelNdotV1726, _FresnelPower ) );
+				float fresnelNdotV1726 = dot( normalize( worldNormal1730 ), ase_worldViewDir );
+				float fresnelNode1726 = ( OutOp1464 + _FresnelScale * pow( max( 1.0 - fresnelNdotV1726 , 0.0001 ), _FresnelPower ) );
 				float2 temp_output_1_0_g475 = ( (ase_screenPosNorm).xy * (_ScreenParams).xy );
 				float2 uv12_g475 = temp_output_1_0_g475;
 				float mulTime15_g475 = _Time.y * 60.0;
@@ -1977,8 +1977,8 @@ Shader "Hanmen/Item Cutoff"
 				int x9_g474 = (int)(temp_output_1_0_g474).x;
 				int y9_g474 = (int)(temp_output_1_0_g474).y;
 				float localgetInterleavedGradientNoise8Bit9_g474 = getInterleavedGradientNoise8Bit9_g474( x9_g474 , y9_g474 );
-				float3 tanNormal1730 = OutNormal1457;
-				float3 worldNormal1730 = float3(dot(tanToWorld0,tanNormal1730), dot(tanToWorld1,tanNormal1730), dot(tanToWorld2,tanNormal1730));
+				float3 tanNormal1730 = NormalFace1715;
+				float3 worldNormal1730 = normalize( float3(dot(tanToWorld0,tanNormal1730), dot(tanToWorld1,tanNormal1730), dot(tanToWorld2,tanNormal1730)) );
 				float Color1Alpha101_g498 = _Color.a;
 				float Color2Alpha97_g498 = _Color2.a;
 				float lerpResult476_g498 = lerp( Color1Alpha101_g498 , Color2Alpha97_g498 , ColorMask296_g498);
@@ -1988,8 +1988,8 @@ Shader "Hanmen/Item Cutoff"
 				float lerpResult478_g498 = lerp( lerpResult477_g498 , Color4Alpha100_g498 , ColorMask494_g498);
 				float AlphaInput137_g498 = tex2DNode119_g498.a;
 				float OutOp1464 = ( saturate( ( lerpResult478_g498 * AlphaInput137_g498 ) ) * _alpha );
-				float fresnelNdotV1726 = dot( worldNormal1730, ase_worldViewDir );
-				float fresnelNode1726 = ( OutOp1464 + _FresnelScale * pow( 1.0 - fresnelNdotV1726, _FresnelPower ) );
+				float fresnelNdotV1726 = dot( normalize( worldNormal1730 ), ase_worldViewDir );
+				float fresnelNode1726 = ( OutOp1464 + _FresnelScale * pow( max( 1.0 - fresnelNdotV1726 , 0.0001 ), _FresnelPower ) );
 				float2 temp_output_1_0_g475 = ( (ase_screenPosNorm).xy * (_ScreenParams).xy );
 				float2 uv12_g475 = temp_output_1_0_g475;
 				float mulTime15_g475 = _Time.y * 60.0;
@@ -2032,6 +2032,13 @@ Shader "Hanmen/Item Cutoff"
 			ZWrite On
 			ZTest LEqual
 			CGPROGRAM
+			#if defined(SHADER_API_GLCORE) || defined(SHADER_API_GLES) || defined(SHADER_API_GLES3) || defined(SHADER_API_D3D9)
+			#define FRONT_FACE_SEMANTIC VFACE
+			#define FRONT_FACE_TYPE float
+			#else
+			#define FRONT_FACE_SEMANTIC SV_IsFrontFace
+			#define FRONT_FACE_TYPE bool
+			#endif
 			#define ASE_USING_SAMPLING_MACROS 1
 
 			#pragma vertex vert
@@ -2132,6 +2139,7 @@ Shader "Hanmen/Item Cutoff"
 			SamplerState sampler_TextureSample20;
 			UNITY_DECLARE_TEX2D_NOSAMPLER(_OcclusionMap);
 			SamplerState sampler_OcclusionMap;
+			uniform float _NormalBackDirInvert;
 			SamplerState sampler_trilinear_repeat;
 			uniform float _alpha;
 			uniform float _FresnelScale;
@@ -2199,7 +2207,7 @@ Shader "Hanmen/Item Cutoff"
 				return o;
 			}
 			
-			float4 frag (v2f i 
+			float4 frag (v2f i , FRONT_FACE_TYPE ase_vface : FRONT_FACE_SEMANTIC
 			#if !defined( CAN_SKIP_VPOS )
 			, UNITY_VPOS_TYPE vpos : VPOS
 			#endif			
@@ -2248,14 +2256,16 @@ Shader "Hanmen/Item Cutoff"
 				float3 normalizeResult262_g498 = normalize( BlendNormals( BlendNormals( UnpackScaleNormal( SAMPLE_TEXTURE2D( _BumpMap, sampler_BumpMap, uv_BumpMap180_g498 ), _Float0 ) , DetailNormal171_g498 ) , DetailNormal272_g498 ) );
 				float3 temp_output_1737_342 = normalizeResult262_g498;
 				float3 OutNormal1457 = temp_output_1737_342;
+				float3 switchResult1710 = (((ase_vface>0)?(OutNormal1457):(-OutNormal1457)));
+				float3 NormalFace1715 = ( _NormalBackDirInvert == 1.0 ? switchResult1710 : OutNormal1457 );
 				float3 ase_worldTangent = i.ase_texcoord3.xyz;
 				float3 ase_worldNormal = i.ase_texcoord4.xyz;
 				float3 ase_worldBitangent = i.ase_texcoord5.xyz;
 				float3 tanToWorld0 = float3( ase_worldTangent.x, ase_worldBitangent.x, ase_worldNormal.x );
 				float3 tanToWorld1 = float3( ase_worldTangent.y, ase_worldBitangent.y, ase_worldNormal.y );
 				float3 tanToWorld2 = float3( ase_worldTangent.z, ase_worldBitangent.z, ase_worldNormal.z );
-				float3 tanNormal1730 = OutNormal1457;
-				float3 worldNormal1730 = float3(dot(tanToWorld0,tanNormal1730), dot(tanToWorld1,tanNormal1730), dot(tanToWorld2,tanNormal1730));
+				float3 tanNormal1730 = NormalFace1715;
+				float3 worldNormal1730 = normalize( float3(dot(tanToWorld0,tanNormal1730), dot(tanToWorld1,tanNormal1730), dot(tanToWorld2,tanNormal1730)) );
 				float Color1Alpha101_g498 = _Color.a;
 				float Color2Alpha97_g498 = _Color2.a;
 				float2 uv_ColorMask86_g498 = i.ase_texcoord2.xy;
@@ -2272,8 +2282,8 @@ Shader "Hanmen/Item Cutoff"
 				float4 tex2DNode119_g498 = SAMPLE_TEXTURE2D( _MainTex, sampler_MainTex, uv_MainTex119_g498 );
 				float AlphaInput137_g498 = tex2DNode119_g498.a;
 				float OutOp1464 = ( saturate( ( lerpResult478_g498 * AlphaInput137_g498 ) ) * _alpha );
-				float fresnelNdotV1726 = dot( worldNormal1730, ase_worldViewDir );
-				float fresnelNode1726 = ( OutOp1464 + _FresnelScale * pow( 1.0 - fresnelNdotV1726, _FresnelPower ) );
+				float fresnelNdotV1726 = dot( normalize( worldNormal1730 ), ase_worldViewDir );
+				float fresnelNode1726 = ( OutOp1464 + _FresnelScale * pow( max( 1.0 - fresnelNdotV1726 , 0.0001 ), _FresnelPower ) );
 				float clampResult353_g498 = clamp( _AlphaEx , 0.2 , 1.0 );
 				float2 uv_OcclusionMap259_g498 = i.ase_texcoord2.xy;
 				float4 tex2DNode259_g498 = SAMPLE_TEXTURE2D( _OcclusionMap, sampler_OcclusionMap, uv_OcclusionMap259_g498 );
@@ -2301,7 +2311,7 @@ Shader "Hanmen/Item Cutoff"
 }
 /*ASEBEGIN
 Version=18935
-44;70.4;1221;862;8883.405;2541.185;2.214176;True;False
+6;0.4;1221;932;8754.251;2066.796;1.089719;True;False
 Node;AmplifyShaderEditor.FunctionNode;1448;-7051.003,-3219.386;Inherit;False;Iridiscence;86;;272;70fe6a1ace0a29b439fe6d71982b6fe0;0;1;1;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1504;-6542.181,-2655.577;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1506;-6932.382,-2251.002;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
@@ -2392,16 +2402,16 @@ Node;AmplifyShaderEditor.RangedFloatNode;1711;-4407.113,-3031.928;Inherit;False;
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;1725;-7145.349,-2554.353;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;1724;-7517.377,-2449.83;Inherit;False;Property;_alpha;alpha;3;0;Create;True;0;0;0;True;0;False;1;1;0;1;0;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;1599;-6523.928,-1621.583;Inherit;False;Property;_Cutoff;Cutoff;2;1;[Header];Fetch;True;1;Alpha Clip Value;0;0;True;0;False;0.5;0.5;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.FresnelNode;1726;-7629.906,-1666.729;Inherit;False;Standard;WorldNormal;ViewDir;False;False;5;0;FLOAT3;0,0,1;False;4;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;1;False;3;FLOAT;5;False;1;FLOAT;0
 Node;AmplifyShaderEditor.ViewDirInputsCoordNode;1729;-7946.576,-1579.737;Inherit;False;World;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
-Node;AmplifyShaderEditor.WorldNormalVector;1730;-7961.785,-1740.792;Inherit;False;False;1;0;FLOAT3;0,0,1;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
 Node;AmplifyShaderEditor.RangedFloatNode;1733;-8017.494,-1310.886;Inherit;False;Property;_FresnelScale;FresnelScale;84;0;Create;True;0;0;0;True;0;False;0;1.37;0;10;0;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;1734;-8016.014,-1229.827;Inherit;False;Property;_FresnelPower;FresnelPower;82;1;[Header];Create;True;1;Fresnel Settings;0;0;True;0;False;0;3.48;0;10;0;1;FLOAT;0
 Node;AmplifyShaderEditor.FunctionNode;1737;-7367.8,-2976.356;Inherit;False;AIT Item Function;4;;498;49cd9f91cda5058428ddba66ec049916;0;0;11;FLOAT3;345;FLOAT3;342;FLOAT3;341;FLOAT;340;FLOAT;0;FLOAT;393;FLOAT;346;FLOAT;480;FLOAT;344;FLOAT;386;SAMPLERSTATE;389
 Node;AmplifyShaderEditor.StaticSwitch;1736;-6014.519,-1218.811;Inherit;False;Property;_SHADERTYPE_ITEM;SHADERTYPE_ITEM;94;0;Create;False;0;0;0;True;1;HideInInspector;False;0;1;1;True;_SHADERTYPE_ITEM;Toggle;2;Key0;Key1;Create;False;False;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1475;-7957.416,-1086.628;Inherit;False;1464;OutOp;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;1732;-8022.503,-1394.558;Inherit;False;Property;_FresnelBias;FresnelBias;83;0;Create;True;0;0;0;False;0;False;0;0;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.GetLocalVarNode;1731;-8208.543,-1745.159;Inherit;False;1457;OutNormal;1;0;OBJECT;;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.WorldNormalVector;1730;-7961.785,-1740.792;Inherit;False;True;1;0;FLOAT3;0,0,1;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
+Node;AmplifyShaderEditor.FresnelNode;1726;-7629.906,-1666.729;Inherit;False;Standard;WorldNormal;ViewDir;True;True;5;0;FLOAT3;0,0,1;False;4;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;1;False;3;FLOAT;5;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode;1731;-8257.582,-1745.159;Inherit;False;1715;NormalFace;1;0;OBJECT;;False;1;FLOAT3;0
 WireConnection;1448;1;1737;342
 WireConnection;1504;0;1448;0
 WireConnection;1506;0;1737;340
@@ -2498,11 +2508,11 @@ WireConnection;1708;0;1711;0
 WireConnection;1715;0;1707;0
 WireConnection;1725;0;1737;344
 WireConnection;1725;1;1724;0
+WireConnection;1730;0;1731;0
 WireConnection;1726;0;1730;0
 WireConnection;1726;4;1729;0
 WireConnection;1726;1;1475;0
 WireConnection;1726;2;1733;0
 WireConnection;1726;3;1734;0
-WireConnection;1730;0;1731;0
 ASEEND*/
-//CHKSM=04CB0E3467D8E4C8713D127D948CD4E3CF51760F
+//CHKSM=4E4A2160BED15C95BE47F628B63B41C20B912C8E

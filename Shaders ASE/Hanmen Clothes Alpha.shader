@@ -239,6 +239,7 @@ Shader "Hanmen/Clothes True Alpha"
 		SamplerState sampler_MetallicGlossMap;
 		uniform float4 _Color4;
 		uniform float _CullMode;
+		uniform float _NormalBackDirInvert;
 		SamplerState sampler_trilinear_repeat;
 		SamplerState sampler_linear_repeat;
 		uniform float _FresnelScale;
@@ -248,7 +249,6 @@ Shader "Hanmen/Clothes True Alpha"
 		uniform float _Roughness;
 		uniform float _Roughness4;
 		uniform float _Glossiness4;
-		uniform float _NormalBackDirInvert;
 		uniform float _OcculusionStrength;
 		uniform float _DetailOcculusionScale;
 		uniform float _DetailOcculusionScale2;
@@ -468,6 +468,8 @@ Shader "Hanmen/Clothes True Alpha"
 			float3 normalizeResult564_g200 = normalize( lerpResult87_g200 );
 			float3 temp_output_1650_557 = normalizeResult564_g200;
 			float3 outNormal1623 = temp_output_1650_557;
+			float3 switchResult1653 = (((i.ASEVFace>0)?(outNormal1623):(-outNormal1623)));
+			float3 NormalFace1658 = ( _NormalBackDirInvert == 1.0 ? switchResult1653 : outNormal1623 );
 			float2 uv_MainTex576_g200 = i.uv_texcoord;
 			float4 tex2DNode576_g200 = SAMPLE_TEXTURE2D( _MainTex, sampler_MainTex, uv_MainTex576_g200 );
 			float AlphaInput195_g200 = tex2DNode576_g200.a;
@@ -478,8 +480,8 @@ Shader "Hanmen/Clothes True Alpha"
 			float clampResult780_g200 = clamp( _AlphaEx , 0.2 , 1.0 );
 			float TearingsMask340_g200 = tex2DNode196_g200.b;
 			clip( ( step( pow( ( 1.0 - clampResult780_g200 ) , 0.2 ) , pow( TearingsMask340_g200 , 0.5 ) ) * AlphaInput195_g200 ) - 0.002);
-			float fresnelNdotV1664 = dot( normalize( (WorldNormalVector( i , outNormal1623 )) ), ase_worldViewDir );
-			float fresnelNode1664 = ( saturate( ( ( AlphaInput195_g200 * _AlphaMaster * saturate( pow( OccAlpha219_g200 , ( _WetAlpha * ExGloss298_g200 ) ) ) ) + WeatheringAlpha2466_g200 ) ) + _FresnelScale * pow( 1.0 - fresnelNdotV1664, _FresnelPower ) );
+			float fresnelNdotV1664 = dot( normalize( normalize( (WorldNormalVector( i , NormalFace1658 )) ) ), ase_worldViewDir );
+			float fresnelNode1664 = ( saturate( ( ( AlphaInput195_g200 * _AlphaMaster * saturate( pow( OccAlpha219_g200 , ( _WetAlpha * ExGloss298_g200 ) ) ) ) + WeatheringAlpha2466_g200 ) ) + _FresnelScale * pow( max( 1.0 - fresnelNdotV1664 , 0.0001 ), _FresnelPower ) );
 			float outAlpha1663 = fresnelNode1664;
 			float2 uv_ColorMask304_g200 = i.uv_texcoord;
 			float ColorMask4347_g200 = SAMPLE_TEXTURE2D( _ColorMask, sampler_linear_repeat, uv_ColorMask304_g200 ).b;
@@ -580,8 +582,6 @@ Shader "Hanmen/Clothes True Alpha"
 			float smoothness169_g198 = outSmoothness1627;
 			float perceprualRoughness188_g198 = ( 1.0 - smoothness169_g198 );
 			half fd90273_g198 = ( 0.5 + ( 2.0 * LdotH139_g198 * LdotH139_g198 * perceprualRoughness188_g198 ) );
-			float3 switchResult1653 = (((i.ASEVFace>0)?(outNormal1623):(-outNormal1623)));
-			float3 NormalFace1658 = ( _NormalBackDirInvert == 1.0 ? switchResult1653 : outNormal1623 );
 			float3 normalizeResult25_g198 = normalize( (WorldNormalVector( i , NormalFace1658 )) );
 			float3 normalDir28_g198 = normalizeResult25_g198;
 			float dotResult21_g198 = dot( lightDir14_g198 , normalDir28_g198 );
@@ -809,7 +809,7 @@ Shader "Hanmen/Clothes True Alpha"
 }
 /*ASEBEGIN
 Version=18935
-6;82;1221;850;-4813.421;2537.274;2.314712;True;False
+6;6;1221;926;-4741.891;2199.024;1.60359;True;False
 Node;AmplifyShaderEditor.FunctionNode;1595;5851.836,-2626.556;Inherit;False;Iridiscence;86;;195;70fe6a1ace0a29b439fe6d71982b6fe0;0;1;1;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1611;6175.968,-2151.94;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.ComponentMaskNode;1608;6495.265,-2283.345;Inherit;False;True;True;True;False;1;0;COLOR;0,0,0,0;False;1;FLOAT3;0
@@ -861,7 +861,6 @@ Node;AmplifyShaderEditor.GetLocalVarNode;1647;8757.222,-1415.053;Inherit;False;1
 Node;AmplifyShaderEditor.GetLocalVarNode;1645;8763.583,-1490.558;Inherit;False;1604;OutAlbedo;1;0;OBJECT;;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1660;8770.515,-1584.815;Inherit;False;1623;outNormal;1;0;OBJECT;;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.RangedFloatNode;1659;7320.496,-1520.047;Inherit;False;Property;_NormalBackDirInvert;Normal Invert;1;1;[Toggle];Create;False;1;;0;0;True;0;False;1;1;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.FresnelNode;1664;6216.814,-1474.122;Inherit;False;Standard;WorldNormal;ViewDir;False;False;5;0;FLOAT3;0,0,1;False;4;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;1;False;3;FLOAT;5;False;1;FLOAT;0
 Node;AmplifyShaderEditor.ViewDirInputsCoordNode;1665;5900.143,-1387.13;Inherit;False;World;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
 Node;AmplifyShaderEditor.RangedFloatNode;1671;5829.225,-1118.279;Inherit;False;Property;_FresnelScale;FresnelScale;76;0;Create;True;0;0;0;True;0;False;0;1.37;0;10;0;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;1672;5830.705,-1037.22;Inherit;False;Property;_FresnelPower;FresnelPower;74;1;[Header];Create;True;1;Fresnel Settings;0;0;True;0;False;3;3.48;0;10;0;1;FLOAT;0
@@ -869,10 +868,11 @@ Node;AmplifyShaderEditor.GetLocalVarNode;1632;8767.474,-1668.435;Inherit;False;1
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1604;7399.661,-2822.084;Inherit;False;OutAlbedo;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.StaticSwitch;1673;6773.092,-1059.781;Inherit;False;Property;_SHADERTYPE_CLOTHING;SHADERTYPE_CLOTHING;94;0;Create;False;0;0;0;True;1;HideInInspector;False;0;1;1;True;_SHADERTYPE_CLOTHING;Toggle;2;Key0;Key1;Create;False;False;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1652;7158.202,-1236.987;Inherit;False;1623;outNormal;1;0;OBJECT;;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.WorldNormalVector;1666;5884.934,-1548.185;Inherit;False;True;1;0;FLOAT3;0,0,1;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1663;6819.759,-1473.281;Inherit;False;outAlpha;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;1670;5824.217,-1201.951;Inherit;False;Property;_FresnelBias;FresnelBias;75;0;Create;True;0;0;0;False;0;False;0;0;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.GetLocalVarNode;1667;5501.589,-1557.969;Inherit;False;1623;outNormal;1;0;OBJECT;;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.WorldNormalVector;1666;5884.934,-1548.185;Inherit;False;True;1;0;FLOAT3;0,0,1;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
+Node;AmplifyShaderEditor.FresnelNode;1664;6216.814,-1474.122;Inherit;False;Standard;WorldNormal;ViewDir;True;True;5;0;FLOAT3;0,0,1;False;4;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;1;False;3;FLOAT;5;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode;1667;5501.589,-1557.969;Inherit;False;1658;NormalFace;1;0;OBJECT;;False;1;FLOAT3;0
 WireConnection;1595;1;1650;557
 WireConnection;1611;0;1595;0
 WireConnection;1608;0;1607;0
@@ -931,13 +931,13 @@ WireConnection;1657;1;1656;0
 WireConnection;1657;2;1653;0
 WireConnection;1657;3;1652;0
 WireConnection;1658;0;1657;0
+WireConnection;1604;0;1603;0
+WireConnection;1663;0;1664;0
+WireConnection;1666;0;1667;0
 WireConnection;1664;0;1666;0
 WireConnection;1664;4;1665;0
 WireConnection;1664;1;1621;0
 WireConnection;1664;2;1671;0
 WireConnection;1664;3;1672;0
-WireConnection;1604;0;1603;0
-WireConnection;1666;0;1667;0
-WireConnection;1663;0;1664;0
 ASEEND*/
-//CHKSM=8CE812672A877C70D10DE727C0581AAA39D630F1
+//CHKSM=126D7EF092A0716FF4829FF1F4737B2CB1D81E1D
