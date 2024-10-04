@@ -84,7 +84,6 @@ Shader "Hanmen/Item Cutoff"
 		_TransScattering("Scattering Faloff", Range( 1 , 50)) = 1
 		_TransShadow("TransShadow", Range( 0 , 1)) = 1
 		[Header(Fresnel Settings)]_FresnelPower("FresnelPower", Range( 0 , 10)) = 0
-		_FresnelBias("FresnelBias", Range( 0 , 1)) = 0
 		_FresnelScale("FresnelScale", Range( 0 , 10)) = 0
 		[Header(Iridiscent)][Toggle(_IRIDISCENT_ON)] _Iridiscent("Iridiscent", Float) = 0
 		_IriHue("Hue", Range( 0 , 1)) = 0
@@ -152,8 +151,8 @@ Shader "Hanmen/Item Cutoff"
 			#include "AutoLight.cginc"
 			#define ASE_NEEDS_VERT_NORMAL
 			#define ASE_SHADOWS 1
-			#pragma shader_feature _SHADERTYPE_ITEM
 			#pragma multi_compile __ _EMISSIONCOLORTEXBASE_ON
+			#pragma shader_feature _SHADERTYPE_ITEM
 			#pragma multi_compile __ _SPECULARSETUP_ON
 			#pragma multi_compile __ _IRIDISCENT_ON
 			#pragma multi_compile __ _TEMPORALFILTER_ON
@@ -267,10 +266,9 @@ Shader "Hanmen/Item Cutoff"
 			UNITY_DECLARE_TEX2D_NOSAMPLER(_SpecularMap);
 			SamplerState sampler_SpecularMap;
 			UNITY_DECLARE_TEX2D_NOSAMPLER(_EffectMap);
-			uniform float _FresnelBias;
+			uniform float _alpha;
 			uniform float _FresnelScale;
 			uniform float _FresnelPower;
-			uniform float _alpha;
 			half OneMinusReflectivity( half metallic )
 			{
 				   return OneMinusReflectivityFromMetallic(metallic);
@@ -752,10 +750,8 @@ Shader "Hanmen/Item Cutoff"
 				int x9_g474 = (int)(temp_output_1_0_g474).x;
 				int y9_g474 = (int)(temp_output_1_0_g474).y;
 				float localgetInterleavedGradientNoise8Bit9_g474 = getInterleavedGradientNoise8Bit9_g474( x9_g474 , y9_g474 );
-				float3 tanNormal1730 = NormalFace1715;
+				float3 tanNormal1730 = OutNormal1457;
 				float3 worldNormal1730 = float3(dot(tanToWorld0,tanNormal1730), dot(tanToWorld1,tanNormal1730), dot(tanToWorld2,tanNormal1730));
-				float fresnelNdotV1726 = dot( worldNormal1730, ase_worldViewDir );
-				float fresnelNode1726 = ( _FresnelBias + _FresnelScale * pow( 1.0 - fresnelNdotV1726, _FresnelPower ) );
 				float Color1Alpha101_g498 = _Color.a;
 				float Color2Alpha97_g498 = _Color2.a;
 				float lerpResult476_g498 = lerp( Color1Alpha101_g498 , Color2Alpha97_g498 , ColorMask296_g498);
@@ -765,16 +761,17 @@ Shader "Hanmen/Item Cutoff"
 				float lerpResult478_g498 = lerp( lerpResult477_g498 , Color4Alpha100_g498 , ColorMask494_g498);
 				float AlphaInput137_g498 = tex2DNode119_g498.a;
 				float OutOp1464 = ( saturate( ( lerpResult478_g498 * AlphaInput137_g498 ) ) * _alpha );
-				float temp_output_1727_0 = ( fresnelNode1726 + OutOp1464 );
+				float fresnelNdotV1726 = dot( worldNormal1730, ase_worldViewDir );
+				float fresnelNode1726 = ( OutOp1464 + _FresnelScale * pow( 1.0 - fresnelNdotV1726, _FresnelPower ) );
 				float2 temp_output_1_0_g475 = ( (ase_screenPosNorm).xy * (_ScreenParams).xy );
 				float2 uv12_g475 = temp_output_1_0_g475;
 				float mulTime15_g475 = _Time.y * 60.0;
 				float iFrame12_g475 = mulTime15_g475;
 				float localIGNAnimated12_g475 = IGNAnimated12_g475( uv12_g475 , iFrame12_g475 );
 				#ifdef _TEMPORALFILTER_ON
-				float staticSwitch1695 = step( localIGNAnimated12_g475 , temp_output_1727_0 );
+				float staticSwitch1695 = step( localIGNAnimated12_g475 , fresnelNode1726 );
 				#else
-				float staticSwitch1695 = step( localgetInterleavedGradientNoise8Bit9_g474 , temp_output_1727_0 );
+				float staticSwitch1695 = step( localgetInterleavedGradientNoise8Bit9_g474 , fresnelNode1726 );
 				#endif
 				float clampResult353_g498 = clamp( _AlphaEx , 0.2 , 1.0 );
 				float Tearing360_g498 = tex2DNode259_g498.b;
@@ -823,8 +820,8 @@ Shader "Hanmen/Item Cutoff"
 			#include "AutoLight.cginc"
 			#define ASE_NEEDS_VERT_NORMAL
 			#define ASE_SHADOWS 1
-			#pragma shader_feature _SHADERTYPE_ITEM
 			#pragma multi_compile __ _EMISSIONCOLORTEXBASE_ON
+			#pragma shader_feature _SHADERTYPE_ITEM
 			#pragma multi_compile __ _SPECULARSETUP_ON
 			#pragma multi_compile __ _IRIDISCENT_ON
 			#pragma multi_compile __ _TEMPORALFILTER_ON
@@ -938,10 +935,9 @@ Shader "Hanmen/Item Cutoff"
 			UNITY_DECLARE_TEX2D_NOSAMPLER(_SpecularMap);
 			SamplerState sampler_SpecularMap;
 			UNITY_DECLARE_TEX2D_NOSAMPLER(_EffectMap);
-			uniform float _FresnelBias;
+			uniform float _alpha;
 			uniform float _FresnelScale;
 			uniform float _FresnelPower;
-			uniform float _alpha;
 			half OneMinusReflectivity( half metallic )
 			{
 				   return OneMinusReflectivityFromMetallic(metallic);
@@ -1422,10 +1418,8 @@ Shader "Hanmen/Item Cutoff"
 				int x9_g474 = (int)(temp_output_1_0_g474).x;
 				int y9_g474 = (int)(temp_output_1_0_g474).y;
 				float localgetInterleavedGradientNoise8Bit9_g474 = getInterleavedGradientNoise8Bit9_g474( x9_g474 , y9_g474 );
-				float3 tanNormal1730 = NormalFace1715;
+				float3 tanNormal1730 = OutNormal1457;
 				float3 worldNormal1730 = float3(dot(tanToWorld0,tanNormal1730), dot(tanToWorld1,tanNormal1730), dot(tanToWorld2,tanNormal1730));
-				float fresnelNdotV1726 = dot( worldNormal1730, ase_worldViewDir );
-				float fresnelNode1726 = ( _FresnelBias + _FresnelScale * pow( 1.0 - fresnelNdotV1726, _FresnelPower ) );
 				float Color1Alpha101_g498 = _Color.a;
 				float Color2Alpha97_g498 = _Color2.a;
 				float lerpResult476_g498 = lerp( Color1Alpha101_g498 , Color2Alpha97_g498 , ColorMask296_g498);
@@ -1435,16 +1429,17 @@ Shader "Hanmen/Item Cutoff"
 				float lerpResult478_g498 = lerp( lerpResult477_g498 , Color4Alpha100_g498 , ColorMask494_g498);
 				float AlphaInput137_g498 = tex2DNode119_g498.a;
 				float OutOp1464 = ( saturate( ( lerpResult478_g498 * AlphaInput137_g498 ) ) * _alpha );
-				float temp_output_1727_0 = ( fresnelNode1726 + OutOp1464 );
+				float fresnelNdotV1726 = dot( worldNormal1730, ase_worldViewDir );
+				float fresnelNode1726 = ( OutOp1464 + _FresnelScale * pow( 1.0 - fresnelNdotV1726, _FresnelPower ) );
 				float2 temp_output_1_0_g475 = ( (ase_screenPosNorm).xy * (_ScreenParams).xy );
 				float2 uv12_g475 = temp_output_1_0_g475;
 				float mulTime15_g475 = _Time.y * 60.0;
 				float iFrame12_g475 = mulTime15_g475;
 				float localIGNAnimated12_g475 = IGNAnimated12_g475( uv12_g475 , iFrame12_g475 );
 				#ifdef _TEMPORALFILTER_ON
-				float staticSwitch1695 = step( localIGNAnimated12_g475 , temp_output_1727_0 );
+				float staticSwitch1695 = step( localIGNAnimated12_g475 , fresnelNode1726 );
 				#else
-				float staticSwitch1695 = step( localgetInterleavedGradientNoise8Bit9_g474 , temp_output_1727_0 );
+				float staticSwitch1695 = step( localgetInterleavedGradientNoise8Bit9_g474 , fresnelNode1726 );
 				#endif
 				float clampResult353_g498 = clamp( _AlphaEx , 0.2 , 1.0 );
 				float Tearing360_g498 = tex2DNode259_g498.b;
@@ -1499,8 +1494,8 @@ Shader "Hanmen/Item Cutoff"
 			#include "UnityStandardUtils.cginc"
 			#include "UnityStandardBRDF.cginc"
 			#define ASE_NEEDS_VERT_NORMAL
-			#pragma shader_feature _SHADERTYPE_ITEM
 			#pragma multi_compile __ _EMISSIONCOLORTEXBASE_ON
+			#pragma shader_feature _SHADERTYPE_ITEM
 			#pragma multi_compile __ _SPECULARSETUP_ON
 			#pragma multi_compile __ _IRIDISCENT_ON
 			#pragma multi_compile __ _TEMPORALFILTER_ON
@@ -1612,10 +1607,9 @@ Shader "Hanmen/Item Cutoff"
 			uniform float _Roughness4;
 			UNITY_DECLARE_TEX2D_NOSAMPLER(_EffectMap);
 			uniform float _NormalBackDirInvert;
-			uniform float _FresnelBias;
+			uniform float _alpha;
 			uniform float _FresnelScale;
 			uniform float _FresnelPower;
-			uniform float _alpha;
 			half OneMinusReflectivity( half metallic )
 			{
 				   return OneMinusReflectivityFromMetallic(metallic);
@@ -1983,10 +1977,8 @@ Shader "Hanmen/Item Cutoff"
 				int x9_g474 = (int)(temp_output_1_0_g474).x;
 				int y9_g474 = (int)(temp_output_1_0_g474).y;
 				float localgetInterleavedGradientNoise8Bit9_g474 = getInterleavedGradientNoise8Bit9_g474( x9_g474 , y9_g474 );
-				float3 tanNormal1730 = NormalFace1715;
+				float3 tanNormal1730 = OutNormal1457;
 				float3 worldNormal1730 = float3(dot(tanToWorld0,tanNormal1730), dot(tanToWorld1,tanNormal1730), dot(tanToWorld2,tanNormal1730));
-				float fresnelNdotV1726 = dot( worldNormal1730, ase_worldViewDir );
-				float fresnelNode1726 = ( _FresnelBias + _FresnelScale * pow( 1.0 - fresnelNdotV1726, _FresnelPower ) );
 				float Color1Alpha101_g498 = _Color.a;
 				float Color2Alpha97_g498 = _Color2.a;
 				float lerpResult476_g498 = lerp( Color1Alpha101_g498 , Color2Alpha97_g498 , ColorMask296_g498);
@@ -1996,16 +1988,17 @@ Shader "Hanmen/Item Cutoff"
 				float lerpResult478_g498 = lerp( lerpResult477_g498 , Color4Alpha100_g498 , ColorMask494_g498);
 				float AlphaInput137_g498 = tex2DNode119_g498.a;
 				float OutOp1464 = ( saturate( ( lerpResult478_g498 * AlphaInput137_g498 ) ) * _alpha );
-				float temp_output_1727_0 = ( fresnelNode1726 + OutOp1464 );
+				float fresnelNdotV1726 = dot( worldNormal1730, ase_worldViewDir );
+				float fresnelNode1726 = ( OutOp1464 + _FresnelScale * pow( 1.0 - fresnelNdotV1726, _FresnelPower ) );
 				float2 temp_output_1_0_g475 = ( (ase_screenPosNorm).xy * (_ScreenParams).xy );
 				float2 uv12_g475 = temp_output_1_0_g475;
 				float mulTime15_g475 = _Time.y * 60.0;
 				float iFrame12_g475 = mulTime15_g475;
 				float localIGNAnimated12_g475 = IGNAnimated12_g475( uv12_g475 , iFrame12_g475 );
 				#ifdef _TEMPORALFILTER_ON
-				float staticSwitch1695 = step( localIGNAnimated12_g475 , temp_output_1727_0 );
+				float staticSwitch1695 = step( localIGNAnimated12_g475 , fresnelNode1726 );
 				#else
-				float staticSwitch1695 = step( localgetInterleavedGradientNoise8Bit9_g474 , temp_output_1727_0 );
+				float staticSwitch1695 = step( localgetInterleavedGradientNoise8Bit9_g474 , fresnelNode1726 );
 				#endif
 				float clampResult353_g498 = clamp( _AlphaEx , 0.2 , 1.0 );
 				float Tearing360_g498 = tex2DNode259_g498.b;
@@ -2055,8 +2048,9 @@ Shader "Hanmen/Item Cutoff"
 			#include "UnityCG.cginc"
             #include "UnityShaderVariables.cginc"
 			#include "UnityStandardUtils.cginc"
-			#pragma shader_feature _SHADERTYPE_ITEM
+			#define ASE_NEEDS_VERT_NORMAL
 			#pragma multi_compile __ _EMISSIONCOLORTEXBASE_ON
+			#pragma shader_feature _SHADERTYPE_ITEM
 			#if defined(SHADER_API_D3D11) || defined(SHADER_API_XBOXONE) || defined(UNITY_COMPILER_HLSLCC) || defined(SHADER_API_PSSL) || (defined(SHADER_TARGET_SURFACE_ANALYSIS) && !defined(SHADER_TARGET_SURFACE_ANALYSIS_MOJOSHADER))//ASE Sampler Macros
 			#define SAMPLE_TEXTURE2D(tex,samplerTex,coord) tex.Sample(samplerTex,coord)
 			#else//ASE Sampling Macros
@@ -2138,7 +2132,10 @@ Shader "Hanmen/Item Cutoff"
 			SamplerState sampler_TextureSample20;
 			UNITY_DECLARE_TEX2D_NOSAMPLER(_OcclusionMap);
 			SamplerState sampler_OcclusionMap;
+			SamplerState sampler_trilinear_repeat;
 			uniform float _alpha;
+			uniform float _FresnelScale;
+			uniform float _FresnelPower;
 			half OneMinusReflectivity( half metallic )
 			{
 				   return OneMinusReflectivityFromMetallic(metallic);
@@ -2154,6 +2151,7 @@ Shader "Hanmen/Item Cutoff"
 				float3 normal : NORMAL;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				float4 ase_texcoord : TEXCOORD0;
+				float4 ase_tangent : TANGENT;
 			};
 			
 			struct v2f
@@ -2162,6 +2160,10 @@ Shader "Hanmen/Item Cutoff"
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 				float4 ase_texcoord1 : TEXCOORD1;
+				float4 ase_texcoord2 : TEXCOORD2;
+				float4 ase_texcoord3 : TEXCOORD3;
+				float4 ase_texcoord4 : TEXCOORD4;
+				float4 ase_texcoord5 : TEXCOORD5;
 			};
 
 			
@@ -2173,10 +2175,24 @@ Shader "Hanmen/Item Cutoff"
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
 				
-				o.ase_texcoord1.xy = v.ase_texcoord.xy;
+				float3 ase_worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+				o.ase_texcoord1.xyz = ase_worldPos;
+				float3 ase_worldTangent = UnityObjectToWorldDir(v.ase_tangent);
+				o.ase_texcoord3.xyz = ase_worldTangent;
+				float3 ase_worldNormal = UnityObjectToWorldNormal(v.normal);
+				o.ase_texcoord4.xyz = ase_worldNormal;
+				float ase_vertexTangentSign = v.ase_tangent.w * unity_WorldTransformParams.w;
+				float3 ase_worldBitangent = cross( ase_worldNormal, ase_worldTangent ) * ase_vertexTangentSign;
+				o.ase_texcoord5.xyz = ase_worldBitangent;
+				
+				o.ase_texcoord2.xy = v.ase_texcoord.xy;
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
-				o.ase_texcoord1.zw = 0;
+				o.ase_texcoord1.w = 0;
+				o.ase_texcoord2.zw = 0;
+				o.ase_texcoord3.w = 0;
+				o.ase_texcoord4.w = 0;
+				o.ase_texcoord5.w = 0;
 				
 				v.vertex.xyz +=  float3(0,0,0) ;
 				TRANSFER_SHADOW_CASTER_NORMALOFFSET(o)
@@ -2190,9 +2206,59 @@ Shader "Hanmen/Item Cutoff"
 			) : SV_Target
 			{
 				float outAlpha;
+				float3 ase_worldPos = i.ase_texcoord1.xyz;
+				float3 ase_worldViewDir = UnityWorldSpaceViewDir(ase_worldPos);
+				ase_worldViewDir = normalize(ase_worldViewDir);
+				float2 uv_BumpMap180_g498 = i.ase_texcoord2.xy;
+				float2 UVScalePattern459_g498 = _UVScalePattern;
+				float2 texCoord76_g498 = i.ase_texcoord2.xy * ( _DetailUV * UVScalePattern459_g498 ) + float2( 0,0 );
+				float cos78_g498 = cos( ( _DetailUVRotator * UNITY_PI ) );
+				float sin78_g498 = sin( ( _DetailUVRotator * UNITY_PI ) );
+				float2 rotator78_g498 = mul( texCoord76_g498 - float2( 0.5,0.5 ) , float2x2( cos78_g498 , -sin78_g498 , sin78_g498 , cos78_g498 )) + float2( 0.5,0.5 );
+				float2 Detail1UV79_g498 = rotator78_g498;
+				float2 break13_g498 = Detail1UV79_g498;
+				float temp_output_14_0_g498 = ( pow( 0.25 , 3.0 ) * 0.2 );
+				float2 appendResult24_g498 = (float2(( break13_g498.x + temp_output_14_0_g498 ) , break13_g498.y));
+				float4 tex2DNode85_g498 = SAMPLE_TEXTURE2D( _DetailGlossMap, sampler_trilinear_repeat, Detail1UV79_g498 );
+				float2 uv_DetailMask81_g498 = i.ase_texcoord2.xy;
+				float4 tex2DNode81_g498 = SAMPLE_TEXTURE2D( _DetailMask, sampler_DetailMask, uv_DetailMask81_g498 );
+				float DetailMask183_g498 = tex2DNode81_g498.r;
+				float temp_output_42_0_g498 = ( DetailMask183_g498 * _DetailNormalMapScale );
+				float3 appendResult56_g498 = (float3(1.0 , 0.0 , ( ( SAMPLE_TEXTURE2D( _DetailGlossMap, sampler_trilinear_repeat, appendResult24_g498 ).g - tex2DNode85_g498.g ) * temp_output_42_0_g498 )));
+				float2 appendResult27_g498 = (float2(break13_g498.x , ( break13_g498.y + temp_output_14_0_g498 )));
+				float3 appendResult58_g498 = (float3(0.0 , 1.0 , ( ( SAMPLE_TEXTURE2D( _DetailGlossMap, sampler_trilinear_repeat, appendResult27_g498 ).g - tex2DNode85_g498.g ) * temp_output_42_0_g498 )));
+				float3 normalizeResult66_g498 = normalize( cross( appendResult56_g498 , appendResult58_g498 ) );
+				float3 DetailNormal171_g498 = normalizeResult66_g498;
+				float2 texCoord7_g498 = i.ase_texcoord2.xy * ( UVScalePattern459_g498 * _DetailUV2 ) + float2( 0,0 );
+				float cos10_g498 = cos( ( _DetailUV2Rotator * UNITY_PI ) );
+				float sin10_g498 = sin( ( _DetailUV2Rotator * UNITY_PI ) );
+				float2 rotator10_g498 = mul( texCoord7_g498 - float2( 0.5,0.5 ) , float2x2( cos10_g498 , -sin10_g498 , sin10_g498 , cos10_g498 )) + float2( 0.5,0.5 );
+				float2 Detail2UV12_g498 = rotator10_g498;
+				float2 break20_g498 = Detail2UV12_g498;
+				float temp_output_21_0_g498 = ( pow( 0.25 , 3.0 ) * 0.2 );
+				float2 appendResult32_g498 = (float2(( break20_g498.x + temp_output_21_0_g498 ) , break20_g498.y));
+				float4 tex2DNode41_g498 = SAMPLE_TEXTURE2D( _DetailGlossMap2, sampler_trilinear_repeat, Detail2UV12_g498 );
+				float DetailMask284_g498 = tex2DNode81_g498.g;
+				float temp_output_49_0_g498 = ( DetailMask284_g498 * _DetailNormalMapScale2 );
+				float3 appendResult63_g498 = (float3(1.0 , 0.0 , ( ( SAMPLE_TEXTURE2D( _DetailGlossMap2, sampler_trilinear_repeat, appendResult32_g498 ).g - tex2DNode41_g498.g ) * temp_output_49_0_g498 )));
+				float2 appendResult31_g498 = (float2(break20_g498.x , ( break20_g498.y + temp_output_21_0_g498 )));
+				float3 appendResult64_g498 = (float3(0.0 , 1.0 , ( ( SAMPLE_TEXTURE2D( _DetailGlossMap2, sampler_trilinear_repeat, appendResult31_g498 ).g - tex2DNode41_g498.g ) * temp_output_49_0_g498 )));
+				float3 normalizeResult70_g498 = normalize( cross( appendResult63_g498 , appendResult64_g498 ) );
+				float3 DetailNormal272_g498 = normalizeResult70_g498;
+				float3 normalizeResult262_g498 = normalize( BlendNormals( BlendNormals( UnpackScaleNormal( SAMPLE_TEXTURE2D( _BumpMap, sampler_BumpMap, uv_BumpMap180_g498 ), _Float0 ) , DetailNormal171_g498 ) , DetailNormal272_g498 ) );
+				float3 temp_output_1737_342 = normalizeResult262_g498;
+				float3 OutNormal1457 = temp_output_1737_342;
+				float3 ase_worldTangent = i.ase_texcoord3.xyz;
+				float3 ase_worldNormal = i.ase_texcoord4.xyz;
+				float3 ase_worldBitangent = i.ase_texcoord5.xyz;
+				float3 tanToWorld0 = float3( ase_worldTangent.x, ase_worldBitangent.x, ase_worldNormal.x );
+				float3 tanToWorld1 = float3( ase_worldTangent.y, ase_worldBitangent.y, ase_worldNormal.y );
+				float3 tanToWorld2 = float3( ase_worldTangent.z, ase_worldBitangent.z, ase_worldNormal.z );
+				float3 tanNormal1730 = OutNormal1457;
+				float3 worldNormal1730 = float3(dot(tanToWorld0,tanNormal1730), dot(tanToWorld1,tanNormal1730), dot(tanToWorld2,tanNormal1730));
 				float Color1Alpha101_g498 = _Color.a;
 				float Color2Alpha97_g498 = _Color2.a;
-				float2 uv_ColorMask86_g498 = i.ase_texcoord1.xy;
+				float2 uv_ColorMask86_g498 = i.ase_texcoord2.xy;
 				float4 tex2DNode86_g498 = SAMPLE_TEXTURE2D( _ColorMask, sampler_ColorMask, uv_ColorMask86_g498 );
 				float ColorMask296_g498 = tex2DNode86_g498.r;
 				float lerpResult476_g498 = lerp( Color1Alpha101_g498 , Color2Alpha97_g498 , ColorMask296_g498);
@@ -2202,16 +2268,18 @@ Shader "Hanmen/Item Cutoff"
 				float Color4Alpha100_g498 = _Color4.a;
 				float ColorMask494_g498 = tex2DNode86_g498.b;
 				float lerpResult478_g498 = lerp( lerpResult477_g498 , Color4Alpha100_g498 , ColorMask494_g498);
-				float2 uv_MainTex119_g498 = i.ase_texcoord1.xy;
+				float2 uv_MainTex119_g498 = i.ase_texcoord2.xy;
 				float4 tex2DNode119_g498 = SAMPLE_TEXTURE2D( _MainTex, sampler_MainTex, uv_MainTex119_g498 );
 				float AlphaInput137_g498 = tex2DNode119_g498.a;
 				float OutOp1464 = ( saturate( ( lerpResult478_g498 * AlphaInput137_g498 ) ) * _alpha );
+				float fresnelNdotV1726 = dot( worldNormal1730, ase_worldViewDir );
+				float fresnelNode1726 = ( OutOp1464 + _FresnelScale * pow( 1.0 - fresnelNdotV1726, _FresnelPower ) );
 				float clampResult353_g498 = clamp( _AlphaEx , 0.2 , 1.0 );
-				float2 uv_OcclusionMap259_g498 = i.ase_texcoord1.xy;
+				float2 uv_OcclusionMap259_g498 = i.ase_texcoord2.xy;
 				float4 tex2DNode259_g498 = SAMPLE_TEXTURE2D( _OcclusionMap, sampler_OcclusionMap, uv_OcclusionMap259_g498 );
 				float Tearing360_g498 = tex2DNode259_g498.b;
 				float Mask1604 = ( step( pow( ( 1.0 - clampResult353_g498 ) , 0.2 ) , pow( Tearing360_g498 , 0.5 ) ) * AlphaInput137_g498 );
-				float AlphaSC1698 = ( OutOp1464 * Mask1604 );
+				float AlphaSC1698 = ( fresnelNode1726 * Mask1604 );
 				
 				
 				outAlpha = AlphaSC1698;
@@ -2233,7 +2301,7 @@ Shader "Hanmen/Item Cutoff"
 }
 /*ASEBEGIN
 Version=18935
-283.6;202;1221;731;9157.471;3825.055;4.281665;True;False
+44;70.4;1221;862;8883.405;2541.185;2.214176;True;False
 Node;AmplifyShaderEditor.FunctionNode;1448;-7051.003,-3219.386;Inherit;False;Iridiscence;86;;272;70fe6a1ace0a29b439fe6d71982b6fe0;0;1;1;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1504;-6542.181,-2655.577;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1506;-6932.382,-2251.002;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
@@ -2325,17 +2393,15 @@ Node;AmplifyShaderEditor.SimpleMultiplyOpNode;1725;-7145.349,-2554.353;Inherit;F
 Node;AmplifyShaderEditor.RangedFloatNode;1724;-7517.377,-2449.83;Inherit;False;Property;_alpha;alpha;3;0;Create;True;0;0;0;True;0;False;1;1;0;1;0;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;1599;-6523.928,-1621.583;Inherit;False;Property;_Cutoff;Cutoff;2;1;[Header];Fetch;True;1;Alpha Clip Value;0;0;True;0;False;0.5;0.5;0;1;0;1;FLOAT;0
 Node;AmplifyShaderEditor.FresnelNode;1726;-7629.906,-1666.729;Inherit;False;Standard;WorldNormal;ViewDir;False;False;5;0;FLOAT3;0,0,1;False;4;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;1;False;3;FLOAT;5;False;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleAddOpNode;1727;-7341.654,-1686.772;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.ViewDirInputsCoordNode;1729;-7946.576,-1579.737;Inherit;False;World;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
 Node;AmplifyShaderEditor.WorldNormalVector;1730;-7961.785,-1740.792;Inherit;False;False;1;0;FLOAT3;0,0,1;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
-Node;AmplifyShaderEditor.GetLocalVarNode;1731;-8197.473,-1747.373;Inherit;False;1715;NormalFace;1;0;OBJECT;;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.GetLocalVarNode;1475;-7534.921,-1410.074;Inherit;False;1464;OutOp;1;0;OBJECT;;False;1;FLOAT;0
-Node;AmplifyShaderEditor.WireNode;1735;-6833.626,-1524.197;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;1733;-8017.494,-1310.886;Inherit;False;Property;_FresnelScale;FresnelScale;84;0;Create;True;0;0;0;True;0;False;0;1.37;0;10;0;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;1734;-8016.014,-1229.827;Inherit;False;Property;_FresnelPower;FresnelPower;82;1;[Header];Create;True;1;Fresnel Settings;0;0;True;0;False;0;3.48;0;10;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;1732;-8022.503,-1394.558;Inherit;False;Property;_FresnelBias;FresnelBias;83;0;Create;True;0;0;0;True;0;False;0;0;0;1;0;1;FLOAT;0
 Node;AmplifyShaderEditor.FunctionNode;1737;-7367.8,-2976.356;Inherit;False;AIT Item Function;4;;498;49cd9f91cda5058428ddba66ec049916;0;0;11;FLOAT3;345;FLOAT3;342;FLOAT3;341;FLOAT;340;FLOAT;0;FLOAT;393;FLOAT;346;FLOAT;480;FLOAT;344;FLOAT;386;SAMPLERSTATE;389
-Node;AmplifyShaderEditor.StaticSwitch;1736;-5522.126,-1689.794;Inherit;False;Property;_SHADERTYPE_ITEM;SHADERTYPE_ITEM;94;0;Create;False;0;0;0;True;1;HideInInspector;False;0;1;1;True;_SHADERTYPE_ITEM;Toggle;2;Key0;Key1;Create;False;False;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch;1736;-6014.519,-1218.811;Inherit;False;Property;_SHADERTYPE_ITEM;SHADERTYPE_ITEM;94;0;Create;False;0;0;0;True;1;HideInInspector;False;0;1;1;True;_SHADERTYPE_ITEM;Toggle;2;Key0;Key1;Create;False;False;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode;1475;-7957.416,-1086.628;Inherit;False;1464;OutOp;1;0;OBJECT;;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;1732;-8022.503,-1394.558;Inherit;False;Property;_FresnelBias;FresnelBias;83;0;Create;True;0;0;0;False;0;False;0;0;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode;1731;-8208.543,-1745.159;Inherit;False;1457;OutNormal;1;0;OBJECT;;False;1;FLOAT3;0
 WireConnection;1448;1;1737;342
 WireConnection;1504;0;1448;0
 WireConnection;1506;0;1737;340
@@ -2381,8 +2447,8 @@ WireConnection;1553;0;1737;345
 WireConnection;1551;0;1488;0
 WireConnection;1551;1;1640;68
 WireConnection;1613;0;1598;0
-WireConnection;1693;10;1727;0
-WireConnection;1694;10;1727;0
+WireConnection;1693;10;1726;0
+WireConnection;1694;10;1726;0
 WireConnection;1695;1;1693;0
 WireConnection;1695;0;1694;0
 WireConnection;1621;0;1695;0
@@ -2394,7 +2460,7 @@ WireConnection;1421;3;1713;18
 WireConnection;1421;4;1622;0
 WireConnection;1598;1;1621;0
 WireConnection;1598;2;1599;0
-WireConnection;1697;0;1735;0
+WireConnection;1697;0;1726;0
 WireConnection;1697;1;1605;0
 WireConnection;1698;0;1697;0
 WireConnection;1713;3;1485;0
@@ -2434,12 +2500,9 @@ WireConnection;1725;0;1737;344
 WireConnection;1725;1;1724;0
 WireConnection;1726;0;1730;0
 WireConnection;1726;4;1729;0
-WireConnection;1726;1;1732;0
+WireConnection;1726;1;1475;0
 WireConnection;1726;2;1733;0
 WireConnection;1726;3;1734;0
-WireConnection;1727;0;1726;0
-WireConnection;1727;1;1475;0
 WireConnection;1730;0;1731;0
-WireConnection;1735;0;1475;0
 ASEEND*/
-//CHKSM=1725E51FF8B79B8A6BCE992620A087270B33108A
+//CHKSM=04CB0E3467D8E4C8713D127D948CD4E3CF51760F
