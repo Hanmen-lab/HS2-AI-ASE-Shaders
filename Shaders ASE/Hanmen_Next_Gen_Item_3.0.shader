@@ -1893,6 +1893,14 @@ Shader "Hanmen/Next-Gen Item"
 			#include "UnityStandardUtils.cginc"
 			#pragma multi_compile __ _SHADERTYPE_ITEM
 			#pragma shader_feature SCENE_VIEW
+			#if defined(SHADER_API_D3D11) || defined(SHADER_API_XBOXONE) || defined(UNITY_COMPILER_HLSLCC) || defined(SHADER_API_PSSL) || (defined(SHADER_TARGET_SURFACE_ANALYSIS) && !defined(SHADER_TARGET_SURFACE_ANALYSIS_MOJOSHADER))//ASE Sampler Macros
+			#define SAMPLE_TEXTURE2D(tex,samplerTex,coord) tex.Sample(samplerTex,coord)
+			#define SAMPLE_TEXTURE2D_LOD(tex,samplerTex,coord,lod) tex.SampleLevel(samplerTex,coord, lod)
+			#else//ASE Sampling Macros
+			#define SAMPLE_TEXTURE2D(tex,samplerTex,coord) tex2D(tex,coord)
+			#define SAMPLE_TEXTURE2D_LOD(tex,samplerTex,coord,lod) tex2Dlod(tex,float4(coord,0,lod))
+			#endif//ASE Sampling Macros
+			
 
 			UNITY_DECLARE_TEX2D_NOSAMPLER(_DetailGlossMap);
 			SamplerState sampler_DetailGlossMap;
@@ -1984,6 +1992,8 @@ Shader "Hanmen/Next-Gen Item"
 			SamplerState samplerLightingTexBlurred;
 			UNITY_DECLARE_TEX2D_NOSAMPLER(LightingTexBlurredR);
 			SamplerState samplerLightingTexBlurredR;
+			float4 _Noise_TexelSize;
+			SamplerState sampler_point_repeat;
 			half OneMinusReflectivity( half metallic )
 			{
 				   return OneMinusReflectivityFromMetallic(metallic);
@@ -1995,6 +2005,29 @@ Shader "Hanmen/Next-Gen Item"
 				return saturate(i * rcp(maxInt));
 			}
 			
+			inline float Dither8x8Bayer( int x, int y )
+			{
+				const float dither[ 64 ] = {
+			 1, 49, 13, 61,  4, 52, 16, 64,
+			33, 17, 45, 29, 36, 20, 48, 32,
+			 9, 57,  5, 53, 12, 60,  8, 56,
+			41, 25, 37, 21, 44, 28, 40, 24,
+			 3, 51, 15, 63,  2, 50, 14, 62,
+			35, 19, 47, 31, 34, 18, 46, 30,
+			11, 59,  7, 55, 10, 58,  6, 54,
+			43, 27, 39, 23, 42, 26, 38, 22};
+				int r = y * 8 + x;
+				return dither[r] / 64; // same # of instructions as pre-dividing due to compiler magic
+			}
+			
+			inline float DitherNoiseTex( float4 screenPos, UNITY_DECLARE_TEX2D_NOSAMPLER(noiseTexture), SamplerState samplernoiseTexture, float4 noiseTexelSize )
+			{
+				float dither = SAMPLE_TEXTURE2D_LOD( noiseTexture, samplernoiseTexture, screenPos.xy * _ScreenParams.xy * noiseTexelSize.xy, 0 ).g;
+				float ditherRate = noiseTexelSize.x * noiseTexelSize.y;
+				dither = ( 1 - ditherRate ) * dither + ditherRate;
+				return dither;
+			}
+			
 
 			sampler3D _DitherMaskLOD;
 			uniform float _Cutoff;
@@ -2004,7 +2037,7 @@ Shader "Hanmen/Next-Gen Item"
 				float4 vertex : POSITION;
 				float3 normal : NORMAL;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
-				
+				float4 ase_texcoord : TEXCOORD0;
 			};
 			
 			struct v2f
@@ -2012,7 +2045,8 @@ Shader "Hanmen/Next-Gen Item"
 				V2F_SHADOW_CASTER;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
-				
+				float4 ase_texcoord1 : TEXCOORD1;
+				float4 ase_texcoord2 : TEXCOORD2;
 			};
 
 			
@@ -2024,7 +2058,14 @@ Shader "Hanmen/Next-Gen Item"
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
 				
+				float4 ase_clipPos = UnityObjectToClipPos(v.vertex);
+				float4 screenPos = ComputeScreenPos(ase_clipPos);
+				o.ase_texcoord2 = screenPos;
 				
+				o.ase_texcoord1.xy = v.ase_texcoord.xy;
+				
+				//setting value to unused interpolator channels and avoid initialization warnings
+				o.ase_texcoord1.zw = 0;
 				
 				v.vertex.xyz +=  float3(0,0,0) ;
 				TRANSFER_SHADOW_CASTER_NORMALOFFSET(o)
@@ -2038,9 +2079,34 @@ Shader "Hanmen/Next-Gen Item"
 			) : SV_Target
 			{
 				float outAlpha;
+				float2 uv_MainTex119_g74 = i.ase_texcoord1.xy;
+				float4 tex2DNode119_g74 = SAMPLE_TEXTURE2D( _MainTex, sampler_MainTex, uv_MainTex119_g74 );
+				float AlphaInput137_g74 = tex2DNode119_g74.a;
+				float Color1Alpha101_g74 = _Color.a;
+				float2 uv_ColorMask86_g74 = i.ase_texcoord1.xy;
+				float4 tex2DNode86_g74 = SAMPLE_TEXTURE2D( _ColorMask, sampler_ColorMask, uv_ColorMask86_g74 );
+				float ColorMask199_g74 = ( 1.0 - ( tex2DNode86_g74.r + tex2DNode86_g74.g + tex2DNode86_g74.b ) );
+				float Color2Alpha97_g74 = _Color2.a;
+				float ColorMask296_g74 = tex2DNode86_g74.r;
+				float Color3Alpha98_g74 = _Color3.a;
+				float ColorMask3102_g74 = tex2DNode86_g74.g;
+				float Color4Alpha100_g74 = _Color4.a;
+				float ColorMask494_g74 = tex2DNode86_g74.b;
+				float AlphaMix258_g74 = saturate( ( AlphaInput137_g74 * ( ( Color1Alpha101_g74 * ColorMask199_g74 ) + ( Color2Alpha97_g74 * ColorMask296_g74 ) + ( Color3Alpha98_g74 * ColorMask3102_g74 ) + ( Color4Alpha100_g74 * ColorMask494_g74 ) ) ) );
+				float Bluenoise284_g74 = _DitherBlueNoise;
+				float4 screenPos = i.ase_texcoord2;
+				float4 ase_screenPosNorm = screenPos / screenPos.w;
+				ase_screenPosNorm.z = ( UNITY_NEAR_CLIP_VALUE >= 0 ) ? ase_screenPosNorm.z : ase_screenPosNorm.z * 0.5 + 0.5;
+				float2 clipScreen290_g74 = ase_screenPosNorm.xy * _ScreenParams.xy;
+				float dither290_g74 = Dither8x8Bayer( fmod(clipScreen290_g74.x, 8), fmod(clipScreen290_g74.y, 8) );
+				dither290_g74 = step( dither290_g74, AlphaMix258_g74 );
+				float dither286_g74 = DitherNoiseTex(ase_screenPosNorm, _Noise, sampler_point_repeat, _Noise_TexelSize);
+				dither286_g74 = step( dither286_g74, AlphaMix258_g74 );
+				float FinalAlpha325_g74 = ( _DitherSwitch == 0.0 ? AlphaMix258_g74 : ( Bluenoise284_g74 == 0.0 ? dither290_g74 : dither286_g74 ) );
+				float Alpha845 = FinalAlpha325_g74;
 				
 				
-				outAlpha = 1;
+				outAlpha = Alpha845;
 				#if defined( CAN_SKIP_VPOS )
 				float2 vpos = i.pos;
 				#endif
@@ -2059,7 +2125,7 @@ Shader "Hanmen/Next-Gen Item"
 }
 /*ASEBEGIN
 Version=18935
-90.8;144;1336;792;-5416.717;4562.3;1;True;False
+6;134.4;1336;798;-3752.73;5896.878;3.09287;True;False
 Node;AmplifyShaderEditor.FunctionNode;876;4026.43,-4520.084;Inherit;False;AIT Item Function 1;2;;74;ad510b5e93257fd489f03104b8d9f326;0;0;7;FLOAT3;345;FLOAT3;342;FLOAT3;341;FLOAT;340;FLOAT;0;FLOAT;346;FLOAT;344
 Node;AmplifyShaderEditor.RegisterLocalVarNode;805;4374.64,-4439.769;Inherit;False;Normalout;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.CommentaryNode;751;2573.189,-2856.216;Inherit;False;1781.598;1537.865;Comment;26;768;769;776;779;778;777;775;774;773;772;767;764;761;759;758;757;771;765;763;762;756;755;753;754;752;788;Specular AO;1,1,1,1;0;0
@@ -2328,5 +2394,6 @@ WireConnection;708;3;926;0
 WireConnection;708;4;844;0
 WireConnection;725;0;728;0
 WireConnection;725;1;724;0
+WireConnection;709;0;884;0
 ASEEND*/
-//CHKSM=B2ED1353C73868297FF7BBF536FF77F0F3A1151F
+//CHKSM=F15139002E8E42C450D464F9A7FF856289FA9FF2
