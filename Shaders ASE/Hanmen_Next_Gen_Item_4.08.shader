@@ -5,8 +5,8 @@ Shader "Hanmen/Next-Gen Item"
 	Properties
 	{
 		[Header(Backface Settings)][IntRange]_CullMode("CullMode", Range( 0 , 2)) = 0
-		[Header(Alpha Clip Value)]_Cutoff("Cutoff", Range( 0 , 1)) = 0.5
 		[NoScaleOffset][Header (RGB Color A Cutoff)]_MainTex("MainTex", 2D) = "white" {}
+		[Header(Alpha Clip Value)]_Cutoff("Cutoff", Range( 0 , 1)) = 0.5
 		[NoScaleOffset]_ColorMask("ColorMask", 2D) = "black" {}
 		[NoScaleOffset]_BumpMap("BumpMap", 2D) = "bump" {}
 		[NoScaleOffset][Header(Packed (R_Gloss G_Emission B_MetallicMask))]_MetallicGlossMap("MetallicGlossMap", 2D) = "white" {}
@@ -754,8 +754,8 @@ Shader "Hanmen/Next-Gen Item"
 				float clampResult353_g243 = clamp( _AlphaEx , 0.2 , 1.0 );
 				float2 uv_OcclusionMap375_g243 = i.ase_texcoord1.xy;
 				float Mask943 = ( step( pow( ( 1.0 - clampResult353_g243 ) , 0.2 ) , pow( SAMPLE_TEXTURE2D( _OcclusionMap, sampler_OcclusionMap, uv_OcclusionMap375_g243 ).b , 0.5 ) ) * AlphaInput137_g243 );
-				clip( ( staticSwitch950 * Mask943 ) - _Cutoff);
-				float Clip947 = 1.0;
+				float temp_output_951_0 = ( staticSwitch950 * Mask943 );
+				float Clip947 = temp_output_951_0;
 				
 				
 				outColor = ( staticSwitch895 + staticSwitch897 );
@@ -1402,8 +1402,8 @@ Shader "Hanmen/Next-Gen Item"
 				float clampResult353_g243 = clamp( _AlphaEx , 0.2 , 1.0 );
 				float2 uv_OcclusionMap375_g243 = i.ase_texcoord1.xy;
 				float Mask943 = ( step( pow( ( 1.0 - clampResult353_g243 ) , 0.2 ) , pow( SAMPLE_TEXTURE2D( _OcclusionMap, sampler_OcclusionMap, uv_OcclusionMap375_g243 ).b , 0.5 ) ) * AlphaInput137_g243 );
-				clip( ( staticSwitch950 * Mask943 ) - _Cutoff);
-				float Clip947 = 1.0;
+				float temp_output_951_0 = ( staticSwitch950 * Mask943 );
+				float Clip947 = temp_output_951_0;
 				
 				
 				outColor = ( staticSwitch895 + staticSwitch897 );
@@ -1876,8 +1876,8 @@ Shader "Hanmen/Next-Gen Item"
 				float clampResult353_g243 = clamp( _AlphaEx , 0.2 , 1.0 );
 				float2 uv_OcclusionMap375_g243 = i.ase_texcoord1.xy;
 				float Mask943 = ( step( pow( ( 1.0 - clampResult353_g243 ) , 0.2 ) , pow( SAMPLE_TEXTURE2D( _OcclusionMap, sampler_OcclusionMap, uv_OcclusionMap375_g243 ).b , 0.5 ) ) * AlphaInput137_g243 );
-				clip( ( staticSwitch950 * Mask943 ) - _Cutoff);
-				float Clip947 = 1.0;
+				float temp_output_951_0 = ( staticSwitch950 * Mask943 );
+				float Clip947 = temp_output_951_0;
 				
 				
 				outGBuffer0 = appendResult902;
@@ -2117,7 +2117,7 @@ Shader "Hanmen/Next-Gen Item"
 }
 /*ASEBEGIN
 Version=18935
-194;6;1336;878;-3511.64;5032.415;1.69364;True;False
+192.8;6;1337;878;-6510.959;3960.707;1;True;False
 Node;AmplifyShaderEditor.RegisterLocalVarNode;805;4374.64,-4439.769;Inherit;False;Normalout;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.CommentaryNode;751;2573.189,-2856.216;Inherit;False;1781.598;1537.865;Comment;2;779;788;Specular AO;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;711;2529.143,-3584.173;Inherit;False;1950.029;618.0199;Albedo Scene View;11;723;721;720;719;718;717;716;715;714;713;712;;1,1,1,1;0;0
@@ -2242,9 +2242,6 @@ Node;AmplifyShaderEditor.RegisterLocalVarNode;875;4368.116,-3751.139;Inherit;Fal
 Node;AmplifyShaderEditor.GetLocalVarNode;872;4012.777,-3802.706;Inherit;False;836;Emi;1;0;OBJECT;;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;943;4372.068,-4121.38;Inherit;False;Mask;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;941;4320.368,-4027.671;Inherit;False;Property;_alpha;alpha;55;0;Create;True;0;0;0;True;0;False;1;1;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.GetLocalVarNode;946;7019.879,-3501.417;Inherit;False;943;Mask;1;0;OBJECT;;False;1;FLOAT;0
-Node;AmplifyShaderEditor.RegisterLocalVarNode;947;7656.515,-3588.68;Inherit;False;Clip;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;951;7240.868,-3561.724;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;953;7117.181,-3764.373;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;954;7653.786,-3771.523;Inherit;False;AlphaSC;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;956;6195.478,-3773.645;Inherit;False;942;OutOp;1;0;OBJECT;;False;1;FLOAT;0
@@ -2253,7 +2250,6 @@ Node;AmplifyShaderEditor.GetLocalVarNode;884;6781.856,-4273.531;Inherit;False;94
 Node;AmplifyShaderEditor.GetLocalVarNode;957;6743.186,-4158.006;Inherit;False;954;AlphaSC;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.FunctionNode;948;6521.335,-3625.506;Inherit;False;Dither IGN;-1;;474;0a81f9c8808949b40b4d9bf0cdce67ca;1,11,0;1;10;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.FunctionNode;949;6520.402,-3476.076;Inherit;False;Dither IGN;-1;;475;0a81f9c8808949b40b4d9bf0cdce67ca;1,11,1;1;10;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.ClipNode;952;7432.237,-3584.551;Inherit;False;3;0;FLOAT;1;False;1;FLOAT;0;False;2;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.StaticSwitch;950;6714.866,-3568.459;Inherit;False;Property;_TemporalFilter;TemporalFilter;14;0;Create;False;0;0;0;True;0;False;1;0;0;False;_TEMPORALFILTER_ON;Toggle;2;Key0;Key1;Create;False;False;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;846;6651.695,-6615.335;Inherit;False;947;Clip;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;958;6439.15,-3068.29;Inherit;False;Property;_CullMode;CullMode;0;2;[Header];[IntRange];Create;True;1;Backface Settings;0;0;True;0;False;0;0;0;2;0;1;FLOAT;0
@@ -2269,6 +2265,10 @@ Node;AmplifyShaderEditor.WireNode;963;4348.749,-3802.219;Inherit;False;1;0;FLOAT
 Node;AmplifyShaderEditor.WireNode;961;4379.249,-3934.393;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.WireNode;964;4415.85,-3916.092;Inherit;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.SamplerNode;933;3952.586,-4253.013;Inherit;True;Property;_SpecGlossMap;SpecGlossMap;56;0;Create;True;0;0;0;True;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.ClipNode;952;7496.237,-3433.551;Inherit;False;3;0;FLOAT;1;False;1;FLOAT;0;False;2;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode;947;7662.515,-3561.68;Inherit;False;Clip;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode;946;6817.879,-3398.417;Inherit;False;943;Mask;1;0;OBJECT;;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;951;7145.868,-3561.724;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 WireConnection;805;0;939;342
 WireConnection;715;0;712;0
 WireConnection;717;0;714;0
@@ -2371,16 +2371,11 @@ WireConnection;874;0;872;0
 WireConnection;874;1;873;0
 WireConnection;875;0;874;0
 WireConnection;943;0;939;373
-WireConnection;947;0;952;0
-WireConnection;951;0;950;0
-WireConnection;951;1;946;0
 WireConnection;953;0;956;0
 WireConnection;953;1;946;0
 WireConnection;954;0;953;0
 WireConnection;948;10;956;0
 WireConnection;949;10;956;0
-WireConnection;952;1;951;0
-WireConnection;952;2;955;0
 WireConnection;950;1;948;0
 WireConnection;950;0;949;0
 WireConnection;959;0;939;0
@@ -2390,5 +2385,10 @@ WireConnection;962;0;933;4
 WireConnection;963;0;962;0
 WireConnection;961;0;933;0
 WireConnection;964;0;961;0
+WireConnection;952;1;951;0
+WireConnection;952;2;955;0
+WireConnection;947;0;951;0
+WireConnection;951;0;950;0
+WireConnection;951;1;946;0
 ASEEND*/
-//CHKSM=83E060B3D26A14CD8BD93C5A71FD1FAECDA52A1B
+//CHKSM=CD072AC60711F2937639BC5B41408D14378C46A6
