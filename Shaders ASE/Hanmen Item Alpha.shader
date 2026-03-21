@@ -72,9 +72,9 @@ Shader "Hanmen/Item Alpha"
 		_patternuv3Rotator("patternuv3Rotator", Range( -1 , 1)) = 0
 		_patternuv1Rotator("patternuv1Rotator", Range( -1 , 1)) = 0
 		_patternuv2Rotator("patternuv2Rotator", Range( -1 , 1)) = 0
-		[Header (Emission (Tex Required))]_EmissionStrength("EmissionStrength", Range( 0 , 20)) = 0
+		[Header (Emission (Tex Required))]_EmissionStrength("EmissionStrength", Range( 0 , 20)) = 1
 		_EmissionColor("EmissionColor", Color) = (0,0,0,1)
-		[Toggle(_EMISSIONCOLORTEXBASE_OFF)] _EmissionColorTexBase("EmissionColorTexBase", Float) = 1
+		[Toggle(_EMISSIONCOLORTEXBASE_ON)] _EmissionColorTexBase("EmissionColorTexBase", Float) = 0
 		[Header(Emission Effect)][NoScaleOffset]_EffectMap("EffectMap", 2D) = "white" {}
 		_UVScroll("UVScroll", Vector) = (1,1,0,0)
 		_UVScrollRotator("UVScrollRotator", Range( -1 , 1)) = 0
@@ -110,7 +110,7 @@ Shader "Hanmen/Item Alpha"
 		#include "Lighting.cginc"
 		#pragma target 5.0
 		#pragma shader_feature _SHADERTYPE_ITEM
-		#pragma multi_compile __ _EMISSIONCOLORTEXBASE_OFF
+		#pragma multi_compile __ _EMISSIONCOLORTEXBASE_ON
 		#pragma multi_compile __ _SPECULARSETUP_ON
 		#pragma multi_compile __ _IRIDISCENT_ON
 		#include "Assets/HeightFog/HeightFog.cginc"
@@ -182,7 +182,6 @@ Shader "Hanmen/Item Alpha"
 		uniform float2 _DetailUV2;
 		uniform float _ExGloss;
 		uniform float _Float0;
-		uniform float _EmissionStrength;
 		uniform float4 _UVScroll;
 		uniform float _UVScrollRotator;
 		uniform float _Glossiness;
@@ -232,6 +231,7 @@ Shader "Hanmen/Item Alpha"
 		SamplerState sampler_ColorMask;
 		UNITY_DECLARE_TEX2D_NOSAMPLER(_DetailGlossMap2);
 		SamplerState sampler_DetailGlossMap2;
+		uniform float _EmissionStrength;
 		uniform float _NormalBackDirInvert;
 		uniform float4 _BumpMap_ST;
 		SamplerState sampler_trilinear_repeat;
@@ -626,10 +626,10 @@ Shader "Hanmen/Item Alpha"
 				float3 staticSwitch305_g186 = staticSwitch313_g186;
 			#endif
 			float3 emcol486_g185 = ( temp_output_182_0_g185 * CLEANCOLOR405_g185 );
-			#ifdef _EMISSIONCOLORTEXBASE_OFF
-				float3 staticSwitch404_g185 = (_EmissionColor).rgb;
-			#else
+			#ifdef _EMISSIONCOLORTEXBASE_ON
 				float3 staticSwitch404_g185 = emcol486_g185;
+			#else
+				float3 staticSwitch404_g185 = (_EmissionColor).rgb;
 			#endif
 			float2 appendResult410_g185 = (float2(_UVScroll.x , _UVScroll.y));
 			float2 appendResult413_g185 = (float2(_UVScroll.z , _UVScroll.w));
@@ -762,8 +762,7 @@ Shader "Hanmen/Item Alpha"
 }
 /*ASEBEGIN
 Version=18935
-6;0.4;1337;884;4965.182;2905.84;1;True;False
-Node;AmplifyShaderEditor.FunctionNode;1433;-4200.16,-2821.338;Inherit;False;Iridiscence;87;;180;70fe6a1ace0a29b439fe6d71982b6fe0;0;1;1;FLOAT3;0,0,0;False;1;FLOAT3;0
+6;6;1337;878;4965.182;2902.84;1;True;False
 Node;AmplifyShaderEditor.ColorNode;1441;-3816.678,-2408.3;Inherit;False;Property;_SpecColor;SpecColor;94;0;Fetch;True;0;0;0;True;0;False;0.5,0.5,0.5,1;0,0,0,0;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.WireNode;1448;-3949.412,-2279.099;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1449;-3907.649,-2235.138;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
@@ -831,7 +830,7 @@ Node;AmplifyShaderEditor.FunctionNode;1511;-732.2646,-2329.444;Inherit;False;New
 Node;AmplifyShaderEditor.SimpleAddOpNode;1465;-898.5637,-2605.471;Inherit;False;3;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.StandardSurfaceOutputNode;0;-336.7387,-2619.296;Float;False;True;-1;7;ASEMaterialInspector;0;0;CustomLighting;Hanmen/Item Alpha;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;False;False;False;False;False;False;Off;2;True;1413;3;False;-1;False;0;False;-1;0;False;-1;False;0;Transparent;0.1;True;True;0;False;Transparent;2600;Transparent;ForwardOnly;2;d3d11_9x;d3d11;True;True;True;True;0;False;-1;False;0;False;-1;255;False;-1;255;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;False;0;32;1;2;True;1;True;2;5;True;1415;10;True;1412;0;5;False;-1;8;False;-1;0;False;-1;6;False;-1;0;False;0;0,0,0,0;VertexOffset;True;False;Cylindrical;False;True;Relative;0;Legacy Shaders/Diffuse;-1;-1;-1;-1;0;False;0;0;True;1344;-1;0;True;1424;1;Include;;True;c467eed981df49dba07cd9b741545b92;Custom;0;0;False;0.1;False;-1;0;False;1414;True;15;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT;0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT;0;False;9;FLOAT;0;False;10;FLOAT;0;False;13;FLOAT3;0,0,0;False;11;FLOAT3;0,0,0;False;12;FLOAT3;0,0,0;False;14;FLOAT4;0,0,0,0;False;15;FLOAT3;0,0,0;False;0
 Node;AmplifyShaderEditor.SamplerNode;1451;-3878.938,-2167.773;Inherit;True;Property;_SpecularMap;SpecularMap;95;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-WireConnection;1433;1;1482;342
+Node;AmplifyShaderEditor.FunctionNode;1433;-4224.16,-2821.338;Inherit;False;Iridiscence;87;;180;70fe6a1ace0a29b439fe6d71982b6fe0;0;1;1;FLOAT3;0,0,0;False;1;FLOAT3;0
 WireConnection;1448;0;1433;0
 WireConnection;1449;0;1448;0
 WireConnection;1442;0;1441;0
@@ -901,5 +900,6 @@ WireConnection;1465;1;1466;0
 WireConnection;1465;2;1478;68
 WireConnection;0;9;1476;0
 WireConnection;0;13;1511;0
+WireConnection;1433;1;1482;342
 ASEEND*/
-//CHKSM=28BC242D20397C940A13E8F216E78E45E6C44033
+//CHKSM=DFDA58088C0DBA02D38DA81916C15E882B9FDFEF

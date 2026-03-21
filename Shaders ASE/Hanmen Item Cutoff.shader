@@ -8,8 +8,8 @@ Shader "Hanmen/Item Cutoff"
 		[Toggle]_NormalBackDirInvert("Normal Invert", Range( 0 , 1)) = 1
 		[Header(Alpha Clip Value)]_Cutoff("Cutoff", Range( 0 , 1)) = 0.5
 		_alpha("alpha", Range( 0 , 1)) = 1
-		[Header (RGB Color A Opacity)]_MainTex("MainTex", 2D) = "white" {}
 		[Header((R) MetallicMask)][Header((G) Emission)][Header((B) Thickness)][Header((A) Roughness)]_MetallicGlossMap("MetallicGlossMap", 2D) = "white" {}
+		[Header (RGB Color A Opacity)]_MainTex("MainTex", 2D) = "white" {}
 		_ColorMask("ColorMask", 2D) = "black" {}
 		_BumpMap("BumpMap", 2D) = "bump" {}
 		[NoScaleOffset][Header (R_Detail1 G_Detail2)]_DetailMask("DetailMask", 2D) = "white" {}
@@ -71,9 +71,9 @@ Shader "Hanmen/Item Cutoff"
 		_patternuv3Rotator("patternuv3Rotator", Range( -1 , 1)) = 0
 		_patternuv1Rotator("patternuv1Rotator", Range( -1 , 1)) = 0
 		_patternuv2Rotator("patternuv2Rotator", Range( -1 , 1)) = 0
-		[Header (Emission (Tex Required))]_EmissionStrength("EmissionStrength", Range( 0 , 20)) = 0
+		[Header (Emission (Tex Required))]_EmissionStrength("EmissionStrength", Range( 0 , 20)) = 1
 		_EmissionColor("EmissionColor", Color) = (0,0,0,1)
-		[Toggle(_EMISSIONCOLORTEXBASE_OFF)] _EmissionColorTexBase("EmissionColorTexBase", Float) = 1
+		[Toggle(_EMISSIONCOLORTEXBASE_ON)] _EmissionColorTexBase("EmissionColorTexBase", Float) = 0
 		[Header(Emission Effect)][NoScaleOffset]_EffectMap("EffectMap", 2D) = "white" {}
 		_UVScroll("UVScroll", Vector) = (1,1,0,0)
 		_UVScrollRotator("UVScrollRotator", Range( -1 , 1)) = 0
@@ -153,7 +153,7 @@ Shader "Hanmen/Item Cutoff"
 			#define ASE_NEEDS_VERT_NORMAL
 			#define ASE_SHADOWS 1
 			#pragma shader_feature _SHADERTYPE_ITEM
-			#pragma multi_compile __ _EMISSIONCOLORTEXBASE_OFF
+			#pragma multi_compile __ _EMISSIONCOLORTEXBASE_ON
 			#pragma multi_compile __ _SPECULARSETUP_ON
 			#pragma multi_compile __ _IRIDISCENT_ON
 			#pragma multi_compile __ _TEMPORALFILTER_ON
@@ -199,7 +199,6 @@ Shader "Hanmen/Item Cutoff"
 			uniform float2 _DetailUV2;
 			uniform float _ExGloss;
 			uniform float _Float0;
-			uniform float _EmissionStrength;
 			uniform float4 _UVScroll;
 			uniform float _UVScrollRotator;
 			uniform float _Glossiness;
@@ -249,6 +248,7 @@ Shader "Hanmen/Item Cutoff"
 			SamplerState sampler_ColorMask;
 			UNITY_DECLARE_TEX2D_NOSAMPLER(_DetailGlossMap2);
 			SamplerState sampler_DetailGlossMap2;
+			uniform float _EmissionStrength;
 			uniform float4 _MainTex_ST;
 			uniform float2 _patternuv1;
 			uniform float2 _patternuv2;
@@ -729,10 +729,10 @@ Shader "Hanmen/Item Cutoff"
 				float3 staticSwitch305_g499 = staticSwitch313_g499;
 				#endif
 				float3 emcol486_g528 = ( temp_output_182_0_g528 * CLEANCOLOR405_g528 );
-				#ifdef _EMISSIONCOLORTEXBASE_OFF
-				float3 staticSwitch404_g528 = (_EmissionColor).rgb;
-				#else
+				#ifdef _EMISSIONCOLORTEXBASE_ON
 				float3 staticSwitch404_g528 = emcol486_g528;
+				#else
+				float3 staticSwitch404_g528 = (_EmissionColor).rgb;
 				#endif
 				float2 appendResult410_g528 = (float2(_UVScroll.x , _UVScroll.y));
 				float2 appendResult413_g528 = (float2(_UVScroll.z , _UVScroll.w));
@@ -847,7 +847,7 @@ Shader "Hanmen/Item Cutoff"
 			#define ASE_NEEDS_VERT_NORMAL
 			#define ASE_SHADOWS 1
 			#pragma shader_feature _SHADERTYPE_ITEM
-			#pragma multi_compile __ _EMISSIONCOLORTEXBASE_OFF
+			#pragma multi_compile __ _EMISSIONCOLORTEXBASE_ON
 			#pragma multi_compile __ _SPECULARSETUP_ON
 			#pragma multi_compile __ _IRIDISCENT_ON
 			#pragma multi_compile __ _TEMPORALFILTER_ON
@@ -893,7 +893,6 @@ Shader "Hanmen/Item Cutoff"
 			uniform float2 _DetailUV2;
 			uniform float _ExGloss;
 			uniform float _Float0;
-			uniform float _EmissionStrength;
 			uniform float4 _UVScroll;
 			uniform float _UVScrollRotator;
 			uniform float _Glossiness;
@@ -943,6 +942,7 @@ Shader "Hanmen/Item Cutoff"
 			SamplerState sampler_ColorMask;
 			UNITY_DECLARE_TEX2D_NOSAMPLER(_DetailGlossMap2);
 			SamplerState sampler_DetailGlossMap2;
+			uniform float _EmissionStrength;
 			uniform float4 _MainTex_ST;
 			uniform float2 _patternuv1;
 			uniform float2 _patternuv2;
@@ -1422,10 +1422,10 @@ Shader "Hanmen/Item Cutoff"
 				float3 staticSwitch305_g499 = staticSwitch313_g499;
 				#endif
 				float3 emcol486_g528 = ( temp_output_182_0_g528 * CLEANCOLOR405_g528 );
-				#ifdef _EMISSIONCOLORTEXBASE_OFF
-				float3 staticSwitch404_g528 = (_EmissionColor).rgb;
-				#else
+				#ifdef _EMISSIONCOLORTEXBASE_ON
 				float3 staticSwitch404_g528 = emcol486_g528;
+				#else
+				float3 staticSwitch404_g528 = (_EmissionColor).rgb;
 				#endif
 				float2 appendResult410_g528 = (float2(_UVScroll.x , _UVScroll.y));
 				float2 appendResult413_g528 = (float2(_UVScroll.z , _UVScroll.w));
@@ -1546,7 +1546,7 @@ Shader "Hanmen/Item Cutoff"
 			#include "UnityStandardBRDF.cginc"
 			#define ASE_NEEDS_VERT_NORMAL
 			#pragma shader_feature _SHADERTYPE_ITEM
-			#pragma multi_compile __ _EMISSIONCOLORTEXBASE_OFF
+			#pragma multi_compile __ _EMISSIONCOLORTEXBASE_ON
 			#pragma multi_compile __ _SPECULARSETUP_ON
 			#pragma multi_compile __ _IRIDISCENT_ON
 			#pragma multi_compile __ _TEMPORALFILTER_ON
@@ -1591,7 +1591,6 @@ Shader "Hanmen/Item Cutoff"
 			uniform float2 _DetailUV2;
 			uniform float _ExGloss;
 			uniform float _Float0;
-			uniform float _EmissionStrength;
 			uniform float4 _UVScroll;
 			uniform float _UVScrollRotator;
 			uniform float _Glossiness;
@@ -1641,6 +1640,7 @@ Shader "Hanmen/Item Cutoff"
 			SamplerState sampler_ColorMask;
 			UNITY_DECLARE_TEX2D_NOSAMPLER(_DetailGlossMap2);
 			SamplerState sampler_DetailGlossMap2;
+			uniform float _EmissionStrength;
 			uniform float4 _MainTex_ST;
 			uniform float2 _patternuv1;
 			uniform float2 _patternuv2;
@@ -2006,10 +2006,10 @@ Shader "Hanmen/Item Cutoff"
 				float4 appendResult13_g502 = (float4(( ( normalizeResult21_g502 * 0.5 ) + 0.5 ) , 1.0));
 				
 				float3 emcol486_g528 = ( temp_output_182_0_g528 * CLEANCOLOR405_g528 );
-				#ifdef _EMISSIONCOLORTEXBASE_OFF
-				float3 staticSwitch404_g528 = (_EmissionColor).rgb;
-				#else
+				#ifdef _EMISSIONCOLORTEXBASE_ON
 				float3 staticSwitch404_g528 = emcol486_g528;
+				#else
+				float3 staticSwitch404_g528 = (_EmissionColor).rgb;
 				#endif
 				float2 appendResult410_g528 = (float2(_UVScroll.x , _UVScroll.y));
 				float2 appendResult413_g528 = (float2(_UVScroll.z , _UVScroll.w));
@@ -2126,7 +2126,7 @@ Shader "Hanmen/Item Cutoff"
             #include "UnityShaderVariables.cginc"
 			#include "UnityStandardUtils.cginc"
 			#pragma shader_feature _SHADERTYPE_ITEM
-			#pragma multi_compile __ _EMISSIONCOLORTEXBASE_OFF
+			#pragma multi_compile __ _EMISSIONCOLORTEXBASE_ON
 			#if defined(SHADER_API_D3D11) || defined(SHADER_API_XBOXONE) || defined(UNITY_COMPILER_HLSLCC) || defined(SHADER_API_PSSL) || (defined(SHADER_TARGET_SURFACE_ANALYSIS) && !defined(SHADER_TARGET_SURFACE_ANALYSIS_MOJOSHADER))//ASE Sampler Macros
 			#define SAMPLE_TEXTURE2D(tex,samplerTex,coord) tex.Sample(samplerTex,coord)
 			#else//ASE Sampling Macros
@@ -2161,7 +2161,6 @@ Shader "Hanmen/Item Cutoff"
 			uniform float2 _DetailUV2;
 			uniform float _ExGloss;
 			uniform float _Float0;
-			uniform float _EmissionStrength;
 			uniform float4 _UVScroll;
 			uniform float _UVScrollRotator;
 			uniform float _Glossiness;
@@ -2211,6 +2210,7 @@ Shader "Hanmen/Item Cutoff"
 			SamplerState sampler_ColorMask;
 			UNITY_DECLARE_TEX2D_NOSAMPLER(_DetailGlossMap2);
 			SamplerState sampler_DetailGlossMap2;
+			uniform float _EmissionStrength;
 			uniform float4 _ColorMask_ST;
 			uniform float4 _MainTex_ST;
 			uniform float _alpha;
@@ -2310,8 +2310,7 @@ Shader "Hanmen/Item Cutoff"
 }
 /*ASEBEGIN
 Version=18935
-6;6;1337;878;7712.808;3286.225;1;True;False
-Node;AmplifyShaderEditor.FunctionNode;1448;-7051.003,-3219.386;Inherit;False;Iridiscence;89;;272;70fe6a1ace0a29b439fe6d71982b6fe0;0;1;1;FLOAT3;0,0,0;False;1;FLOAT3;0
+6;0.4;1337;884;7712.808;3286.225;1;True;False
 Node;AmplifyShaderEditor.WireNode;1504;-6542.181,-2655.577;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1506;-6932.382,-2251.002;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.WireNode;1505;-6501.107,-2637.094;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
@@ -2416,7 +2415,7 @@ Node;AmplifyShaderEditor.RangedFloatNode;1724;-7526.732,-2436.181;Inherit;False;
 Node;AmplifyShaderEditor.SamplerNode;1510;-6563.142,-2576.792;Inherit;True;Property;_SpecularMap;SpecularMap;97;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.ColorNode;1499;-6584.295,-2835.49;Inherit;False;Property;_SpecColor;SpecColor;96;0;Fetch;True;0;0;0;True;0;False;0.509434,0.509434,0.509434,1;0.509434,0.509434,0.509434,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.FunctionNode;1768;-7368.165,-2978.356;Inherit;False;AIT Item Function;6;;528;49cd9f91cda5058428ddba66ec049916;0;0;11;FLOAT3;345;FLOAT3;342;FLOAT3;341;FLOAT;340;FLOAT;0;FLOAT;393;FLOAT;346;FLOAT;480;FLOAT;344;FLOAT;386;SAMPLERSTATE;389
-WireConnection;1448;1;1768;342
+Node;AmplifyShaderEditor.FunctionNode;1448;-7061.003,-3221.386;Inherit;False;Iridiscence;89;;272;70fe6a1ace0a29b439fe6d71982b6fe0;0;1;1;FLOAT3;0,0,0;False;1;FLOAT3;0
 WireConnection;1504;0;1448;0
 WireConnection;1506;0;1768;340
 WireConnection;1505;0;1504;0
@@ -2521,5 +2520,6 @@ WireConnection;1726;4;1729;0
 WireConnection;1726;1;1475;0
 WireConnection;1726;2;1733;0
 WireConnection;1726;3;1734;0
+WireConnection;1448;1;1768;342
 ASEEND*/
-//CHKSM=85213C183972C6910611A53BB1E17758BECDADD9
+//CHKSM=0242C82745F7D50B0F4E389E1797C4DB9ACDF0FD
