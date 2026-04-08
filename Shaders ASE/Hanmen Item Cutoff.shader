@@ -8,8 +8,8 @@ Shader "Hanmen/Item Cutoff"
 		[Toggle]_NormalBackDirInvert("Normal Invert", Range( 0 , 1)) = 1
 		[Header(Alpha Clip Value)]_Cutoff("Cutoff", Range( 0 , 1)) = 0.5
 		_alpha("alpha", Range( 0 , 1)) = 1
-		[Header((R) MetallicMask)][Header((G) Emission)][Header((B) Thickness)][Header((A) Roughness)]_MetallicGlossMap("MetallicGlossMap", 2D) = "white" {}
 		[Header (RGB Color A Opacity)]_MainTex("MainTex", 2D) = "white" {}
+		[Header((R) MetallicMask)][Header((G) Emission)][Header((B) Thickness)][Header((A) Roughness)]_MetallicGlossMap("MetallicGlossMap", 2D) = "white" {}
 		_ColorMask("ColorMask", 2D) = "black" {}
 		_BumpMap("BumpMap", 2D) = "bump" {}
 		[NoScaleOffset][Header (R_Detail1 G_Detail2)]_DetailMask("DetailMask", 2D) = "white" {}
@@ -172,11 +172,6 @@ Shader "Hanmen/Item Cutoff"
 
 			//This is a late directive
 			
-			uniform float _IriBrightness;
-			uniform float _IriSaturation;
-			uniform float _IriContrast;
-			uniform float _IriHue;
-			uniform float _IriScale;
 			uniform float _IsScreenshotActive;
 			uniform float _ScreenshotToolFrame;
 			uniform float _CullMode;
@@ -249,6 +244,11 @@ Shader "Hanmen/Item Cutoff"
 			UNITY_DECLARE_TEX2D_NOSAMPLER(_DetailGlossMap2);
 			SamplerState sampler_DetailGlossMap2;
 			uniform float _EmissionStrength;
+			uniform float _IriBrightness;
+			uniform float _IriSaturation;
+			uniform float _IriContrast;
+			uniform float _IriHue;
+			uniform float _IriScale;
 			uniform float4 _MainTex_ST;
 			uniform float2 _patternuv1;
 			uniform float2 _patternuv2;
@@ -320,7 +320,7 @@ Shader "Hanmen/Item Cutoff"
 				return g;
 			}
 			
-			float4 MyCustomExpression45_g272( Gradient gradient, float time, float repeatFrequency )
+			float4 MyCustomExpression45_g529( Gradient gradient, float time, float repeatFrequency )
 			{
 				time = fmod(time * repeatFrequency, 1.0);
 				    
@@ -498,8 +498,8 @@ Shader "Hanmen/Item Cutoff"
 				float3 lerpResult313_g528 = lerp( lerpResult289_g528 , ( lerpResult289_g528 * _WetAlbedoOffset ) , ExGloss255_g528);
 				float3 DiffuseMix326_g528 = lerpResult313_g528;
 				float3 temp_output_1768_345 = DiffuseMix326_g528;
-				Gradient gradient37_g272 = NewGradient( 0, 7, 2, float4( 1, 0, 0, 0 ), float4( 1, 0.5313669, 0, 0.1499962 ), float4( 0.9518073, 1, 0, 0.3176471 ), float4( 0, 0.9381461, 1, 0.5911803 ), float4( 0.1839623, 0.3384229, 1, 0.7588311 ), float4( 0.838, 0, 1, 0.9264668 ), float4( 1, 0, 0, 1 ), 0, float2( 1, 0 ), float2( 1, 1 ), 0, 0, 0, 0, 0, 0 );
-				Gradient gradient45_g272 =(Gradient)gradient37_g272;
+				Gradient gradient37_g529 = NewGradient( 0, 7, 2, float4( 1, 0, 0, 0 ), float4( 1, 0.5313669, 0, 0.1499962 ), float4( 0.9518073, 1, 0, 0.3176471 ), float4( 0, 0.9381461, 1, 0.5911803 ), float4( 0.1839623, 0.3384229, 1, 0.7588311 ), float4( 0.838, 0, 1, 0.9264668 ), float4( 1, 0, 0, 1 ), 0, float2( 1, 0 ), float2( 1, 1 ), 0, 0, 0, 0, 0, 0 );
+				Gradient gradient45_g529 =(Gradient)gradient37_g529;
 				float3 ase_worldPos = i.ase_texcoord2.xyz;
 				float3 ase_worldViewDir = UnityWorldSpaceViewDir(ase_worldPos);
 				ase_worldViewDir = normalize(ase_worldViewDir);
@@ -546,23 +546,23 @@ Shader "Hanmen/Item Cutoff"
 				float3 tanToWorld0 = float3( ase_worldTangent.x, ase_worldBitangent.x, ase_worldNormal.x );
 				float3 tanToWorld1 = float3( ase_worldTangent.y, ase_worldBitangent.y, ase_worldNormal.y );
 				float3 tanToWorld2 = float3( ase_worldTangent.z, ase_worldBitangent.z, ase_worldNormal.z );
-				float3 tanNormal44_g272 = temp_output_1768_342;
-				float3 worldNormal44_g272 = float3(dot(tanToWorld0,tanNormal44_g272), dot(tanToWorld1,tanNormal44_g272), dot(tanToWorld2,tanNormal44_g272));
-				float dotResult7_g272 = dot( ase_worldViewDir , worldNormal44_g272 );
-				float time45_g272 = dotResult7_g272;
-				float repeatFrequency45_g272 = _IriScale;
-				float4 localMyCustomExpression45_g272 = MyCustomExpression45_g272( gradient45_g272 , time45_g272 , repeatFrequency45_g272 );
-				float3 temp_output_47_0_g272 = (localMyCustomExpression45_g272).xyz;
-				float3 temp_output_12_0_g272 = (temp_output_47_0_g272).xyz;
-				float temp_output_10_0_g272 = radians( ( 360.0 * _IriHue ) );
-				float temp_output_13_0_g272 = cos( temp_output_10_0_g272 );
+				float3 tanNormal44_g529 = temp_output_1768_342;
+				float3 worldNormal44_g529 = float3(dot(tanToWorld0,tanNormal44_g529), dot(tanToWorld1,tanNormal44_g529), dot(tanToWorld2,tanNormal44_g529));
+				float dotResult7_g529 = dot( ase_worldViewDir , worldNormal44_g529 );
+				float time45_g529 = dotResult7_g529;
+				float repeatFrequency45_g529 = _IriScale;
+				float4 localMyCustomExpression45_g529 = MyCustomExpression45_g529( gradient45_g529 , time45_g529 , repeatFrequency45_g529 );
+				float3 temp_output_47_0_g529 = (localMyCustomExpression45_g529).xyz;
+				float3 temp_output_12_0_g529 = (temp_output_47_0_g529).xyz;
+				float temp_output_10_0_g529 = radians( ( 360.0 * _IriHue ) );
+				float temp_output_13_0_g529 = cos( temp_output_10_0_g529 );
 				float3 _k = float3(0.57735,0.57735,0.57735);
-				float dotResult14_g272 = dot( _k , temp_output_12_0_g272 );
-				float3 temp_output_32_0_g272 = ( ( ( ( ( ( temp_output_12_0_g272 * temp_output_13_0_g272 ) + ( cross( _k , temp_output_12_0_g272 ) * sin( temp_output_10_0_g272 ) ) + ( _k * dotResult14_g272 * ( 1.0 - temp_output_13_0_g272 ) ) ) - float3( 0.5,0.5,0.5 ) ) * ( _IriContrast * 2.0 ) ) + float3( 0.5,0.5,0.5 ) ) + ( ( _IriBrightness * 2.0 ) - 1.0 ) );
-				float dotResult34_g272 = dot( temp_output_32_0_g272 , float3(0.39,0.59,0.11) );
-				float3 temp_cast_1 = (dotResult34_g272).xxx;
-				float3 lerpResult35_g272 = lerp( temp_cast_1 , temp_output_32_0_g272 , ( _IriSaturation * 2.0 ));
-				float3 temp_output_1448_0 = lerpResult35_g272;
+				float dotResult14_g529 = dot( _k , temp_output_12_0_g529 );
+				float3 temp_output_32_0_g529 = ( ( ( ( ( ( temp_output_12_0_g529 * temp_output_13_0_g529 ) + ( cross( _k , temp_output_12_0_g529 ) * sin( temp_output_10_0_g529 ) ) + ( _k * dotResult14_g529 * ( 1.0 - temp_output_13_0_g529 ) ) ) - float3( 0.5,0.5,0.5 ) ) * ( _IriContrast * 2.0 ) ) + float3( 0.5,0.5,0.5 ) ) + ( ( _IriBrightness * 2.0 ) - 1.0 ) );
+				float dotResult34_g529 = dot( temp_output_32_0_g529 , float3(0.39,0.59,0.11) );
+				float3 temp_cast_1 = (dotResult34_g529).xxx;
+				float3 lerpResult35_g529 = lerp( temp_cast_1 , temp_output_32_0_g529 , ( _IriSaturation * 2.0 ));
+				float3 temp_output_1448_0 = lerpResult35_g529;
 				float3 blendOpSrc1451 = temp_output_1448_0;
 				float3 blendOpDest1451 = temp_output_1768_345;
 				float2 uv_MetallicGlossMap = i.ase_texcoord1.xy * _MetallicGlossMap_ST.xy + _MetallicGlossMap_ST.zw;
@@ -866,11 +866,6 @@ Shader "Hanmen/Item Cutoff"
 
 			//This is a late directive
 			
-			uniform float _IriBrightness;
-			uniform float _IriSaturation;
-			uniform float _IriContrast;
-			uniform float _IriHue;
-			uniform float _IriScale;
 			uniform float _IsScreenshotActive;
 			uniform float _ScreenshotToolFrame;
 			uniform float _CullMode;
@@ -943,6 +938,11 @@ Shader "Hanmen/Item Cutoff"
 			UNITY_DECLARE_TEX2D_NOSAMPLER(_DetailGlossMap2);
 			SamplerState sampler_DetailGlossMap2;
 			uniform float _EmissionStrength;
+			uniform float _IriBrightness;
+			uniform float _IriSaturation;
+			uniform float _IriContrast;
+			uniform float _IriHue;
+			uniform float _IriScale;
 			uniform float4 _MainTex_ST;
 			uniform float2 _patternuv1;
 			uniform float2 _patternuv2;
@@ -1014,7 +1014,7 @@ Shader "Hanmen/Item Cutoff"
 				return g;
 			}
 			
-			float4 MyCustomExpression45_g272( Gradient gradient, float time, float repeatFrequency )
+			float4 MyCustomExpression45_g529( Gradient gradient, float time, float repeatFrequency )
 			{
 				time = fmod(time * repeatFrequency, 1.0);
 				    
@@ -1191,8 +1191,8 @@ Shader "Hanmen/Item Cutoff"
 				float3 lerpResult313_g528 = lerp( lerpResult289_g528 , ( lerpResult289_g528 * _WetAlbedoOffset ) , ExGloss255_g528);
 				float3 DiffuseMix326_g528 = lerpResult313_g528;
 				float3 temp_output_1768_345 = DiffuseMix326_g528;
-				Gradient gradient37_g272 = NewGradient( 0, 7, 2, float4( 1, 0, 0, 0 ), float4( 1, 0.5313669, 0, 0.1499962 ), float4( 0.9518073, 1, 0, 0.3176471 ), float4( 0, 0.9381461, 1, 0.5911803 ), float4( 0.1839623, 0.3384229, 1, 0.7588311 ), float4( 0.838, 0, 1, 0.9264668 ), float4( 1, 0, 0, 1 ), 0, float2( 1, 0 ), float2( 1, 1 ), 0, 0, 0, 0, 0, 0 );
-				Gradient gradient45_g272 =(Gradient)gradient37_g272;
+				Gradient gradient37_g529 = NewGradient( 0, 7, 2, float4( 1, 0, 0, 0 ), float4( 1, 0.5313669, 0, 0.1499962 ), float4( 0.9518073, 1, 0, 0.3176471 ), float4( 0, 0.9381461, 1, 0.5911803 ), float4( 0.1839623, 0.3384229, 1, 0.7588311 ), float4( 0.838, 0, 1, 0.9264668 ), float4( 1, 0, 0, 1 ), 0, float2( 1, 0 ), float2( 1, 1 ), 0, 0, 0, 0, 0, 0 );
+				Gradient gradient45_g529 =(Gradient)gradient37_g529;
 				float3 ase_worldPos = i.ase_texcoord2.xyz;
 				float3 ase_worldViewDir = UnityWorldSpaceViewDir(ase_worldPos);
 				ase_worldViewDir = normalize(ase_worldViewDir);
@@ -1239,23 +1239,23 @@ Shader "Hanmen/Item Cutoff"
 				float3 tanToWorld0 = float3( ase_worldTangent.x, ase_worldBitangent.x, ase_worldNormal.x );
 				float3 tanToWorld1 = float3( ase_worldTangent.y, ase_worldBitangent.y, ase_worldNormal.y );
 				float3 tanToWorld2 = float3( ase_worldTangent.z, ase_worldBitangent.z, ase_worldNormal.z );
-				float3 tanNormal44_g272 = temp_output_1768_342;
-				float3 worldNormal44_g272 = float3(dot(tanToWorld0,tanNormal44_g272), dot(tanToWorld1,tanNormal44_g272), dot(tanToWorld2,tanNormal44_g272));
-				float dotResult7_g272 = dot( ase_worldViewDir , worldNormal44_g272 );
-				float time45_g272 = dotResult7_g272;
-				float repeatFrequency45_g272 = _IriScale;
-				float4 localMyCustomExpression45_g272 = MyCustomExpression45_g272( gradient45_g272 , time45_g272 , repeatFrequency45_g272 );
-				float3 temp_output_47_0_g272 = (localMyCustomExpression45_g272).xyz;
-				float3 temp_output_12_0_g272 = (temp_output_47_0_g272).xyz;
-				float temp_output_10_0_g272 = radians( ( 360.0 * _IriHue ) );
-				float temp_output_13_0_g272 = cos( temp_output_10_0_g272 );
+				float3 tanNormal44_g529 = temp_output_1768_342;
+				float3 worldNormal44_g529 = float3(dot(tanToWorld0,tanNormal44_g529), dot(tanToWorld1,tanNormal44_g529), dot(tanToWorld2,tanNormal44_g529));
+				float dotResult7_g529 = dot( ase_worldViewDir , worldNormal44_g529 );
+				float time45_g529 = dotResult7_g529;
+				float repeatFrequency45_g529 = _IriScale;
+				float4 localMyCustomExpression45_g529 = MyCustomExpression45_g529( gradient45_g529 , time45_g529 , repeatFrequency45_g529 );
+				float3 temp_output_47_0_g529 = (localMyCustomExpression45_g529).xyz;
+				float3 temp_output_12_0_g529 = (temp_output_47_0_g529).xyz;
+				float temp_output_10_0_g529 = radians( ( 360.0 * _IriHue ) );
+				float temp_output_13_0_g529 = cos( temp_output_10_0_g529 );
 				float3 _k = float3(0.57735,0.57735,0.57735);
-				float dotResult14_g272 = dot( _k , temp_output_12_0_g272 );
-				float3 temp_output_32_0_g272 = ( ( ( ( ( ( temp_output_12_0_g272 * temp_output_13_0_g272 ) + ( cross( _k , temp_output_12_0_g272 ) * sin( temp_output_10_0_g272 ) ) + ( _k * dotResult14_g272 * ( 1.0 - temp_output_13_0_g272 ) ) ) - float3( 0.5,0.5,0.5 ) ) * ( _IriContrast * 2.0 ) ) + float3( 0.5,0.5,0.5 ) ) + ( ( _IriBrightness * 2.0 ) - 1.0 ) );
-				float dotResult34_g272 = dot( temp_output_32_0_g272 , float3(0.39,0.59,0.11) );
-				float3 temp_cast_1 = (dotResult34_g272).xxx;
-				float3 lerpResult35_g272 = lerp( temp_cast_1 , temp_output_32_0_g272 , ( _IriSaturation * 2.0 ));
-				float3 temp_output_1448_0 = lerpResult35_g272;
+				float dotResult14_g529 = dot( _k , temp_output_12_0_g529 );
+				float3 temp_output_32_0_g529 = ( ( ( ( ( ( temp_output_12_0_g529 * temp_output_13_0_g529 ) + ( cross( _k , temp_output_12_0_g529 ) * sin( temp_output_10_0_g529 ) ) + ( _k * dotResult14_g529 * ( 1.0 - temp_output_13_0_g529 ) ) ) - float3( 0.5,0.5,0.5 ) ) * ( _IriContrast * 2.0 ) ) + float3( 0.5,0.5,0.5 ) ) + ( ( _IriBrightness * 2.0 ) - 1.0 ) );
+				float dotResult34_g529 = dot( temp_output_32_0_g529 , float3(0.39,0.59,0.11) );
+				float3 temp_cast_1 = (dotResult34_g529).xxx;
+				float3 lerpResult35_g529 = lerp( temp_cast_1 , temp_output_32_0_g529 , ( _IriSaturation * 2.0 ));
+				float3 temp_output_1448_0 = lerpResult35_g529;
 				float3 blendOpSrc1451 = temp_output_1448_0;
 				float3 blendOpDest1451 = temp_output_1768_345;
 				float2 uv_MetallicGlossMap = i.ase_texcoord1.xy * _MetallicGlossMap_ST.xy + _MetallicGlossMap_ST.zw;
@@ -1550,7 +1550,6 @@ Shader "Hanmen/Item Cutoff"
 			#pragma multi_compile __ _SPECULARSETUP_ON
 			#pragma multi_compile __ _IRIDISCENT_ON
 			#pragma multi_compile __ _TEMPORALFILTER_ON
-			#include "Assets/Example Folders/Testing/testinc.cginc"
 			#if defined(SHADER_API_D3D11) || defined(SHADER_API_XBOXONE) || defined(UNITY_COMPILER_HLSLCC) || defined(SHADER_API_PSSL) || (defined(SHADER_TARGET_SURFACE_ANALYSIS) && !defined(SHADER_TARGET_SURFACE_ANALYSIS_MOJOSHADER))//ASE Sampler Macros
 			#define SAMPLE_TEXTURE2D(tex,samplerTex,coord) tex.Sample(samplerTex,coord)
 			#define SAMPLE_TEXTURE2D_LOD(tex,samplerTex,coord,lod) tex.SampleLevel(samplerTex,coord, lod)
@@ -1564,11 +1563,6 @@ Shader "Hanmen/Item Cutoff"
 			#endif//ASE Sampling Macros
 			
 
-			uniform float _IriBrightness;
-			uniform float _IriSaturation;
-			uniform float _IriContrast;
-			uniform float _IriHue;
-			uniform float _IriScale;
 			uniform float _IsScreenshotActive;
 			uniform float _ScreenshotToolFrame;
 			uniform float _CullMode;
@@ -1641,6 +1635,11 @@ Shader "Hanmen/Item Cutoff"
 			UNITY_DECLARE_TEX2D_NOSAMPLER(_DetailGlossMap2);
 			SamplerState sampler_DetailGlossMap2;
 			uniform float _EmissionStrength;
+			uniform float _IriBrightness;
+			uniform float _IriSaturation;
+			uniform float _IriContrast;
+			uniform float _IriHue;
+			uniform float _IriScale;
 			uniform float4 _MainTex_ST;
 			uniform float2 _patternuv1;
 			uniform float2 _patternuv2;
@@ -1712,7 +1711,7 @@ Shader "Hanmen/Item Cutoff"
 				return g;
 			}
 			
-			float4 MyCustomExpression45_g272( Gradient gradient, float time, float repeatFrequency )
+			float4 MyCustomExpression45_g529( Gradient gradient, float time, float repeatFrequency )
 			{
 				time = fmod(time * repeatFrequency, 1.0);
 				    
@@ -1866,8 +1865,8 @@ Shader "Hanmen/Item Cutoff"
 				float3 lerpResult313_g528 = lerp( lerpResult289_g528 , ( lerpResult289_g528 * _WetAlbedoOffset ) , ExGloss255_g528);
 				float3 DiffuseMix326_g528 = lerpResult313_g528;
 				float3 temp_output_1768_345 = DiffuseMix326_g528;
-				Gradient gradient37_g272 = NewGradient( 0, 7, 2, float4( 1, 0, 0, 0 ), float4( 1, 0.5313669, 0, 0.1499962 ), float4( 0.9518073, 1, 0, 0.3176471 ), float4( 0, 0.9381461, 1, 0.5911803 ), float4( 0.1839623, 0.3384229, 1, 0.7588311 ), float4( 0.838, 0, 1, 0.9264668 ), float4( 1, 0, 0, 1 ), 0, float2( 1, 0 ), float2( 1, 1 ), 0, 0, 0, 0, 0, 0 );
-				Gradient gradient45_g272 =(Gradient)gradient37_g272;
+				Gradient gradient37_g529 = NewGradient( 0, 7, 2, float4( 1, 0, 0, 0 ), float4( 1, 0.5313669, 0, 0.1499962 ), float4( 0.9518073, 1, 0, 0.3176471 ), float4( 0, 0.9381461, 1, 0.5911803 ), float4( 0.1839623, 0.3384229, 1, 0.7588311 ), float4( 0.838, 0, 1, 0.9264668 ), float4( 1, 0, 0, 1 ), 0, float2( 1, 0 ), float2( 1, 1 ), 0, 0, 0, 0, 0, 0 );
+				Gradient gradient45_g529 =(Gradient)gradient37_g529;
 				float3 ase_worldPos = i.ase_texcoord2.xyz;
 				float3 ase_worldViewDir = UnityWorldSpaceViewDir(ase_worldPos);
 				ase_worldViewDir = normalize(ase_worldViewDir);
@@ -1914,23 +1913,23 @@ Shader "Hanmen/Item Cutoff"
 				float3 tanToWorld0 = float3( ase_worldTangent.x, ase_worldBitangent.x, ase_worldNormal.x );
 				float3 tanToWorld1 = float3( ase_worldTangent.y, ase_worldBitangent.y, ase_worldNormal.y );
 				float3 tanToWorld2 = float3( ase_worldTangent.z, ase_worldBitangent.z, ase_worldNormal.z );
-				float3 tanNormal44_g272 = temp_output_1768_342;
-				float3 worldNormal44_g272 = float3(dot(tanToWorld0,tanNormal44_g272), dot(tanToWorld1,tanNormal44_g272), dot(tanToWorld2,tanNormal44_g272));
-				float dotResult7_g272 = dot( ase_worldViewDir , worldNormal44_g272 );
-				float time45_g272 = dotResult7_g272;
-				float repeatFrequency45_g272 = _IriScale;
-				float4 localMyCustomExpression45_g272 = MyCustomExpression45_g272( gradient45_g272 , time45_g272 , repeatFrequency45_g272 );
-				float3 temp_output_47_0_g272 = (localMyCustomExpression45_g272).xyz;
-				float3 temp_output_12_0_g272 = (temp_output_47_0_g272).xyz;
-				float temp_output_10_0_g272 = radians( ( 360.0 * _IriHue ) );
-				float temp_output_13_0_g272 = cos( temp_output_10_0_g272 );
+				float3 tanNormal44_g529 = temp_output_1768_342;
+				float3 worldNormal44_g529 = float3(dot(tanToWorld0,tanNormal44_g529), dot(tanToWorld1,tanNormal44_g529), dot(tanToWorld2,tanNormal44_g529));
+				float dotResult7_g529 = dot( ase_worldViewDir , worldNormal44_g529 );
+				float time45_g529 = dotResult7_g529;
+				float repeatFrequency45_g529 = _IriScale;
+				float4 localMyCustomExpression45_g529 = MyCustomExpression45_g529( gradient45_g529 , time45_g529 , repeatFrequency45_g529 );
+				float3 temp_output_47_0_g529 = (localMyCustomExpression45_g529).xyz;
+				float3 temp_output_12_0_g529 = (temp_output_47_0_g529).xyz;
+				float temp_output_10_0_g529 = radians( ( 360.0 * _IriHue ) );
+				float temp_output_13_0_g529 = cos( temp_output_10_0_g529 );
 				float3 _k = float3(0.57735,0.57735,0.57735);
-				float dotResult14_g272 = dot( _k , temp_output_12_0_g272 );
-				float3 temp_output_32_0_g272 = ( ( ( ( ( ( temp_output_12_0_g272 * temp_output_13_0_g272 ) + ( cross( _k , temp_output_12_0_g272 ) * sin( temp_output_10_0_g272 ) ) + ( _k * dotResult14_g272 * ( 1.0 - temp_output_13_0_g272 ) ) ) - float3( 0.5,0.5,0.5 ) ) * ( _IriContrast * 2.0 ) ) + float3( 0.5,0.5,0.5 ) ) + ( ( _IriBrightness * 2.0 ) - 1.0 ) );
-				float dotResult34_g272 = dot( temp_output_32_0_g272 , float3(0.39,0.59,0.11) );
-				float3 temp_cast_1 = (dotResult34_g272).xxx;
-				float3 lerpResult35_g272 = lerp( temp_cast_1 , temp_output_32_0_g272 , ( _IriSaturation * 2.0 ));
-				float3 temp_output_1448_0 = lerpResult35_g272;
+				float dotResult14_g529 = dot( _k , temp_output_12_0_g529 );
+				float3 temp_output_32_0_g529 = ( ( ( ( ( ( temp_output_12_0_g529 * temp_output_13_0_g529 ) + ( cross( _k , temp_output_12_0_g529 ) * sin( temp_output_10_0_g529 ) ) + ( _k * dotResult14_g529 * ( 1.0 - temp_output_13_0_g529 ) ) ) - float3( 0.5,0.5,0.5 ) ) * ( _IriContrast * 2.0 ) ) + float3( 0.5,0.5,0.5 ) ) + ( ( _IriBrightness * 2.0 ) - 1.0 ) );
+				float dotResult34_g529 = dot( temp_output_32_0_g529 , float3(0.39,0.59,0.11) );
+				float3 temp_cast_1 = (dotResult34_g529).xxx;
+				float3 lerpResult35_g529 = lerp( temp_cast_1 , temp_output_32_0_g529 , ( _IriSaturation * 2.0 ));
+				float3 temp_output_1448_0 = lerpResult35_g529;
 				float3 blendOpSrc1451 = temp_output_1448_0;
 				float3 blendOpDest1451 = temp_output_1768_345;
 				float2 uv_MetallicGlossMap = i.ase_texcoord1.xy * _MetallicGlossMap_ST.xy + _MetallicGlossMap_ST.zw;
@@ -2134,11 +2133,6 @@ Shader "Hanmen/Item Cutoff"
 			#endif//ASE Sampling Macros
 			
 
-			uniform float _IriBrightness;
-			uniform float _IriSaturation;
-			uniform float _IriContrast;
-			uniform float _IriHue;
-			uniform float _IriScale;
 			uniform float _IsScreenshotActive;
 			uniform float _ScreenshotToolFrame;
 			uniform float _CullMode;
@@ -2211,6 +2205,11 @@ Shader "Hanmen/Item Cutoff"
 			UNITY_DECLARE_TEX2D_NOSAMPLER(_DetailGlossMap2);
 			SamplerState sampler_DetailGlossMap2;
 			uniform float _EmissionStrength;
+			uniform float _IriBrightness;
+			uniform float _IriSaturation;
+			uniform float _IriContrast;
+			uniform float _IriHue;
+			uniform float _IriScale;
 			uniform float4 _ColorMask_ST;
 			uniform float4 _MainTex_ST;
 			uniform float _alpha;
@@ -2310,7 +2309,7 @@ Shader "Hanmen/Item Cutoff"
 }
 /*ASEBEGIN
 Version=18935
-6;0.4;1337;884;7712.808;3286.225;1;True;False
+69.2;80;1337;804;3669.493;2060.844;1;True;False
 Node;AmplifyShaderEditor.WireNode;1504;-6542.181,-2655.577;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1506;-6932.382,-2251.002;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.WireNode;1505;-6501.107,-2637.094;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
@@ -2392,7 +2391,6 @@ Node;AmplifyShaderEditor.RegisterLocalVarNode;1698;-5996.779,-1980.408;Inherit;F
 Node;AmplifyShaderEditor.FunctionNode;1748;-3463.731,-2871.145;Inherit;False;GGX Specular Light;1;;499;53564f0ffa5fbe14e85233656c8e0b13;0;5;286;FLOAT3;0,0,0;False;30;FLOAT3;0,0,0;False;146;FLOAT3;0,0,0;False;147;FLOAT;0;False;302;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1419;-2848.684,-2721.344;Float;False;True;-1;2;ASEMaterialInspector;0;7;Hanmen/Item Cutoff;e1de45c0d41f68c41b2cc20c8b9c05ef;True;ForwardBase;0;1;ForwardBase;3;False;False;False;False;False;False;False;False;False;False;False;False;False;True;True;2;True;1344;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;RenderType=TransparentCutout=RenderType;Queue=AlphaTest=Queue=0;True;7;False;0;False;True;0;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;True;0;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;True;0;False;-1;True;True;0;True;1344;False;True;True;True;True;True;0;False;-1;False;False;False;False;False;False;False;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;True;3;False;-1;True;True;0;False;-1;0;False;-1;True;1;LightMode=ForwardBase;True;7;False;0;Legacy Shaders/Diffuse;0;0;Standard;0;0;5;False;True;True;True;True;False;;True;0
 Node;AmplifyShaderEditor.SamplerNode;1749;-4024.255,-965.3303;Inherit;True;Global;_DeferredPlusBuffer;_DeferredPlusBuffer;76;0;Create;True;0;0;0;False;0;False;1749;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1421;-2939.744,-1636.719;Float;False;False;-1;2;ASEMaterialInspector;100;7;New Amplify Shader;e1de45c0d41f68c41b2cc20c8b9c05ef;True;Deferred;0;3;Deferred;5;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;RenderType=Opaque=RenderType;True;2;False;0;False;True;0;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;True;0;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;True;0;False;-1;True;True;0;True;1344;False;True;True;True;True;True;0;False;-1;False;False;False;False;False;False;False;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;True;3;False;-1;True;True;0;False;-1;0;False;-1;True;1;LightMode=Deferred;True;7;False;2;Include;;False;;Native;Include;;True;32d23867264cf2d4c8fa140fc70dca8a;Custom;;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.ScreenPosInputsNode;1750;-4399.139,-945.4687;Float;False;0;False;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.GetLocalVarNode;1468;-4764.278,-2590.065;Inherit;False;1457;OutNormal;1;0;OBJECT;;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.NegateNode;1709;-4513.434,-2763.222;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
@@ -2415,7 +2413,8 @@ Node;AmplifyShaderEditor.RangedFloatNode;1724;-7526.732,-2436.181;Inherit;False;
 Node;AmplifyShaderEditor.SamplerNode;1510;-6563.142,-2576.792;Inherit;True;Property;_SpecularMap;SpecularMap;97;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.ColorNode;1499;-6584.295,-2835.49;Inherit;False;Property;_SpecColor;SpecColor;96;0;Fetch;True;0;0;0;True;0;False;0.509434,0.509434,0.509434,1;0.509434,0.509434,0.509434,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.FunctionNode;1768;-7368.165,-2978.356;Inherit;False;AIT Item Function;6;;528;49cd9f91cda5058428ddba66ec049916;0;0;11;FLOAT3;345;FLOAT3;342;FLOAT3;341;FLOAT;340;FLOAT;0;FLOAT;393;FLOAT;346;FLOAT;480;FLOAT;344;FLOAT;386;SAMPLERSTATE;389
-Node;AmplifyShaderEditor.FunctionNode;1448;-7061.003,-3221.386;Inherit;False;Iridiscence;89;;272;70fe6a1ace0a29b439fe6d71982b6fe0;0;1;1;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.FunctionNode;1448;-7061.003,-3221.386;Inherit;False;Iridiscence;89;;529;70fe6a1ace0a29b439fe6d71982b6fe0;0;1;1;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1421;-2939.744,-1636.719;Float;False;False;-1;2;ASEMaterialInspector;100;7;New Amplify Shader;e1de45c0d41f68c41b2cc20c8b9c05ef;True;Deferred;0;3;Deferred;5;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;RenderType=Opaque=RenderType;True;2;False;0;False;True;0;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;True;0;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;True;0;False;-1;True;True;0;True;1344;False;True;True;True;True;True;0;False;-1;False;False;False;False;False;False;False;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;True;3;False;-1;True;True;0;False;-1;0;False;-1;True;1;LightMode=Deferred;True;7;False;0;;0;0;Standard;0;False;0
 WireConnection;1504;0;1448;0
 WireConnection;1506;0;1768;340
 WireConnection;1505;0;1504;0
@@ -2487,11 +2486,6 @@ WireConnection;1748;302;1474;0
 WireConnection;1419;0;1427;0
 WireConnection;1419;1;1614;0
 WireConnection;1749;1;1750;0
-WireConnection;1421;0;1752;0
-WireConnection;1421;1;1752;1
-WireConnection;1421;2;1752;12
-WireConnection;1421;3;1752;18
-WireConnection;1421;4;1622;0
 WireConnection;1709;0;1468;0
 WireConnection;1710;0;1468;0
 WireConnection;1710;1;1709;0
@@ -2521,5 +2515,10 @@ WireConnection;1726;1;1475;0
 WireConnection;1726;2;1733;0
 WireConnection;1726;3;1734;0
 WireConnection;1448;1;1768;342
+WireConnection;1421;0;1752;0
+WireConnection;1421;1;1752;1
+WireConnection;1421;2;1752;12
+WireConnection;1421;3;1752;18
+WireConnection;1421;4;1622;0
 ASEEND*/
-//CHKSM=0242C82745F7D50B0F4E389E1797C4DB9ACDF0FD
+//CHKSM=D5EA90002692C1F1A2E9CC7DB184C70C55C57336

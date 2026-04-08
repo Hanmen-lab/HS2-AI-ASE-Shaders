@@ -90,6 +90,7 @@ Shader "Hanmen/Clothes True Alpha"
 		_IriSaturation("Saturation", Range( 0 , 1)) = 0.5
 		_IriBrightness("Brightness", Range( 0 , 1)) = 0.5
 		_IriContrast("Contrast", Range( 0 , 1)) = 0.5
+		_IriScale("RepeatFreq", Range( 0 , 10)) = 1
 		[Toggle(_SPECULARSETUP_ON)] _SpecularSetup("SpecularSetup", Float) = 0
 		_SpecColor("SpecColor", Color) = (0.5,0.5,0.5,1)
 		[NoScaleOffset]_SpecularMap("SpecularMap", 2D) = "white" {}
@@ -109,8 +110,8 @@ Shader "Hanmen/Clothes True Alpha"
 		#include "UnityShaderVariables.cginc"
 		#include "Lighting.cginc"
 		#pragma target 5.0
-		#pragma multi_compile __ _EMISSIONCOLORTEXBASE_ON
 		#pragma shader_feature _SHADERTYPE_CLOTHING
+		#pragma multi_compile __ _EMISSIONCOLORTEXBASE_ON
 		#pragma multi_compile __ _SPECULARSETUP_ON
 		#pragma multi_compile __ _IRIDISCENT_ON
 		#define ASE_USING_SAMPLING_MACROS 1
@@ -160,12 +161,14 @@ Shader "Hanmen/Clothes True Alpha"
 		uniform float _IriSaturation;
 		uniform float _IriContrast;
 		uniform float _IriHue;
+		uniform float _IriScale;
 		uniform float _TransDirect;
 		uniform float _TransNormalDistortion;
 		uniform float _TransAmbient;
 		uniform float _TransShadow;
 		uniform float _TransScattering;
 		uniform float _Translucency;
+		uniform float _CullMode;
 		uniform float _DetailGlossScale;
 		uniform float _WetGlossSplats;
 		uniform float _WeatheringRange3;
@@ -192,7 +195,6 @@ Shader "Hanmen/Clothes True Alpha"
 		uniform float _DetailNormalMapScale2;
 		UNITY_DECLARE_TEX2D_NOSAMPLER(_OcclusionMap);
 		SamplerState sampler_OcclusionMap;
-		uniform float4 _BaseColor;
 		uniform float _WetBumpOffset;
 		uniform float _WetGlossBase;
 		uniform float _DetailUV2Rotator;
@@ -231,14 +233,14 @@ Shader "Hanmen/Clothes True Alpha"
 		uniform float _WetAlpha;
 		uniform float _AlphaEx;
 		uniform float _AlphaMaster;
-		uniform float _UVScrollRotator;
-		uniform float4 _UVScroll;
 		uniform float4 _EmissionColor;
 		uniform float _EmissionStrength;
+		uniform float _UVScrollRotator;
+		uniform float4 _UVScroll;
 		UNITY_DECLARE_TEX2D_NOSAMPLER(_MetallicGlossMap);
 		SamplerState sampler_MetallicGlossMap;
+		uniform float4 _BaseColor;
 		uniform float4 _Color4;
-		uniform float _CullMode;
 		uniform float _NormalBackDirInvert;
 		SamplerState sampler_trilinear_repeat;
 		SamplerState sampler_linear_repeat;
@@ -302,26 +304,29 @@ Shader "Hanmen/Clothes True Alpha"
 		}
 
 
-		float4 SampleGradient( Gradient gradient, float time )
+		float4 MyCustomExpression45_g195( Gradient gradient, float time, float repeatFrequency )
 		{
-			float3 color = gradient.colors[0].rgb;
-			UNITY_UNROLL
-			for (int c = 1; c < 8; c++)
-			{
-			float colorPos = saturate((time - gradient.colors[c-1].w) / ( 0.00001 + (gradient.colors[c].w - gradient.colors[c-1].w)) * step(c, (float)gradient.colorsLength-1));
-			color = lerp(color, gradient.colors[c].rgb, lerp(colorPos, step(0.01, colorPos), gradient.type));
-			}
-			#ifndef UNITY_COLORSPACE_GAMMA
-			color = half3(GammaToLinearSpaceExact(color.r), GammaToLinearSpaceExact(color.g), GammaToLinearSpaceExact(color.b));
-			#endif
-			float alpha = gradient.alphas[0].x;
-			UNITY_UNROLL
-			for (int a = 1; a < 8; a++)
-			{
-			float alphaPos = saturate((time - gradient.alphas[a-1].y) / ( 0.00001 + (gradient.alphas[a].y - gradient.alphas[a-1].y)) * step(a, (float)gradient.alphasLength-1));
-			alpha = lerp(alpha, gradient.alphas[a].x, lerp(alphaPos, step(0.01, alphaPos), gradient.type));
-			}
-			return float4(color, alpha);
+			time = fmod(time * repeatFrequency, 1.0);
+			    
+			    float3 color = gradient.colors[0].rgb;
+			    UNITY_UNROLL
+			    for (int c = 1; c < 8; c++)
+			    {
+			        float colorPos = saturate((time - gradient.colors[c-1].w) / (0.00001 + (gradient.colors[c].w - gradient.colors[c-1].w)) * step(c, (float)gradient.colorsLength - 1));
+			        color = lerp(color, gradient.colors[c].rgb, lerp(colorPos, step(0.01, colorPos), gradient.type));
+			    }
+			    #ifndef UNITY_COLORSPACE_GAMMA
+			    color = half3(GammaToLinearSpaceExact(color.r), GammaToLinearSpaceExact(color.g), GammaToLinearSpaceExact(color.b));
+			    #endif
+			    float alpha = gradient.alphas[0].x;
+			    UNITY_UNROLL
+			    for (int a = 1; a < 8; a++)
+			    {
+			        float alphaPos = saturate((time - gradient.alphas[a-1].y) / (0.00001 + (gradient.alphas[a].y - gradient.alphas[a-1].y)) * step(a, (float)gradient.alphasLength - 1));
+			        alpha = lerp(alpha, gradient.alphas[a].x, lerp(alphaPos, step(0.01, alphaPos), gradient.type));
+			    }
+			    
+			    return float4(color, alpha);
 		}
 
 
@@ -358,189 +363,190 @@ Shader "Hanmen/Clothes True Alpha"
 			ase_lightAtten = UnityMixRealtimeAndBakedShadows(data.atten, bakedAtten, UnityComputeShadowFade(fadeDist));
 			#endif
 			float3 ase_worldPos = i.worldPos;
-			float3 ase_worldViewDir = Unity_SafeNormalize( UnityWorldSpaceViewDir( ase_worldPos ) );
-			float2 uv_BumpMap402_g200 = i.uv_texcoord;
-			float WetBumpOffset303_g200 = _WetBumpOffset;
-			float ExGloss298_g200 = _ExGloss;
-			float2 UVScale107_g200 = _UVScalePattern;
-			float2 uv_TexCoord152_g200 = i.uv_texcoord * ( _DetailUV * UVScale107_g200 );
-			float cos162_g200 = cos( ( _DetailUVRotator * UNITY_PI ) );
-			float sin162_g200 = sin( ( _DetailUVRotator * UNITY_PI ) );
-			float2 rotator162_g200 = mul( uv_TexCoord152_g200 - float2( 0.5,0.5 ) , float2x2( cos162_g200 , -sin162_g200 , sin162_g200 , cos162_g200 )) + float2( 0.5,0.5 );
-			float2 Detail1UV173_g200 = rotator162_g200;
-			float2 break194_g200 = Detail1UV173_g200;
-			float saferPower168_g200 = abs( 0.25 );
-			float temp_output_186_0_g200 = ( pow( saferPower168_g200 , 3.0 ) * 0.2 );
-			float2 appendResult218_g200 = (float2(( break194_g200.x + temp_output_186_0_g200 ) , break194_g200.y));
-			float4 tex2DNode243_g200 = SAMPLE_TEXTURE2D( _DetailGlossMap, sampler_trilinear_repeat, Detail1UV173_g200 );
-			float2 uv_DetailMask25_g200 = i.uv_texcoord;
-			float4 tex2DNode25_g200 = SAMPLE_TEXTURE2D( _DetailMask, sampler_DetailMask, uv_DetailMask25_g200 );
-			float DetailMask130_g200 = tex2DNode25_g200.r;
-			float temp_output_255_0_g200 = ( DetailMask130_g200 * _DetailNormalMapScale );
-			float temp_output_283_0_g200 = ( ( SAMPLE_TEXTURE2D( _DetailGlossMap, sampler_trilinear_repeat, appendResult218_g200 ).g - tex2DNode243_g200.g ) * temp_output_255_0_g200 );
-			float3 appendResult300_g200 = (float3(1.0 , 0.0 , temp_output_283_0_g200));
-			float2 appendResult222_g200 = (float2(break194_g200.x , ( break194_g200.y + temp_output_186_0_g200 )));
-			float temp_output_268_0_g200 = ( ( SAMPLE_TEXTURE2D( _DetailGlossMap, sampler_trilinear_repeat, appendResult222_g200 ).g - tex2DNode243_g200.g ) * temp_output_255_0_g200 );
-			float3 appendResult297_g200 = (float3(0.0 , 1.0 , temp_output_268_0_g200));
-			float3 normalizeResult348_g200 = normalize( cross( appendResult300_g200 , appendResult297_g200 ) );
-			float3 DetailNormal1368_g200 = normalizeResult348_g200;
-			float2 uv_TexCoord16_g200 = i.uv_texcoord * ( _DetailUV2 * UVScale107_g200 );
-			float cos19_g200 = cos( ( _DetailUV2Rotator * UNITY_PI ) );
-			float sin19_g200 = sin( ( _DetailUV2Rotator * UNITY_PI ) );
-			float2 rotator19_g200 = mul( uv_TexCoord16_g200 - float2( 0.5,0.5 ) , float2x2( cos19_g200 , -sin19_g200 , sin19_g200 , cos19_g200 )) + float2( 0.5,0.5 );
-			float2 Detail2UV20_g200 = rotator19_g200;
-			float2 break24_g200 = Detail2UV20_g200;
-			float saferPower22_g200 = abs( 0.25 );
-			float temp_output_26_0_g200 = ( pow( saferPower22_g200 , 3.0 ) * 0.2 );
-			float2 appendResult34_g200 = (float2(( break24_g200.x + temp_output_26_0_g200 ) , break24_g200.y));
-			float4 tex2DNode38_g200 = SAMPLE_TEXTURE2D( _DetailGlossMap2, sampler_trilinear_repeat, Detail2UV20_g200 );
-			float DetailMask235_g200 = tex2DNode25_g200.g;
-			float temp_output_43_0_g200 = ( DetailMask235_g200 * _DetailNormalMapScale2 );
-			float temp_output_50_0_g200 = ( ( SAMPLE_TEXTURE2D( _DetailGlossMap2, sampler_trilinear_repeat, appendResult34_g200 ).g - tex2DNode38_g200.g ) * temp_output_43_0_g200 );
-			float3 appendResult58_g200 = (float3(1.0 , 0.0 , temp_output_50_0_g200));
-			float2 appendResult33_g200 = (float2(break24_g200.x , ( break24_g200.y + temp_output_26_0_g200 )));
-			float temp_output_53_0_g200 = ( ( SAMPLE_TEXTURE2D( _DetailGlossMap2, sampler_trilinear_repeat, appendResult33_g200 ).g - tex2DNode38_g200.g ) * temp_output_43_0_g200 );
-			float3 appendResult57_g200 = (float3(0.0 , 1.0 , temp_output_53_0_g200));
-			float3 normalizeResult69_g200 = normalize( cross( appendResult58_g200 , appendResult57_g200 ) );
-			float3 DetailNormal276_g200 = normalizeResult69_g200;
-			float2 appendResult657_g200 = (float2(_WetStreaksUV.x , _WetStreaksUV.y));
-			float2 appendResult658_g200 = (float2(_WetStreaksUV.z , _WetStreaksUV.w));
-			float2 uv_TexCoord660_g200 = i.uv_texcoord * appendResult657_g200 + appendResult658_g200;
-			float2 WetStrUV669_g200 = uv_TexCoord660_g200;
-			float2 break547_g200 = WetStrUV669_g200;
-			float temp_output_541_0_g200 = ( pow( 0.25 , 2.0 ) * 0.1 );
-			float2 appendResult546_g200 = (float2(( break547_g200.x + temp_output_541_0_g200 ) , break547_g200.y));
-			float4 tex2DNode515_g200 = SAMPLE_TEXTURE2D( _WetnessMap, sampler_MainTex, WetStrUV669_g200 );
-			float3 appendResult523_g200 = (float3(1.0 , 0.0 , ( ( SAMPLE_TEXTURE2D( _WeatheringMap, sampler_MainTex, appendResult546_g200 ).g - tex2DNode515_g200.g ) * 1.0 )));
-			float2 appendResult534_g200 = (float2(break547_g200.x , ( break547_g200.y + temp_output_541_0_g200 )));
-			float3 appendResult542_g200 = (float3(0.0 , 1.0 , ( ( SAMPLE_TEXTURE2D( _WetnessMap, sampler_MainTex, appendResult534_g200 ).g - tex2DNode515_g200.g ) * 1.0 )));
-			float3 normalizeResult524_g200 = normalize( cross( appendResult523_g200 , appendResult542_g200 ) );
-			float3 WetnessNormal545_g200 = normalizeResult524_g200;
-			float WetStr661_g200 = SAMPLE_TEXTURE2D( _WetnessMap, sampler_linear_repeat, WetStrUV669_g200 ).g;
-			float smoothstepResult651_g200 = smoothstep( ( 1.0 - ExGloss298_g200 ) , 1.0 , WetStr661_g200);
-			float StreaksAlpha662_g200 = smoothstepResult651_g200;
-			float WetOpStreaks673_g200 = _WetOpacityStreaks;
-			float3 lerpResult98_g200 = lerp( BlendNormals( BlendNormals( UnpackScaleNormal( SAMPLE_TEXTURE2D( _BumpMap, sampler_BumpMap, uv_BumpMap402_g200 ), ( _Float0 + ( WetBumpOffset303_g200 * ExGloss298_g200 ) ) ) , DetailNormal1368_g200 ) , DetailNormal276_g200 ) , WetnessNormal545_g200 , ( StreaksAlpha662_g200 * WetOpStreaks673_g200 ));
-			float2 appendResult115_g200 = (float2(_WeatheringUV.x , _WeatheringUV.y));
-			float2 appendResult110_g200 = (float2(_WeatheringUV.z , _WeatheringUV.w));
+			float3 ase_worldViewDir = normalize( UnityWorldSpaceViewDir( ase_worldPos ) );
+			float2 uv_BumpMap402_g203 = i.uv_texcoord;
+			float WetBumpOffset303_g203 = _WetBumpOffset;
+			float ExGloss298_g203 = _ExGloss;
+			float2 UVScale107_g203 = _UVScalePattern;
+			float2 uv_TexCoord152_g203 = i.uv_texcoord * ( _DetailUV * UVScale107_g203 );
+			float cos162_g203 = cos( ( _DetailUVRotator * UNITY_PI ) );
+			float sin162_g203 = sin( ( _DetailUVRotator * UNITY_PI ) );
+			float2 rotator162_g203 = mul( uv_TexCoord152_g203 - float2( 0.5,0.5 ) , float2x2( cos162_g203 , -sin162_g203 , sin162_g203 , cos162_g203 )) + float2( 0.5,0.5 );
+			float2 Detail1UV173_g203 = rotator162_g203;
+			float2 break194_g203 = Detail1UV173_g203;
+			float saferPower168_g203 = abs( 0.25 );
+			float temp_output_186_0_g203 = ( pow( saferPower168_g203 , 3.0 ) * 0.2 );
+			float2 appendResult218_g203 = (float2(( break194_g203.x + temp_output_186_0_g203 ) , break194_g203.y));
+			float4 tex2DNode243_g203 = SAMPLE_TEXTURE2D( _DetailGlossMap, sampler_trilinear_repeat, Detail1UV173_g203 );
+			float2 uv_DetailMask25_g203 = i.uv_texcoord;
+			float4 tex2DNode25_g203 = SAMPLE_TEXTURE2D( _DetailMask, sampler_DetailMask, uv_DetailMask25_g203 );
+			float DetailMask130_g203 = tex2DNode25_g203.r;
+			float temp_output_255_0_g203 = ( DetailMask130_g203 * _DetailNormalMapScale );
+			float temp_output_283_0_g203 = ( ( SAMPLE_TEXTURE2D( _DetailGlossMap, sampler_trilinear_repeat, appendResult218_g203 ).g - tex2DNode243_g203.g ) * temp_output_255_0_g203 );
+			float3 appendResult300_g203 = (float3(1.0 , 0.0 , temp_output_283_0_g203));
+			float2 appendResult222_g203 = (float2(break194_g203.x , ( break194_g203.y + temp_output_186_0_g203 )));
+			float temp_output_268_0_g203 = ( ( SAMPLE_TEXTURE2D( _DetailGlossMap, sampler_trilinear_repeat, appendResult222_g203 ).g - tex2DNode243_g203.g ) * temp_output_255_0_g203 );
+			float3 appendResult297_g203 = (float3(0.0 , 1.0 , temp_output_268_0_g203));
+			float3 normalizeResult348_g203 = normalize( cross( appendResult300_g203 , appendResult297_g203 ) );
+			float3 DetailNormal1368_g203 = normalizeResult348_g203;
+			float2 uv_TexCoord16_g203 = i.uv_texcoord * ( _DetailUV2 * UVScale107_g203 );
+			float cos19_g203 = cos( ( _DetailUV2Rotator * UNITY_PI ) );
+			float sin19_g203 = sin( ( _DetailUV2Rotator * UNITY_PI ) );
+			float2 rotator19_g203 = mul( uv_TexCoord16_g203 - float2( 0.5,0.5 ) , float2x2( cos19_g203 , -sin19_g203 , sin19_g203 , cos19_g203 )) + float2( 0.5,0.5 );
+			float2 Detail2UV20_g203 = rotator19_g203;
+			float2 break24_g203 = Detail2UV20_g203;
+			float saferPower22_g203 = abs( 0.25 );
+			float temp_output_26_0_g203 = ( pow( saferPower22_g203 , 3.0 ) * 0.2 );
+			float2 appendResult34_g203 = (float2(( break24_g203.x + temp_output_26_0_g203 ) , break24_g203.y));
+			float4 tex2DNode38_g203 = SAMPLE_TEXTURE2D( _DetailGlossMap2, sampler_trilinear_repeat, Detail2UV20_g203 );
+			float DetailMask235_g203 = tex2DNode25_g203.g;
+			float temp_output_43_0_g203 = ( DetailMask235_g203 * _DetailNormalMapScale2 );
+			float temp_output_50_0_g203 = ( ( SAMPLE_TEXTURE2D( _DetailGlossMap2, sampler_trilinear_repeat, appendResult34_g203 ).g - tex2DNode38_g203.g ) * temp_output_43_0_g203 );
+			float3 appendResult58_g203 = (float3(1.0 , 0.0 , temp_output_50_0_g203));
+			float2 appendResult33_g203 = (float2(break24_g203.x , ( break24_g203.y + temp_output_26_0_g203 )));
+			float temp_output_53_0_g203 = ( ( SAMPLE_TEXTURE2D( _DetailGlossMap2, sampler_trilinear_repeat, appendResult33_g203 ).g - tex2DNode38_g203.g ) * temp_output_43_0_g203 );
+			float3 appendResult57_g203 = (float3(0.0 , 1.0 , temp_output_53_0_g203));
+			float3 normalizeResult69_g203 = normalize( cross( appendResult58_g203 , appendResult57_g203 ) );
+			float3 DetailNormal276_g203 = normalizeResult69_g203;
+			float2 appendResult657_g203 = (float2(_WetStreaksUV.x , _WetStreaksUV.y));
+			float2 appendResult658_g203 = (float2(_WetStreaksUV.z , _WetStreaksUV.w));
+			float2 uv_TexCoord660_g203 = i.uv_texcoord * appendResult657_g203 + appendResult658_g203;
+			float2 WetStrUV669_g203 = uv_TexCoord660_g203;
+			float2 break547_g203 = WetStrUV669_g203;
+			float temp_output_541_0_g203 = ( pow( 0.25 , 2.0 ) * 0.1 );
+			float2 appendResult546_g203 = (float2(( break547_g203.x + temp_output_541_0_g203 ) , break547_g203.y));
+			float4 tex2DNode515_g203 = SAMPLE_TEXTURE2D( _WetnessMap, sampler_MainTex, WetStrUV669_g203 );
+			float3 appendResult523_g203 = (float3(1.0 , 0.0 , ( ( SAMPLE_TEXTURE2D( _WeatheringMap, sampler_MainTex, appendResult546_g203 ).g - tex2DNode515_g203.g ) * 1.0 )));
+			float2 appendResult534_g203 = (float2(break547_g203.x , ( break547_g203.y + temp_output_541_0_g203 )));
+			float3 appendResult542_g203 = (float3(0.0 , 1.0 , ( ( SAMPLE_TEXTURE2D( _WetnessMap, sampler_MainTex, appendResult534_g203 ).g - tex2DNode515_g203.g ) * 1.0 )));
+			float3 normalizeResult524_g203 = normalize( cross( appendResult523_g203 , appendResult542_g203 ) );
+			float3 WetnessNormal545_g203 = normalizeResult524_g203;
+			float WetStr661_g203 = SAMPLE_TEXTURE2D( _WetnessMap, sampler_linear_repeat, WetStrUV669_g203 ).g;
+			float smoothstepResult651_g203 = smoothstep( ( 1.0 - ExGloss298_g203 ) , 1.0 , WetStr661_g203);
+			float StreaksAlpha662_g203 = smoothstepResult651_g203;
+			float WetOpStreaks673_g203 = _WetOpacityStreaks;
+			float3 lerpResult98_g203 = lerp( BlendNormals( BlendNormals( UnpackScaleNormal( SAMPLE_TEXTURE2D( _BumpMap, sampler_BumpMap, uv_BumpMap402_g203 ), ( _Float0 + ( WetBumpOffset303_g203 * ExGloss298_g203 ) ) ) , DetailNormal1368_g203 ) , DetailNormal276_g203 ) , WetnessNormal545_g203 , ( StreaksAlpha662_g203 * WetOpStreaks673_g203 ));
+			float2 appendResult115_g203 = (float2(_WeatheringUV.x , _WeatheringUV.y));
+			float2 appendResult110_g203 = (float2(_WeatheringUV.z , _WeatheringUV.w));
 			float2 temp_cast_0 = (_WeatheringUVSeed).xx;
-			float dotResult731_g200 = dot( temp_cast_0 , float2( 12.9898,78.233 ) );
-			float lerpResult737_g200 = lerp( -10.0 , 10.0 , frac( ( sin( dotResult731_g200 ) * 43758.55 ) ));
-			float2 uv_TexCoord127_g200 = i.uv_texcoord * appendResult115_g200 + ( appendResult110_g200 + lerpResult737_g200 );
-			float2 WeatheringUV144_g200 = uv_TexCoord127_g200;
-			float2 break223_g200 = WeatheringUV144_g200;
-			float temp_output_224_0_g200 = ( pow( 0.2 , 2.0 ) * 0.1 );
-			float2 appendResult258_g200 = (float2(( break223_g200.x + temp_output_224_0_g200 ) , break223_g200.y));
-			float4 tex2DNode266_g200 = SAMPLE_TEXTURE2D( _WeatheringMap, sampler_WeatheringMap, WeatheringUV144_g200 );
-			float3 appendResult344_g200 = (float3(1.0 , 0.0 , ( ( SAMPLE_TEXTURE2D( _WeatheringMap, sampler_WeatheringMap, appendResult258_g200 ).b - tex2DNode266_g200.b ) * 2.0 )));
-			float2 appendResult252_g200 = (float2(break223_g200.x , ( break223_g200.y + temp_output_224_0_g200 )));
-			float3 appendResult339_g200 = (float3(0.0 , 1.0 , ( ( SAMPLE_TEXTURE2D( _WeatheringMap, sampler_WeatheringMap, appendResult252_g200 ).b - tex2DNode266_g200.b ) * 2.0 )));
-			float3 normalizeResult398_g200 = normalize( cross( appendResult344_g200 , appendResult339_g200 ) );
-			float3 WeatheringBump425_g200 = normalizeResult398_g200;
-			float4 tex2DNode177_g200 = SAMPLE_TEXTURE2D( _WeatheringMap, sampler_WeatheringMap, WeatheringUV144_g200 );
-			float2 uv_WeatheringMask100_g200 = i.uv_texcoord;
-			float4 tex2DNode100_g200 = SAMPLE_TEXTURE2D( _WeatheringMask, sampler_WeatheringMask, uv_WeatheringMask100_g200 );
-			float clampResult161_g200 = clamp( ( tex2DNode100_g200.r - tex2DNode100_g200.g ) , 0.0 , 1.0 );
-			float WMask1183_g200 = ( clampResult161_g200 * ceil( _WeatheringRange1 ) );
-			float RangeCut1208_g200 = (0.7 + (_WeatheringRange1 - 0.0) * (0.0 - 0.7) / (1.0 - 0.0));
-			float clampResult253_g200 = clamp( ( ( tex2DNode177_g200.g * WMask1183_g200 ) - RangeCut1208_g200 ) , 0.0 , 1.0 );
-			float clampResult159_g200 = clamp( ( tex2DNode100_g200.g - tex2DNode100_g200.r ) , 0.0 , 1.0 );
-			float WMask2192_g200 = ( clampResult159_g200 * ceil( _WeatheringRange2 ) );
-			float RangeCut2211_g200 = (0.7 + (_WeatheringRange2 - 0.0) * (0.0 - 0.7) / (1.0 - 0.0));
-			float clampResult251_g200 = clamp( ( ( tex2DNode177_g200.g * WMask2192_g200 ) - RangeCut2211_g200 ) , 0.0 , 1.0 );
-			float WMask3190_g200 = ( tex2DNode100_g200.b * ceil( _WeatheringRange3 ) );
-			float RangeCut3210_g200 = (0.7 + (_WeatheringRange3 - 0.0) * (0.0 - 0.7) / (1.0 - 0.0));
-			float clampResult254_g200 = clamp( ( ( tex2DNode177_g200.g * WMask3190_g200 ) - RangeCut3210_g200 ) , 0.0 , 1.0 );
-			float WMask4180_g200 = ( ( tex2DNode100_g200.r * tex2DNode100_g200.g ) * ceil( _WeatheringRange4 ) );
-			float RangeCut4205_g200 = (0.7 + (_WeatheringRange4 - 0.0) * (0.0 - 0.7) / (1.0 - 0.0));
-			float clampResult259_g200 = clamp( ( ( tex2DNode177_g200.g * WMask4180_g200 ) - RangeCut4205_g200 ) , 0.0 , 1.0 );
-			float WMask5184_g200 = ( ( tex2DNode100_g200.r * tex2DNode100_g200.b ) * ceil( _WeatheringRange5 ) );
-			float RangeCut5201_g200 = (0.7 + (_WeatheringRange5 - 0.0) * (0.0 - 0.7) / (1.0 - 0.0));
-			float clampResult261_g200 = clamp( ( ( tex2DNode177_g200.g * WMask5184_g200 ) - RangeCut5201_g200 ) , 0.0 , 1.0 );
-			float WMaskAll165_g200 = ceil( _WeatheringAll );
-			float RangeCutAll171_g200 = (0.7 + (_WeatheringAll - 0.0) * (0.0 - 0.7) / (1.0 - 0.0));
-			float clampResult215_g200 = clamp( ( ( tex2DNode177_g200.g * WMaskAll165_g200 ) - RangeCutAll171_g200 ) , 0.0 , 1.0 );
-			float clampResult299_g200 = clamp( ( clampResult253_g200 + clampResult251_g200 + clampResult254_g200 + clampResult259_g200 + clampResult261_g200 + clampResult215_g200 ) , 0.0 , 1.0 );
-			float lerpResult313_g200 = lerp( clampResult299_g200 , clampResult215_g200 , WMaskAll165_g200);
-			float clampResult373_g200 = clamp( ( lerpResult313_g200 * 10.0 ) , 0.0 , 1.0 );
-			float WeatheringAlpha396_g200 = clampResult373_g200;
-			float3 lerpResult87_g200 = lerp( lerpResult98_g200 , WeatheringBump425_g200 , ( SAMPLE_TEXTURE2D( _WeatheringMap, sampler_WeatheringMap, WeatheringUV144_g200 ).b * WeatheringAlpha396_g200 ));
-			float3 normalizeResult564_g200 = normalize( lerpResult87_g200 );
-			float3 temp_output_1650_557 = normalizeResult564_g200;
+			float dotResult731_g203 = dot( temp_cast_0 , float2( 12.9898,78.233 ) );
+			float lerpResult737_g203 = lerp( -10.0 , 10.0 , frac( ( sin( dotResult731_g203 ) * 43758.55 ) ));
+			float2 uv_TexCoord127_g203 = i.uv_texcoord * appendResult115_g203 + ( appendResult110_g203 + lerpResult737_g203 );
+			float2 WeatheringUV144_g203 = uv_TexCoord127_g203;
+			float2 break223_g203 = WeatheringUV144_g203;
+			float temp_output_224_0_g203 = ( pow( 0.2 , 2.0 ) * 0.1 );
+			float2 appendResult258_g203 = (float2(( break223_g203.x + temp_output_224_0_g203 ) , break223_g203.y));
+			float4 tex2DNode266_g203 = SAMPLE_TEXTURE2D( _WeatheringMap, sampler_WeatheringMap, WeatheringUV144_g203 );
+			float3 appendResult344_g203 = (float3(1.0 , 0.0 , ( ( SAMPLE_TEXTURE2D( _WeatheringMap, sampler_WeatheringMap, appendResult258_g203 ).b - tex2DNode266_g203.b ) * 2.0 )));
+			float2 appendResult252_g203 = (float2(break223_g203.x , ( break223_g203.y + temp_output_224_0_g203 )));
+			float3 appendResult339_g203 = (float3(0.0 , 1.0 , ( ( SAMPLE_TEXTURE2D( _WeatheringMap, sampler_WeatheringMap, appendResult252_g203 ).b - tex2DNode266_g203.b ) * 2.0 )));
+			float3 normalizeResult398_g203 = normalize( cross( appendResult344_g203 , appendResult339_g203 ) );
+			float3 WeatheringBump425_g203 = normalizeResult398_g203;
+			float4 tex2DNode177_g203 = SAMPLE_TEXTURE2D( _WeatheringMap, sampler_WeatheringMap, WeatheringUV144_g203 );
+			float2 uv_WeatheringMask100_g203 = i.uv_texcoord;
+			float4 tex2DNode100_g203 = SAMPLE_TEXTURE2D( _WeatheringMask, sampler_WeatheringMask, uv_WeatheringMask100_g203 );
+			float clampResult161_g203 = clamp( ( tex2DNode100_g203.r - tex2DNode100_g203.g ) , 0.0 , 1.0 );
+			float WMask1183_g203 = ( clampResult161_g203 * ceil( _WeatheringRange1 ) );
+			float RangeCut1208_g203 = (0.7 + (_WeatheringRange1 - 0.0) * (0.0 - 0.7) / (1.0 - 0.0));
+			float clampResult253_g203 = clamp( ( ( tex2DNode177_g203.g * WMask1183_g203 ) - RangeCut1208_g203 ) , 0.0 , 1.0 );
+			float clampResult159_g203 = clamp( ( tex2DNode100_g203.g - tex2DNode100_g203.r ) , 0.0 , 1.0 );
+			float WMask2192_g203 = ( clampResult159_g203 * ceil( _WeatheringRange2 ) );
+			float RangeCut2211_g203 = (0.7 + (_WeatheringRange2 - 0.0) * (0.0 - 0.7) / (1.0 - 0.0));
+			float clampResult251_g203 = clamp( ( ( tex2DNode177_g203.g * WMask2192_g203 ) - RangeCut2211_g203 ) , 0.0 , 1.0 );
+			float WMask3190_g203 = ( tex2DNode100_g203.b * ceil( _WeatheringRange3 ) );
+			float RangeCut3210_g203 = (0.7 + (_WeatheringRange3 - 0.0) * (0.0 - 0.7) / (1.0 - 0.0));
+			float clampResult254_g203 = clamp( ( ( tex2DNode177_g203.g * WMask3190_g203 ) - RangeCut3210_g203 ) , 0.0 , 1.0 );
+			float WMask4180_g203 = ( ( tex2DNode100_g203.r * tex2DNode100_g203.g ) * ceil( _WeatheringRange4 ) );
+			float RangeCut4205_g203 = (0.7 + (_WeatheringRange4 - 0.0) * (0.0 - 0.7) / (1.0 - 0.0));
+			float clampResult259_g203 = clamp( ( ( tex2DNode177_g203.g * WMask4180_g203 ) - RangeCut4205_g203 ) , 0.0 , 1.0 );
+			float WMask5184_g203 = ( ( tex2DNode100_g203.r * tex2DNode100_g203.b ) * ceil( _WeatheringRange5 ) );
+			float RangeCut5201_g203 = (0.7 + (_WeatheringRange5 - 0.0) * (0.0 - 0.7) / (1.0 - 0.0));
+			float clampResult261_g203 = clamp( ( ( tex2DNode177_g203.g * WMask5184_g203 ) - RangeCut5201_g203 ) , 0.0 , 1.0 );
+			float WMaskAll165_g203 = ceil( _WeatheringAll );
+			float RangeCutAll171_g203 = (0.7 + (_WeatheringAll - 0.0) * (0.0 - 0.7) / (1.0 - 0.0));
+			float clampResult215_g203 = clamp( ( ( tex2DNode177_g203.g * WMaskAll165_g203 ) - RangeCutAll171_g203 ) , 0.0 , 1.0 );
+			float clampResult299_g203 = clamp( ( clampResult253_g203 + clampResult251_g203 + clampResult254_g203 + clampResult259_g203 + clampResult261_g203 + clampResult215_g203 ) , 0.0 , 1.0 );
+			float lerpResult313_g203 = lerp( clampResult299_g203 , clampResult215_g203 , WMaskAll165_g203);
+			float clampResult373_g203 = clamp( ( lerpResult313_g203 * 10.0 ) , 0.0 , 1.0 );
+			float WeatheringAlpha396_g203 = clampResult373_g203;
+			float3 lerpResult87_g203 = lerp( lerpResult98_g203 , WeatheringBump425_g203 , ( SAMPLE_TEXTURE2D( _WeatheringMap, sampler_WeatheringMap, WeatheringUV144_g203 ).b * WeatheringAlpha396_g203 ));
+			float3 normalizeResult564_g203 = normalize( lerpResult87_g203 );
+			float3 temp_output_1650_557 = normalizeResult564_g203;
 			float3 outNormal1623 = temp_output_1650_557;
 			float3 switchResult1653 = (((i.ASEVFace>0)?(outNormal1623):(-outNormal1623)));
 			float3 NormalFace1658 = ( _NormalBackDirInvert == 1.0 ? switchResult1653 : outNormal1623 );
-			float2 uv_MainTex576_g200 = i.uv_texcoord;
-			float4 tex2DNode576_g200 = SAMPLE_TEXTURE2D( _MainTex, sampler_MainTex, uv_MainTex576_g200 );
-			float AlphaInput195_g200 = tex2DNode576_g200.a;
-			float2 uv_OcclusionMap196_g200 = i.uv_texcoord;
-			float4 tex2DNode196_g200 = SAMPLE_TEXTURE2D( _OcclusionMap, sampler_OcclusionMap, uv_OcclusionMap196_g200 );
-			float OccAlpha219_g200 = tex2DNode196_g200.a;
-			float WeatheringAlpha2466_g200 = lerpResult313_g200;
-			float clampResult780_g200 = clamp( _AlphaEx , 0.2 , 1.0 );
-			float TearingsMask340_g200 = tex2DNode196_g200.b;
-			clip( ( step( pow( ( 1.0 - clampResult780_g200 ) , 0.2 ) , pow( TearingsMask340_g200 , 0.5 ) ) * AlphaInput195_g200 ) - 0.002);
+			float2 uv_MainTex576_g203 = i.uv_texcoord;
+			float4 tex2DNode576_g203 = SAMPLE_TEXTURE2D( _MainTex, sampler_MainTex, uv_MainTex576_g203 );
+			float AlphaInput195_g203 = tex2DNode576_g203.a;
+			float2 uv_OcclusionMap196_g203 = i.uv_texcoord;
+			float4 tex2DNode196_g203 = SAMPLE_TEXTURE2D( _OcclusionMap, sampler_OcclusionMap, uv_OcclusionMap196_g203 );
+			float OccAlpha219_g203 = tex2DNode196_g203.a;
+			float WeatheringAlpha2466_g203 = lerpResult313_g203;
+			float clampResult780_g203 = clamp( _AlphaEx , 0.2 , 1.0 );
+			float TearingsMask340_g203 = tex2DNode196_g203.b;
+			clip( ( step( pow( ( 1.0 - clampResult780_g203 ) , 0.2 ) , pow( TearingsMask340_g203 , 0.5 ) ) * AlphaInput195_g203 ) - 0.002);
 			float fresnelNdotV1664 = dot( normalize( normalize( (WorldNormalVector( i , NormalFace1658 )) ) ), ase_worldViewDir );
-			float fresnelNode1664 = ( saturate( ( ( AlphaInput195_g200 * _AlphaMaster * saturate( pow( OccAlpha219_g200 , ( _WetAlpha * ExGloss298_g200 ) ) ) ) + WeatheringAlpha2466_g200 ) ) + _FresnelScale * pow( max( 1.0 - fresnelNdotV1664 , 0.0001 ), _FresnelPower ) );
+			float fresnelNode1664 = ( saturate( ( ( AlphaInput195_g203 * _AlphaMaster * saturate( pow( OccAlpha219_g203 , ( _WetAlpha * ExGloss298_g203 ) ) ) ) + WeatheringAlpha2466_g203 ) ) + _FresnelScale * pow( max( 1.0 - fresnelNdotV1664 , 0.0001 ), _FresnelPower ) );
 			float outAlpha1663 = fresnelNode1664;
-			float2 uv_ColorMask304_g200 = i.uv_texcoord;
-			float ColorMask4347_g200 = SAMPLE_TEXTURE2D( _ColorMask, sampler_linear_repeat, uv_ColorMask304_g200 ).b;
-			float3 lerpResult815_g200 = lerp( (tex2DNode576_g200).rgb , (tex2DNode576_g200).rgb , ( _Color4.a * ColorMask4347_g200 ));
+			float3 temp_output_284_0_g203 = (tex2DNode576_g203).rgb;
+			float2 uv_ColorMask304_g203 = i.uv_texcoord;
+			float ColorMask4347_g203 = SAMPLE_TEXTURE2D( _ColorMask, sampler_linear_repeat, uv_ColorMask304_g203 ).b;
+			float3 lerpResult815_g203 = lerp( temp_output_284_0_g203 , ( temp_output_284_0_g203 * (_Color4).rgb ) , ( _Color4.a * ColorMask4347_g203 ));
 			float3 temp_cast_1 = (1.0).xxx;
-			float Carvature270_g200 = tex2DNode196_g200.r;
-			float3 lerpResult331_g200 = lerp( ( lerpResult815_g200 * (_BaseColor).rgb ) , temp_cast_1 , ( Carvature270_g200 * _CarvatureStrength ));
-			float WetAlbedoOffset311_g200 = _WetAlbedoOffset;
-			float3 temp_output_382_0_g200 = ( lerpResult331_g200 * WetAlbedoOffset311_g200 );
-			float WetSplatsAlbedoOffset349_g200 = _WetSplatsAlbedoOffset;
-			float3 lerpResult411_g200 = lerp( ( temp_output_382_0_g200 * WetSplatsAlbedoOffset349_g200 ) , (_WetColor).rgb , _WetColor.a);
-			float2 appendResult287_g200 = (float2(_WetUV.x , _WetUV.y));
-			float2 appendResult285_g200 = (float2(_WetUV.z , _WetUV.w));
-			float2 uv_TexCoord317_g200 = i.uv_texcoord * appendResult287_g200 + appendResult285_g200;
-			float2 WetUV578_g200 = uv_TexCoord317_g200;
-			float WetSplats369_g200 = SAMPLE_TEXTURE2D( _WetnessMap, sampler_linear_repeat, WetUV578_g200 ).b;
-			float SplatsOp363_g200 = _WetOpacitySplats;
-			float3 lerpResult460_g200 = lerp( temp_output_382_0_g200 , lerpResult411_g200 , ( ( StreaksAlpha662_g200 * WetOpStreaks673_g200 ) + ( WetSplats369_g200 * SplatsOp363_g200 ) ));
-			float2 uv_OcclusionMap429_g200 = i.uv_texcoord;
-			float4 tex2DNode429_g200 = SAMPLE_TEXTURE2D( _OcclusionMap, sampler_MainTex, uv_OcclusionMap429_g200 );
-			float3 WetBodyOffset422_g200 = (_BodyColor1).rgb;
-			float bodycoloralpha417_g200 = _BodyColor1.a;
-			float3 lerpResult480_g200 = lerp( lerpResult460_g200 , ( tex2DNode429_g200.a == 1.0 ? lerpResult460_g200 : WetBodyOffset422_g200 ) , ( bodycoloralpha417_g200 * ( 1.0 - tex2DNode429_g200.a ) ));
-			float3 lerpResult501_g200 = lerp( lerpResult331_g200 , lerpResult480_g200 , ExGloss298_g200);
-			float3 lerpResult505_g200 = lerp( lerpResult501_g200 , (_WeatheringAlbedo).rgb , ( WeatheringAlpha2466_g200 * 0.282353 ));
-			float3 DiffuseMix511_g200 = lerpResult505_g200;
-			float3 temp_output_1650_0 = DiffuseMix511_g200;
-			Gradient gradient37_g195 = NewGradient( 0, 6, 2, float4( 1, 0, 0, 0.02058442 ), float4( 1, 0.5313669, 0, 0.1499962 ), float4( 0.9518073, 1, 0, 0.3176471 ), float4( 0, 0.9381461, 1, 0.5794156 ), float4( 0.1839623, 0.3384229, 1, 0.80589 ), float4( 0.9987321, 0, 1, 1 ), 0, 0, float2( 1, 0 ), float2( 1, 1 ), 0, 0, 0, 0, 0, 0 );
-			float3 ase_worldNormal = WorldNormalVector( i, float3( 0, 0, 1 ) );
-			float3 ase_worldTangent = WorldNormalVector( i, float3( 1, 0, 0 ) );
-			float3 ase_worldBitangent = WorldNormalVector( i, float3( 0, 1, 0 ) );
-			float3x3 ase_worldToTangent = float3x3( ase_worldTangent, ase_worldBitangent, ase_worldNormal );
-			float3 ase_tanViewDir = mul( ase_worldToTangent, ase_worldViewDir );
-			float dotResult7_g195 = dot( ase_tanViewDir , temp_output_1650_557 );
-			float3 temp_output_12_0_g195 = (SampleGradient( gradient37_g195, dotResult7_g195 )).rgb;
+			float Carvature270_g203 = tex2DNode196_g203.r;
+			float3 lerpResult331_g203 = lerp( ( lerpResult815_g203 * (_BaseColor).rgb ) , temp_cast_1 , ( Carvature270_g203 * _CarvatureStrength ));
+			float WetAlbedoOffset311_g203 = _WetAlbedoOffset;
+			float3 temp_output_382_0_g203 = ( lerpResult331_g203 * WetAlbedoOffset311_g203 );
+			float WetSplatsAlbedoOffset349_g203 = _WetSplatsAlbedoOffset;
+			float3 lerpResult411_g203 = lerp( ( temp_output_382_0_g203 * WetSplatsAlbedoOffset349_g203 ) , (_WetColor).rgb , _WetColor.a);
+			float2 appendResult287_g203 = (float2(_WetUV.x , _WetUV.y));
+			float2 appendResult285_g203 = (float2(_WetUV.z , _WetUV.w));
+			float2 uv_TexCoord317_g203 = i.uv_texcoord * appendResult287_g203 + appendResult285_g203;
+			float2 WetUV578_g203 = uv_TexCoord317_g203;
+			float WetSplats369_g203 = SAMPLE_TEXTURE2D( _WetnessMap, sampler_linear_repeat, WetUV578_g203 ).b;
+			float SplatsOp363_g203 = _WetOpacitySplats;
+			float3 lerpResult460_g203 = lerp( temp_output_382_0_g203 , lerpResult411_g203 , ( ( StreaksAlpha662_g203 * WetOpStreaks673_g203 ) + ( WetSplats369_g203 * SplatsOp363_g203 ) ));
+			float2 uv_OcclusionMap429_g203 = i.uv_texcoord;
+			float4 tex2DNode429_g203 = SAMPLE_TEXTURE2D( _OcclusionMap, sampler_MainTex, uv_OcclusionMap429_g203 );
+			float3 WetBodyOffset422_g203 = (_BodyColor1).rgb;
+			float bodycoloralpha417_g203 = _BodyColor1.a;
+			float3 lerpResult480_g203 = lerp( lerpResult460_g203 , ( tex2DNode429_g203.a == 1.0 ? lerpResult460_g203 : WetBodyOffset422_g203 ) , ( bodycoloralpha417_g203 * ( 1.0 - tex2DNode429_g203.a ) ));
+			float3 lerpResult501_g203 = lerp( lerpResult331_g203 , lerpResult480_g203 , ExGloss298_g203);
+			float3 lerpResult505_g203 = lerp( lerpResult501_g203 , (_WeatheringAlbedo).rgb , ( WeatheringAlpha2466_g203 * 0.282353 ));
+			float3 DiffuseMix511_g203 = lerpResult505_g203;
+			float3 temp_output_1650_0 = DiffuseMix511_g203;
+			Gradient gradient37_g195 = NewGradient( 0, 7, 2, float4( 1, 0, 0, 0 ), float4( 1, 0.5313669, 0, 0.1499962 ), float4( 0.9518073, 1, 0, 0.3176471 ), float4( 0, 0.9381461, 1, 0.5911803 ), float4( 0.1839623, 0.3384229, 1, 0.7588311 ), float4( 0.838, 0, 1, 0.9264668 ), float4( 1, 0, 0, 1 ), 0, float2( 1, 0 ), float2( 1, 1 ), 0, 0, 0, 0, 0, 0 );
+			Gradient gradient45_g195 =(Gradient)gradient37_g195;
+			float dotResult7_g195 = dot( ase_worldViewDir , (WorldNormalVector( i , temp_output_1650_557 )) );
+			float time45_g195 = dotResult7_g195;
+			float repeatFrequency45_g195 = _IriScale;
+			float4 localMyCustomExpression45_g195 = MyCustomExpression45_g195( gradient45_g195 , time45_g195 , repeatFrequency45_g195 );
+			float3 temp_output_47_0_g195 = (localMyCustomExpression45_g195).xyz;
+			float3 temp_output_12_0_g195 = (temp_output_47_0_g195).xyz;
 			float temp_output_10_0_g195 = radians( ( 360.0 * _IriHue ) );
 			float temp_output_13_0_g195 = cos( temp_output_10_0_g195 );
-			float3 _k7 = float3(0.57735,0.57735,0.57735);
-			float dotResult14_g195 = dot( _k7 , temp_output_12_0_g195 );
-			float3 temp_output_32_0_g195 = ( ( ( ( ( ( temp_output_12_0_g195 * temp_output_13_0_g195 ) + ( cross( _k7 , temp_output_12_0_g195 ) * sin( temp_output_10_0_g195 ) ) + ( _k7 * dotResult14_g195 * ( 1.0 - temp_output_13_0_g195 ) ) ) - float3( 0.5,0.5,0.5 ) ) * ( _IriContrast * 2.0 ) ) + float3( 0.5,0.5,0.5 ) ) + ( ( _IriBrightness * 2.0 ) - 1.0 ) );
+			float3 _k = float3(0.57735,0.57735,0.57735);
+			float dotResult14_g195 = dot( _k , temp_output_12_0_g195 );
+			float3 temp_output_32_0_g195 = ( ( ( ( ( ( temp_output_12_0_g195 * temp_output_13_0_g195 ) + ( cross( _k , temp_output_12_0_g195 ) * sin( temp_output_10_0_g195 ) ) + ( _k * dotResult14_g195 * ( 1.0 - temp_output_13_0_g195 ) ) ) - float3( 0.5,0.5,0.5 ) ) * ( _IriContrast * 2.0 ) ) + float3( 0.5,0.5,0.5 ) ) + ( ( _IriBrightness * 2.0 ) - 1.0 ) );
 			float dotResult34_g195 = dot( temp_output_32_0_g195 , float3(0.39,0.59,0.11) );
 			float3 temp_cast_2 = (dotResult34_g195).xxx;
 			float3 lerpResult35_g195 = lerp( temp_cast_2 , temp_output_32_0_g195 , ( _IriSaturation * 2.0 ));
 			float3 temp_output_1595_0 = lerpResult35_g195;
 			float3 blendOpSrc1596 = temp_output_1595_0;
 			float3 blendOpDest1596 = temp_output_1650_0;
-			float2 uv_MetallicGlossMap532_g200 = i.uv_texcoord;
-			float4 tex2DNode532_g200 = SAMPLE_TEXTURE2D( _MetallicGlossMap, sampler_MetallicGlossMap, uv_MetallicGlossMap532_g200 );
-			float MetallicGlossMask800_g200 = tex2DNode532_g200.r;
-			float lerpResult399_g200 = lerp( 1.0 , MetallicGlossMask800_g200 , _MetallicMask);
-			float2 uv_DetailMainTex528_g200 = i.uv_texcoord;
-			float4 tex2DNode528_g200 = SAMPLE_TEXTURE2D( _DetailMainTex, sampler_MainTex, uv_DetailMainTex528_g200 );
-			float MainMetallic797_g200 = tex2DNode528_g200.r;
-			float lerpResult395_g200 = lerp( 1.0 , MetallicGlossMask800_g200 , _MetallicMask4);
-			float lerpResult462_g200 = lerp( ( lerpResult399_g200 * MainMetallic797_g200 ) , ( lerpResult395_g200 * _Metallic4 ) , ColorMask4347_g200);
-			float Detail1310_g200 = SAMPLE_TEXTURE2D( _DetailGlossMap, sampler_trilinear_repeat, Detail1UV173_g200 ).r;
-			float Detail2352_g200 = SAMPLE_TEXTURE2D( _DetailGlossMap2, sampler_trilinear_repeat, Detail2UV20_g200 ).r;
-			float lerpResult495_g200 = lerp( saturate( ( ( lerpResult462_g200 - ( ( 1.0 - Detail1310_g200 ) * ( _DetailMetallicScale * DetailMask130_g200 ) ) ) - ( ( 1.0 - Detail2352_g200 ) * ( _DetailMetallicScale2 * DetailMask235_g200 ) ) ) ) , 0.0 , WeatheringAlpha2466_g200);
-			float temp_output_1650_559 = saturate( lerpResult495_g200 );
+			float2 uv_MetallicGlossMap532_g203 = i.uv_texcoord;
+			float4 tex2DNode532_g203 = SAMPLE_TEXTURE2D( _MetallicGlossMap, sampler_MetallicGlossMap, uv_MetallicGlossMap532_g203 );
+			float MetallicGlossMask800_g203 = tex2DNode532_g203.r;
+			float lerpResult399_g203 = lerp( 1.0 , MetallicGlossMask800_g203 , _MetallicMask);
+			float2 uv_DetailMainTex528_g203 = i.uv_texcoord;
+			float4 tex2DNode528_g203 = SAMPLE_TEXTURE2D( _DetailMainTex, sampler_MainTex, uv_DetailMainTex528_g203 );
+			float MainMetallic797_g203 = tex2DNode528_g203.r;
+			float lerpResult395_g203 = lerp( 1.0 , MetallicGlossMask800_g203 , _MetallicMask4);
+			float lerpResult462_g203 = lerp( ( lerpResult399_g203 * MainMetallic797_g203 ) , ( lerpResult395_g203 * _Metallic4 ) , ColorMask4347_g203);
+			float Detail1310_g203 = SAMPLE_TEXTURE2D( _DetailGlossMap, sampler_trilinear_repeat, Detail1UV173_g203 ).r;
+			float Detail2352_g203 = SAMPLE_TEXTURE2D( _DetailGlossMap2, sampler_trilinear_repeat, Detail2UV20_g203 ).r;
+			float lerpResult495_g203 = lerp( saturate( ( ( lerpResult462_g203 - ( ( 1.0 - Detail1310_g203 ) * ( _DetailMetallicScale * DetailMask130_g203 ) ) ) - ( ( 1.0 - Detail2352_g203 ) * ( _DetailMetallicScale2 * DetailMask235_g203 ) ) ) ) , 0.0 , WeatheringAlpha2466_g203);
+			float temp_output_1650_559 = saturate( lerpResult495_g203 );
 			float3 lerpBlendMode1596 = lerp(blendOpDest1596,( blendOpSrc1596 * blendOpDest1596 ),temp_output_1650_559);
 			#ifdef _IRIDISCENT_ON
 				float3 staticSwitch1597 = ( saturate( lerpBlendMode1596 ));
@@ -566,19 +572,19 @@ Shader "Hanmen/Clothes True Alpha"
 			float3 normalizeResult136_g198 = ASESafeNormalize( ( lightDir14_g198 + viewDir15_g198 ) );
 			float dotResult137_g198 = dot( lightDir14_g198 , normalizeResult136_g198 );
 			float LdotH139_g198 = saturate( dotResult137_g198 );
-			float mgAlpha806_g200 = tex2DNode532_g200.a;
-			float lerpResult353_g200 = lerp( 1.0 , mgAlpha806_g200 , _Roughness);
-			float MainGlossiness795_g200 = tex2DNode528_g200.b;
-			float lerpResult336_g200 = lerp( 1.0 , mgAlpha806_g200 , _Roughness4);
-			float lerpResult384_g200 = lerp( ( lerpResult353_g200 * MainGlossiness795_g200 ) , ( lerpResult336_g200 * _Glossiness4 ) , ColorMask4347_g200);
-			float WetGlossBase397_g200 = _WetGlossBase;
-			float lerpResult470_g200 = lerp( saturate( ( ( lerpResult384_g200 - ( ( 1.0 - Detail1310_g200 ) * ( _DetailGlossScale * DetailMask130_g200 ) ) ) - ( ( 1.0 - Detail2352_g200 ) * ( _DetailGlossScale2 * DetailMask235_g200 ) ) ) ) , mgAlpha806_g200 , ( WetGlossBase397_g200 * ExGloss298_g200 ));
-			float SplatsGloss407_g200 = _WetGlossSplats;
-			float lerpResult664_g200 = lerp( lerpResult470_g200 , SplatsGloss407_g200 , ( SplatsOp363_g200 * ExGloss298_g200 * WetSplats369_g200 ));
-			float lerpResult649_g200 = lerp( lerpResult664_g200 , 0.87 , ( WetOpStreaks673_g200 * smoothstepResult651_g200 ));
-			float lerpResult499_g200 = lerp( lerpResult649_g200 , _WeatheringGloss , WeatheringAlpha396_g200);
-			float GlossinessFinal513_g200 = saturate( lerpResult499_g200 );
-			float outSmoothness1627 = GlossinessFinal513_g200;
+			float mgAlpha806_g203 = tex2DNode532_g203.a;
+			float lerpResult353_g203 = lerp( 1.0 , mgAlpha806_g203 , _Roughness);
+			float MainGlossiness795_g203 = tex2DNode528_g203.b;
+			float lerpResult336_g203 = lerp( 1.0 , mgAlpha806_g203 , _Roughness4);
+			float lerpResult384_g203 = lerp( ( lerpResult353_g203 * MainGlossiness795_g203 ) , ( lerpResult336_g203 * _Glossiness4 ) , ColorMask4347_g203);
+			float WetGlossBase397_g203 = _WetGlossBase;
+			float lerpResult470_g203 = lerp( saturate( ( ( lerpResult384_g203 - ( ( 1.0 - Detail1310_g203 ) * ( _DetailGlossScale * DetailMask130_g203 ) ) ) - ( ( 1.0 - Detail2352_g203 ) * ( _DetailGlossScale2 * DetailMask235_g203 ) ) ) ) , mgAlpha806_g203 , ( WetGlossBase397_g203 * ExGloss298_g203 ));
+			float SplatsGloss407_g203 = _WetGlossSplats;
+			float lerpResult664_g203 = lerp( lerpResult470_g203 , SplatsGloss407_g203 , ( SplatsOp363_g203 * ExGloss298_g203 * WetSplats369_g203 ));
+			float lerpResult649_g203 = lerp( lerpResult664_g203 , 0.87 , ( WetOpStreaks673_g203 * smoothstepResult651_g203 ));
+			float lerpResult499_g203 = lerp( lerpResult649_g203 , _WeatheringGloss , WeatheringAlpha396_g203);
+			float GlossinessFinal513_g203 = saturate( lerpResult499_g203 );
+			float outSmoothness1627 = GlossinessFinal513_g203;
 			float smoothness169_g198 = outSmoothness1627;
 			float perceprualRoughness188_g198 = ( 1.0 - smoothness169_g198 );
 			half fd90273_g198 = ( 0.5 + ( 2.0 * LdotH139_g198 * LdotH139_g198 * perceprualRoughness188_g198 ) );
@@ -602,15 +608,15 @@ Shader "Hanmen/Clothes True Alpha"
 			float3 diffNorm203_g198 = normalDir28_g198;
 			gi203_g198 = UnityGI_Base( data, 1, diffNorm203_g198 );
 			float3 indirectDiffuse203_g198 = gi203_g198.indirect.diffuse + diffNorm203_g198 * 0.0001;
-			float OcclusionG832_g200 = tex2DNode196_g200.g;
-			float lerpResult483_g200 = lerp( 1.0 , OcclusionG832_g200 , _OcculusionStrength);
-			float smoothstepResult621_g200 = smoothstep( 0.0 , 0.8 , Detail1310_g200);
-			float lerpResult488_g200 = lerp( 1.0 , smoothstepResult621_g200 , ( _DetailOcculusionScale * DetailMask130_g200 ));
-			float smoothstepResult622_g200 = smoothstep( 0.0 , 0.8 , Detail2352_g200);
-			float lerpResult494_g200 = lerp( 1.0 , smoothstepResult622_g200 , ( _DetailOcculusionScale2 * DetailMask235_g200 ));
-			float lerpResult620_g200 = lerp( ( lerpResult483_g200 * lerpResult488_g200 * lerpResult494_g200 ) , 1.0 , WeatheringAlpha396_g200);
-			float OcclusionMix509_g200 = saturate( lerpResult620_g200 );
-			float outAO1628 = OcclusionMix509_g200;
+			float OcclusionG832_g203 = tex2DNode196_g203.g;
+			float lerpResult483_g203 = lerp( 1.0 , OcclusionG832_g203 , _OcculusionStrength);
+			float smoothstepResult621_g203 = smoothstep( 0.0 , 0.8 , Detail1310_g203);
+			float lerpResult488_g203 = lerp( 1.0 , smoothstepResult621_g203 , ( _DetailOcculusionScale * DetailMask130_g203 ));
+			float smoothstepResult622_g203 = smoothstep( 0.0 , 0.8 , Detail2352_g203);
+			float lerpResult494_g203 = lerp( 1.0 , smoothstepResult622_g203 , ( _DetailOcculusionScale2 * DetailMask235_g203 ));
+			float lerpResult620_g203 = lerp( ( lerpResult483_g203 * lerpResult488_g203 * lerpResult494_g203 ) , 1.0 , WeatheringAlpha396_g203);
+			float OcclusionMix509_g203 = saturate( lerpResult620_g203 );
+			float outAO1628 = OcclusionMix509_g203;
 			float occlusion306_g198 = outAO1628;
 			half Roughness64_g198 = max( ( perceprualRoughness188_g198 * perceprualRoughness188_g198 ) , 0.002 );
 			half SmithJointGGXVisibilityTerm42_g198 = ( 0.5 / ( ( ( ( NdotV55_g198 * ( 1.0 - Roughness64_g198 ) ) + Roughness64_g198 ) * NdotL20_g198 ) + 1E-05 + ( NdotV55_g198 * ( Roughness64_g198 + ( ( 1.0 - Roughness64_g198 ) * NdotL20_g198 ) ) ) ) );
@@ -674,28 +680,28 @@ Shader "Hanmen/Clothes True Alpha"
 			#else
 				float3 staticSwitch305_g198 = staticSwitch313_g198;
 			#endif
-			float EmissionMask799_g200 = tex2DNode532_g200.g;
-			float3 CLEANCOLOR838_g200 = lerpResult815_g200;
+			float EmissionMask799_g203 = tex2DNode532_g203.g;
+			float3 CLEANCOLOR838_g203 = lerpResult815_g203;
 			#ifdef _EMISSIONCOLORTEXBASE_ON
-				float3 staticSwitch837_g200 = CLEANCOLOR838_g200;
+				float3 staticSwitch837_g203 = CLEANCOLOR838_g203;
 			#else
-				float3 staticSwitch837_g200 = (_EmissionColor).rgb;
+				float3 staticSwitch837_g203 = (_EmissionColor).rgb;
 			#endif
-			float2 appendResult842_g200 = (float2(_UVScroll.x , _UVScroll.y));
-			float2 appendResult848_g200 = (float2(_UVScroll.z , _UVScroll.w));
-			float2 uv_TexCoord840_g200 = i.uv_texcoord * appendResult842_g200;
-			float2 panner841_g200 = ( _Time.y * ( appendResult842_g200 * appendResult848_g200 ) + uv_TexCoord840_g200);
-			float cos850_g200 = cos( ( _UVScrollRotator * UNITY_PI ) );
-			float sin850_g200 = sin( ( _UVScrollRotator * UNITY_PI ) );
-			float2 rotator850_g200 = mul( panner841_g200 - float2( 0.5,0.5 ) , float2x2( cos850_g200 , -sin850_g200 , sin850_g200 , cos850_g200 )) + float2( 0.5,0.5 );
-			float WeatheringBumpMask718_g200 = tex2DNode177_g200.b;
-			float3 outEmission1625 = ( ( EmissionMask799_g200 * staticSwitch837_g200 * _EmissionStrength * (SAMPLE_TEXTURE2D( _EffectMap, sampler_MainTex, rotator850_g200 )).rgb ) + ( ( WeatheringAlpha2466_g200 * WeatheringBumpMask718_g200 ) * _WeatheringEmission ) );
+			float2 appendResult842_g203 = (float2(_UVScroll.x , _UVScroll.y));
+			float2 appendResult848_g203 = (float2(_UVScroll.z , _UVScroll.w));
+			float2 uv_TexCoord840_g203 = i.uv_texcoord * appendResult842_g203;
+			float2 panner841_g203 = ( _Time.y * ( appendResult842_g203 * appendResult848_g203 ) + uv_TexCoord840_g203);
+			float cos850_g203 = cos( ( _UVScrollRotator * UNITY_PI ) );
+			float sin850_g203 = sin( ( _UVScrollRotator * UNITY_PI ) );
+			float2 rotator850_g203 = mul( panner841_g203 - float2( 0.5,0.5 ) , float2x2( cos850_g203 , -sin850_g203 , sin850_g203 , cos850_g203 )) + float2( 0.5,0.5 );
+			float WeatheringBumpMask718_g203 = tex2DNode177_g203.b;
+			float3 outEmission1625 = ( ( EmissionMask799_g203 * staticSwitch837_g203 * _EmissionStrength * (SAMPLE_TEXTURE2D( _EffectMap, sampler_MainTex, rotator850_g203 )).rgb ) + ( ( WeatheringAlpha2466_g203 * WeatheringBumpMask718_g203 ) * _WeatheringEmission ) );
 			float3 normalizeResult61_g196 = normalize( (WorldNormalVector( i , outNormal1623 )) );
 			float3 normal2_g197 = normalizeResult61_g196;
 			float3 localGI2_g197 = GI2_g197( normal2_g197 );
 			float3 temp_output_69_15_g196 = localGI2_g197;
-			float Thickness507_g200 = tex2DNode532_g200.b;
-			float thickness1646 = Thickness507_g200;
+			float Thickness507_g203 = tex2DNode532_g203.b;
+			float thickness1646 = Thickness507_g203;
 			float temp_output_59_0_g196 = ( _Translucency * thickness1646 );
 			float3 temp_output_6_0_g196 = OutAlbedo1604;
 			c.rgb = ( ( ( OutAlbedo1604 * ( ( Diffuseterm281_g198 * lightAtten296_g198 ) + ( indirectDiffuse203_g198 * occlusion306_g198 ) ) ) + ( SpecularTerm34_g198 * lightAtten296_g198 * FresnelTerm130_g198 ) + staticSwitch305_g198 ) + outEmission1625 + ( ( temp_output_69_15_g196 * _TransAmbient ) * temp_output_59_0_g196 * temp_output_6_0_g196 ) );
@@ -809,28 +815,28 @@ Shader "Hanmen/Clothes True Alpha"
 }
 /*ASEBEGIN
 Version=18935
-6;6;1221;926;-4741.891;2199.024;1.60359;True;False
-Node;AmplifyShaderEditor.FunctionNode;1595;5851.836,-2626.556;Inherit;False;Iridiscence;86;;195;70fe6a1ace0a29b439fe6d71982b6fe0;0;1;1;FLOAT3;0,0,0;False;1;FLOAT3;0
+117.2;62.4;1337;822;-8739.58;2312.337;1;True;False
+Node;AmplifyShaderEditor.FunctionNode;1595;5851.836,-2626.556;Inherit;False;Iridiscence;88;;195;70fe6a1ace0a29b439fe6d71982b6fe0;0;1;1;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1611;6175.968,-2151.94;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.ComponentMaskNode;1608;6495.265,-2283.345;Inherit;False;True;True;True;False;1;0;COLOR;0,0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1612;6222.102,-2125.577;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1613;5905.209,-1876.744;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;1600;6752.592,-2182.068;Inherit;False;Property;_Iridiscent2;Iridiscent;85;0;Create;True;0;0;0;True;0;False;1;0;0;True;;Toggle;2;Key0;Key1;Reference;1597;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.StaticSwitch;1600;6752.592,-2182.068;Inherit;False;Property;_Iridiscent2;Iridiscent;87;0;Create;True;0;0;0;True;0;False;1;0;0;True;;Toggle;2;Key0;Key1;Reference;1597;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.BlendOpsNode;1596;6141.151,-2630.663;Inherit;False;Multiply;True;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT;1;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.ComponentMaskNode;1617;6491.784,-2048.189;Inherit;False;True;True;True;False;1;0;COLOR;0,0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1609;6039.75,-2742.274;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1614;5949.149,-1852.577;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;1597;6386.739,-2626.739;Inherit;False;Property;_Iridiscent;Iridiscent;85;0;Create;True;0;0;0;True;0;False;1;0;0;True;;Toggle;2;Key0;Key1;Create;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.StaticSwitch;1597;6386.739,-2626.739;Inherit;False;Property;_Iridiscent;Iridiscent;87;0;Create;True;0;0;0;True;0;False;1;0;0;True;;Toggle;2;Key0;Key1;Create;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;1619;6980.833,-2064.812;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.DiffuseAndSpecularFromMetallicNode;1601;7148.071,-1896.234;Inherit;False;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;3;FLOAT3;0;FLOAT3;1;FLOAT;2
 Node;AmplifyShaderEditor.WireNode;1610;6103.462,-2773.03;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.DiffuseAndSpecularFromMetallicNode;1606;6673.288,-2560.237;Inherit;False;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;3;FLOAT3;0;FLOAT3;1;FLOAT;2
-Node;AmplifyShaderEditor.StaticSwitch;1602;7477.574,-2540.774;Inherit;False;Property;_SpecularSetup;SpecularSetup;91;0;Create;True;0;0;0;False;0;False;1;0;0;True;;Toggle;2;Key0;Key1;Create;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.StaticSwitch;1603;6996.55,-2825.649;Inherit;False;Property;_SpecularSetup2;SpecularSetup;91;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;1602;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.StaticSwitch;1602;7477.574,-2540.774;Inherit;False;Property;_SpecularSetup;SpecularSetup;94;0;Create;True;0;0;0;False;0;False;1;0;0;True;;Toggle;2;Key0;Key1;Create;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.StaticSwitch;1603;6996.55,-2825.649;Inherit;False;Property;_SpecularSetup2;SpecularSetup;94;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;1602;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1627;5917.078,-2186.828;Inherit;False;outSmoothness;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1605;7767.688,-2537.081;Inherit;False;OutSpecular;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1623;5911.21,-2356.282;Inherit;False;outNormal;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.CommentaryNode;1635;8648.84,-2316.688;Inherit;False;1083.366;982.0896;Comment;15;1647;1645;1593;1284;1632;1640;1639;1626;1643;1630;1633;1629;1634;1624;1660;ForwardBase;1,1,1,1;0;0
+Node;AmplifyShaderEditor.CommentaryNode;1635;8648.84,-2316.688;Inherit;False;1513.28;1010.976;Comment;15;1632;1660;1645;1647;1624;1284;1593;1640;1639;1626;1643;1633;1634;1630;1629;ForwardBase;1,1,1,1;0;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1646;5944.352,-1994.988;Inherit;False;thickness;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1628;5913.789,-2094.082;Inherit;False;outAO;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1629;8730.379,-1823.305;Inherit;False;1627;outSmoothness;1;0;OBJECT;;False;1;FLOAT;0
@@ -838,41 +844,41 @@ Node;AmplifyShaderEditor.RegisterLocalVarNode;1625;5915.825,-2274.957;Inherit;Fa
 Node;AmplifyShaderEditor.GetLocalVarNode;1630;8777.33,-1742.289;Inherit;False;1628;outAO;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1634;8744.747,-2008.513;Inherit;False;1605;OutSpecular;1;0;OBJECT;;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1633;8754.425,-2179.128;Inherit;False;1604;OutAlbedo;1;0;OBJECT;;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.FunctionNode;1643;8987.68,-1585.578;Inherit;False;Unity Translucency;77;;196;3081dbcb6ac8af842b2faa561ed4ff52;0;3;6;FLOAT3;0,0,0;False;26;FLOAT3;0,0,1;False;46;FLOAT;1;False;2;FLOAT3;0;FLOAT3;68
+Node;AmplifyShaderEditor.FunctionNode;1643;8987.68,-1585.578;Inherit;False;Unity Translucency;79;;196;3081dbcb6ac8af842b2faa561ed4ff52;0;3;6;FLOAT3;0,0,0;False;26;FLOAT3;0,0,1;False;46;FLOAT;1;False;2;FLOAT3;0;FLOAT3;68
 Node;AmplifyShaderEditor.GetLocalVarNode;1626;8749.46,-1917.688;Inherit;False;1625;outEmission;1;0;OBJECT;;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.FunctionNode;1639;9050.925,-2112.491;Inherit;False;GGX Specular Light;-1;;198;53564f0ffa5fbe14e85233656c8e0b13;0;5;286;FLOAT3;0,0,0;False;30;FLOAT3;0,0,0;False;146;FLOAT3;0,0,0;False;147;FLOAT;0;False;302;FLOAT;0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.FunctionNode;1639;9050.925,-2112.491;Inherit;False;GGX Specular Light;0;;198;53564f0ffa5fbe14e85233656c8e0b13;0;5;286;FLOAT3;0,0,0;False;30;FLOAT3;0,0,0;False;146;FLOAT3;0,0,0;False;147;FLOAT;0;False;302;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.SimpleAddOpNode;1640;9297.329,-1932.29;Inherit;False;3;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.StandardSurfaceOutputNode;1593;9439.388,-2072.38;Float;False;True;-1;7;ASEMaterialInspector;0;0;CustomLighting;Hanmen/Clothes True Alpha;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;False;False;False;False;False;False;Back;0;True;1492;3;False;-1;False;1;False;-1;1;False;-1;False;7;Transparent;0.5;True;True;0;False;Transparent;;Transparent;ForwardOnly;2;d3d11_9x;d3d11;True;True;True;True;0;False;-1;False;0;False;-1;255;False;-1;255;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;False;2;15;10;25;False;0.5;True;2;5;False;1462;10;False;1463;0;5;False;-1;10;False;-1;0;False;-1;0;False;-1;0;False;0;0,0,0,0;VertexOffset;True;False;Cylindrical;False;True;Relative;0;Legacy Shaders/Diffuse;-1;-1;-1;-1;0;False;0;0;True;1284;-1;0;True;1533;0;0;0;False;0.1;False;-1;0;False;-1;True;15;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT;0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT;0;False;9;FLOAT;0;False;10;FLOAT;0;False;13;FLOAT3;0,0,0;False;11;FLOAT3;0,0,0;False;12;FLOAT3;0,0,0;False;14;FLOAT4;0,0,0,0;False;15;FLOAT3;0,0,0;False;0
 Node;AmplifyShaderEditor.ClipNode;1621;6093.832,-1692.706;Inherit;False;3;0;FLOAT;1;False;1;FLOAT;0;False;2;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.SamplerNode;1618;6158.937,-2048.759;Inherit;True;Property;_SpecularMap;SpecularMap;93;1;[NoScaleOffset];Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.FunctionNode;1650;5560.153,-2425.048;Inherit;False;AIT Clothes Function;2;;200;d0644e5becc3a6145ad3ab18b1d3f488;0;0;11;FLOAT3;0;FLOAT3;557;FLOAT3;558;FLOAT;559;FLOAT;560;FLOAT;812;FLOAT;561;SAMPLERSTATE;748;FLOAT;562;FLOAT;787;FLOAT;817
-Node;AmplifyShaderEditor.RegisterLocalVarNode;1644;6026.532,-2878.263;Inherit;False;Diffuse;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.SamplerNode;1618;6158.937,-2048.759;Inherit;True;Property;_SpecularMap;SpecularMap;96;1;[NoScaleOffset];Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.RangedFloatNode;1651;5886.353,-1648.936;Inherit;False;Constant;_Float21;Float 21;10;0;Create;True;0;0;0;False;0;False;0.002;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;1284;9410.468,-1499.894;Inherit;False;Property;_CullMode;CullMode;0;2;[Header];[IntRange];Create;True;1;Backface Settings;3;None;0;Front;1;Back;2;0;True;0;False;2;2;0;2;0;1;FLOAT;0
-Node;AmplifyShaderEditor.ColorNode;1607;6288.398,-2282.267;Inherit;False;Property;_SpecColor;SpecColor;92;0;Fetch;True;0;0;0;True;0;False;0.5,0.5,0.5,1;0.5,0.5,0.5,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.ColorNode;1607;6288.398,-2282.267;Inherit;False;Property;_SpecColor;SpecColor;95;0;Fetch;True;0;0;0;True;0;False;0.5,0.5,0.5,1;0.5,0.5,0.5,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.SwitchByFaceNode;1653;7421.196,-1398.148;Inherit;False;2;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1654;7619.414,-1439.794;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.NegateNode;1655;7222.414,-1377.357;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.RangedFloatNode;1656;7462.37,-1304.914;Inherit;False;Constant;_Float22;Float 5;73;0;Create;True;0;0;0;False;0;False;1;0;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.Compare;1657;7714.489,-1339.759;Inherit;False;0;4;0;FLOAT;0;False;1;FLOAT;1;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.RegisterLocalVarNode;1658;7898.901,-1322.936;Inherit;False;NormalFace;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode;1658;7935.784,-1337.368;Inherit;False;NormalFace;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1624;8757.688,-2096.216;Inherit;False;1658;NormalFace;1;0;OBJECT;;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1647;8757.222,-1415.053;Inherit;False;1646;thickness;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1645;8763.583,-1490.558;Inherit;False;1604;OutAlbedo;1;0;OBJECT;;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1660;8770.515,-1584.815;Inherit;False;1623;outNormal;1;0;OBJECT;;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.RangedFloatNode;1659;7320.496,-1520.047;Inherit;False;Property;_NormalBackDirInvert;Normal Invert;1;1;[Toggle];Create;False;1;;0;0;True;0;False;1;1;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;1659;7320.496,-1520.047;Inherit;False;Property;_NormalBackDirInvert;Normal Invert;3;1;[Toggle];Create;False;1;;0;0;True;0;False;1;1;0;1;0;1;FLOAT;0
 Node;AmplifyShaderEditor.ViewDirInputsCoordNode;1665;5900.143,-1387.13;Inherit;False;World;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
-Node;AmplifyShaderEditor.RangedFloatNode;1671;5829.225,-1118.279;Inherit;False;Property;_FresnelScale;FresnelScale;76;0;Create;True;0;0;0;True;0;False;0;1.37;0;10;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;1672;5830.705,-1037.22;Inherit;False;Property;_FresnelPower;FresnelPower;74;1;[Header];Create;True;1;Fresnel Settings;0;0;True;0;False;3;3.48;0;10;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;1671;5829.225,-1118.279;Inherit;False;Property;_FresnelScale;FresnelScale;78;0;Create;True;0;0;0;True;0;False;0;0;0;10;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;1672;5830.705,-1037.22;Inherit;False;Property;_FresnelPower;FresnelPower;76;1;[Header];Create;True;1;Fresnel Settings;0;0;True;0;False;3;3;0;10;0;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1632;8767.474,-1668.435;Inherit;False;1663;outAlpha;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1604;7399.661,-2822.084;Inherit;False;OutAlbedo;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.StaticSwitch;1673;6773.092,-1059.781;Inherit;False;Property;_SHADERTYPE_CLOTHING;SHADERTYPE_CLOTHING;94;0;Create;False;0;0;0;True;1;HideInInspector;False;0;1;1;True;_SHADERTYPE_CLOTHING;Toggle;2;Key0;Key1;Create;False;False;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch;1673;6773.092,-1059.781;Inherit;False;Property;_SHADERTYPE_CLOTHING;SHADERTYPE_CLOTHING;97;0;Create;False;0;0;0;True;1;HideInInspector;False;0;1;1;True;_SHADERTYPE_CLOTHING;Toggle;2;Key0;Key1;Create;False;False;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1652;7158.202,-1236.987;Inherit;False;1623;outNormal;1;0;OBJECT;;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1663;6819.759,-1473.281;Inherit;False;outAlpha;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;1670;5824.217,-1201.951;Inherit;False;Property;_FresnelBias;FresnelBias;75;0;Create;True;0;0;0;False;0;False;0;0;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;1670;5824.217,-1201.951;Inherit;False;Property;_FresnelBias;FresnelBias;77;0;Create;True;0;0;0;False;0;False;0;0;0;1;0;1;FLOAT;0
 Node;AmplifyShaderEditor.WorldNormalVector;1666;5884.934,-1548.185;Inherit;False;True;1;0;FLOAT3;0,0,1;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
 Node;AmplifyShaderEditor.FresnelNode;1664;6216.814,-1474.122;Inherit;False;Standard;WorldNormal;ViewDir;True;True;5;0;FLOAT3;0,0,1;False;4;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;1;False;3;FLOAT;5;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1667;5501.589,-1557.969;Inherit;False;1658;NormalFace;1;0;OBJECT;;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.RangedFloatNode;1284;9004.823,-1440.158;Inherit;False;Property;_CullMode;CullMode;2;2;[Header];[IntRange];Create;True;1;Backface Settings;3;None;0;Front;1;Back;2;0;True;0;False;2;2;0;2;0;1;FLOAT;0
+Node;AmplifyShaderEditor.StandardSurfaceOutputNode;1593;9813.907,-2097.11;Float;False;True;-1;7;ASEMaterialInspector;0;0;CustomLighting;Hanmen/Clothes True Alpha;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;False;False;False;False;False;False;Back;0;True;1492;3;False;-1;False;1;False;-1;1;False;-1;False;7;Transparent;0.5;True;True;0;False;Transparent;;Transparent;ForwardOnly;2;d3d11_9x;d3d11;True;True;True;True;0;False;-1;False;0;False;-1;255;False;-1;255;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;False;2;15;10;25;False;0.5;True;2;5;False;1462;10;False;1463;0;5;False;-1;10;False;-1;0;False;-1;0;False;-1;0;False;0;0,0,0,0;VertexOffset;True;False;Cylindrical;False;True;Relative;0;Legacy Shaders/Diffuse;-1;-1;-1;-1;0;False;0;0;True;1284;-1;0;True;1533;0;0;0;False;0.1;False;-1;0;False;-1;True;15;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT;0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT;0;False;9;FLOAT;0;False;10;FLOAT;0;False;13;FLOAT3;0,0,0;False;11;FLOAT3;0,0,0;False;12;FLOAT3;0,0,0;False;14;FLOAT4;0,0,0,0;False;15;FLOAT3;0,0,0;False;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode;1644;6022.166,-2930.667;Inherit;False;Diffuse;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.FunctionNode;1650;5560.153,-2425.048;Inherit;False;AIT Clothes Function;4;;203;d0644e5becc3a6145ad3ab18b1d3f488;0;0;11;FLOAT3;0;FLOAT3;557;FLOAT3;558;FLOAT;559;FLOAT;560;FLOAT;812;FLOAT;561;SAMPLERSTATE;748;FLOAT;562;FLOAT;787;FLOAT;817
 WireConnection;1595;1;1650;557
 WireConnection;1611;0;1595;0
 WireConnection;1608;0;1607;0
@@ -916,12 +922,9 @@ WireConnection;1639;302;1630;0
 WireConnection;1640;0;1639;0
 WireConnection;1640;1;1626;0
 WireConnection;1640;2;1643;68
-WireConnection;1593;9;1632;0
-WireConnection;1593;13;1640;0
 WireConnection;1621;0;1650;817
 WireConnection;1621;1;1650;787
 WireConnection;1621;2;1651;0
-WireConnection;1644;0;1650;0
 WireConnection;1653;0;1652;0
 WireConnection;1653;1;1655;0
 WireConnection;1654;0;1659;0
@@ -939,5 +942,8 @@ WireConnection;1664;4;1665;0
 WireConnection;1664;1;1621;0
 WireConnection;1664;2;1671;0
 WireConnection;1664;3;1672;0
+WireConnection;1593;9;1632;0
+WireConnection;1593;13;1640;0
+WireConnection;1644;0;1650;0
 ASEEND*/
-//CHKSM=126D7EF092A0716FF4829FF1F4737B2CB1D81E1D
+//CHKSM=8717B4D56DD4104564A9F11F7F5FB89BAC402935

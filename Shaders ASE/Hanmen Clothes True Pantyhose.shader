@@ -92,6 +92,7 @@ Shader "Hanmen/Clothes True Pantyhose"
 		_IriSaturation("Saturation", Range( 0 , 1)) = 0.5
 		_IriBrightness("Brightness", Range( 0 , 1)) = 0.5
 		_IriContrast("Contrast", Range( 0 , 1)) = 0.5
+		_IriScale("RepeatFreq", Range( 0 , 10)) = 1
 		[Header(Cutout Setting)]_Cutoff("Cutoff", Range( 0 , 1)) = 0.1
 		[IntRange]_CullMode("CullMode", Range( 0 , 2)) = 2
 		[HideInInspector] _texcoord( "", 2D ) = "white" {}
@@ -153,10 +154,6 @@ Shader "Hanmen/Clothes True Pantyhose"
 			UnityGIInput GIData;
 		};
 
-		uniform float _IriBrightness;
-		uniform float _IriSaturation;
-		uniform float _IriContrast;
-		uniform float _IriHue;
 		uniform float _TransDirect;
 		uniform float _TransNormalDistortion;
 		uniform float _TransAmbient;
@@ -237,8 +234,13 @@ Shader "Hanmen/Clothes True Pantyhose"
 		uniform float _DetailAlpha1;
 		uniform float _AlphaMaster;
 		uniform float _AlphaEx;
-		uniform float _Cutoff;
 		uniform float _CullMode;
+		uniform float _Cutoff;
+		uniform float _IriBrightness;
+		uniform float _IriSaturation;
+		uniform float _IriContrast;
+		uniform float _IriHue;
+		uniform float _IriScale;
 		uniform float4 _MainTex_ST;
 		SamplerState sampler_trilinear_repeat;
 		SamplerState sampler_linear_repeat;
@@ -302,26 +304,29 @@ Shader "Hanmen/Clothes True Pantyhose"
 		}
 
 
-		float4 SampleGradient( Gradient gradient, float time )
+		float4 MyCustomExpression45_g777( Gradient gradient, float time, float repeatFrequency )
 		{
-			float3 color = gradient.colors[0].rgb;
-			UNITY_UNROLL
-			for (int c = 1; c < 8; c++)
-			{
-			float colorPos = saturate((time - gradient.colors[c-1].w) / ( 0.00001 + (gradient.colors[c].w - gradient.colors[c-1].w)) * step(c, (float)gradient.colorsLength-1));
-			color = lerp(color, gradient.colors[c].rgb, lerp(colorPos, step(0.01, colorPos), gradient.type));
-			}
-			#ifndef UNITY_COLORSPACE_GAMMA
-			color = half3(GammaToLinearSpaceExact(color.r), GammaToLinearSpaceExact(color.g), GammaToLinearSpaceExact(color.b));
-			#endif
-			float alpha = gradient.alphas[0].x;
-			UNITY_UNROLL
-			for (int a = 1; a < 8; a++)
-			{
-			float alphaPos = saturate((time - gradient.alphas[a-1].y) / ( 0.00001 + (gradient.alphas[a].y - gradient.alphas[a-1].y)) * step(a, (float)gradient.alphasLength-1));
-			alpha = lerp(alpha, gradient.alphas[a].x, lerp(alphaPos, step(0.01, alphaPos), gradient.type));
-			}
-			return float4(color, alpha);
+			time = fmod(time * repeatFrequency, 1.0);
+			    
+			    float3 color = gradient.colors[0].rgb;
+			    UNITY_UNROLL
+			    for (int c = 1; c < 8; c++)
+			    {
+			        float colorPos = saturate((time - gradient.colors[c-1].w) / (0.00001 + (gradient.colors[c].w - gradient.colors[c-1].w)) * step(c, (float)gradient.colorsLength - 1));
+			        color = lerp(color, gradient.colors[c].rgb, lerp(colorPos, step(0.01, colorPos), gradient.type));
+			    }
+			    #ifndef UNITY_COLORSPACE_GAMMA
+			    color = half3(GammaToLinearSpaceExact(color.r), GammaToLinearSpaceExact(color.g), GammaToLinearSpaceExact(color.b));
+			    #endif
+			    float alpha = gradient.alphas[0].x;
+			    UNITY_UNROLL
+			    for (int a = 1; a < 8; a++)
+			    {
+			        float alphaPos = saturate((time - gradient.alphas[a-1].y) / (0.00001 + (gradient.alphas[a].y - gradient.alphas[a-1].y)) * step(a, (float)gradient.alphasLength - 1));
+			        alpha = lerp(alpha, gradient.alphas[a].x, lerp(alphaPos, step(0.01, alphaPos), gradient.type));
+			    }
+			    
+			    return float4(color, alpha);
 		}
 
 
@@ -394,7 +399,7 @@ Shader "Hanmen/Clothes True Pantyhose"
 			float4 tex2DNode576_g776 = SAMPLE_TEXTURE2D( _MainTex, sampler_MainTex, uv_MainTex );
 			float AlphaInput195_g776 = tex2DNode576_g776.a;
 			float3 ase_worldPos = i.worldPos;
-			float3 ase_worldViewDir = Unity_SafeNormalize( UnityWorldSpaceViewDir( ase_worldPos ) );
+			float3 ase_worldViewDir = normalize( UnityWorldSpaceViewDir( ase_worldPos ) );
 			float2 uv_BumpMap402_g776 = i.uv_texcoord;
 			float3 tex2DNode402_g776 = UnpackScaleNormal( SAMPLE_TEXTURE2D( _BumpMap, sampler_BumpMap, uv_BumpMap402_g776 ), _Float0 );
 			float3 BaseNormal731_g776 = tex2DNode402_g776;
@@ -469,11 +474,8 @@ Shader "Hanmen/Clothes True Pantyhose"
 			float3 lerpResult505_g776 = lerp( lerpResult501_g776 , (_WeatheringAlbedo).rgb , ( WeatheringAlpha2466_g776 * 0.282353 ));
 			float3 DiffuseMix511_g776 = lerpResult505_g776;
 			float3 Diffuse1467 = DiffuseMix511_g776;
-			Gradient gradient37_g772 = NewGradient( 0, 6, 2, float4( 1, 0, 0, 0.02058442 ), float4( 1, 0.5313669, 0, 0.1499962 ), float4( 0.9518073, 1, 0, 0.3176471 ), float4( 0, 0.9381461, 1, 0.5794156 ), float4( 0.1839623, 0.3384229, 1, 0.80589 ), float4( 0.9987321, 0, 1, 1 ), 0, 0, float2( 1, 0 ), float2( 1, 1 ), 0, 0, 0, 0, 0, 0 );
-			float3 ase_worldTangent = WorldNormalVector( i, float3( 1, 0, 0 ) );
-			float3 ase_worldBitangent = WorldNormalVector( i, float3( 0, 1, 0 ) );
-			float3x3 ase_worldToTangent = float3x3( ase_worldTangent, ase_worldBitangent, ase_worldNormal );
-			float3 ase_tanViewDir = mul( ase_worldToTangent, ase_worldViewDir );
+			Gradient gradient37_g777 = NewGradient( 0, 7, 2, float4( 1, 0, 0, 0 ), float4( 1, 0.5313669, 0, 0.1499962 ), float4( 0.9518073, 1, 0, 0.3176471 ), float4( 0, 0.9381461, 1, 0.5911803 ), float4( 0.1839623, 0.3384229, 1, 0.7588311 ), float4( 0.838, 0, 1, 0.9264668 ), float4( 1, 0, 0, 1 ), 0, float2( 1, 0 ), float2( 1, 1 ), 0, 0, 0, 0, 0, 0 );
+			Gradient gradient45_g777 =(Gradient)gradient37_g777;
 			float2 break194_g776 = Detail1UV173_g776;
 			float saferPower168_g776 = abs( 0.25 );
 			float temp_output_186_0_g776 = ( pow( saferPower168_g776 , 1.0 ) * 0.01 );
@@ -522,17 +524,21 @@ Shader "Hanmen/Clothes True Pantyhose"
 			float3 lerpResult87_g776 = lerp( lerpResult98_g776 , WeatheringBump425_g776 , ( SAMPLE_TEXTURE2D( _WeatheringMap, sampler_WeatheringMap, WeatheringUV144_g776 ).b * WeatheringAlpha396_g776 ));
 			float3 normalizeResult564_g776 = normalize( lerpResult87_g776 );
 			float3 OutNormal1473 = normalizeResult564_g776;
-			float dotResult7_g772 = dot( ase_tanViewDir , OutNormal1473 );
-			float3 temp_output_12_0_g772 = (SampleGradient( gradient37_g772, dotResult7_g772 )).rgb;
-			float temp_output_10_0_g772 = radians( ( 360.0 * _IriHue ) );
-			float temp_output_13_0_g772 = cos( temp_output_10_0_g772 );
-			float3 _k7 = float3(0.57735,0.57735,0.57735);
-			float dotResult14_g772 = dot( _k7 , temp_output_12_0_g772 );
-			float3 temp_output_32_0_g772 = ( ( ( ( ( ( temp_output_12_0_g772 * temp_output_13_0_g772 ) + ( cross( _k7 , temp_output_12_0_g772 ) * sin( temp_output_10_0_g772 ) ) + ( _k7 * dotResult14_g772 * ( 1.0 - temp_output_13_0_g772 ) ) ) - float3( 0.5,0.5,0.5 ) ) * ( _IriContrast * 2.0 ) ) + float3( 0.5,0.5,0.5 ) ) + ( ( _IriBrightness * 2.0 ) - 1.0 ) );
-			float dotResult34_g772 = dot( temp_output_32_0_g772 , float3(0.39,0.59,0.11) );
-			float3 temp_cast_2 = (dotResult34_g772).xxx;
-			float3 lerpResult35_g772 = lerp( temp_cast_2 , temp_output_32_0_g772 , ( _IriSaturation * 2.0 ));
-			float3 temp_output_1424_0 = lerpResult35_g772;
+			float dotResult7_g777 = dot( ase_worldViewDir , (WorldNormalVector( i , OutNormal1473 )) );
+			float time45_g777 = dotResult7_g777;
+			float repeatFrequency45_g777 = _IriScale;
+			float4 localMyCustomExpression45_g777 = MyCustomExpression45_g777( gradient45_g777 , time45_g777 , repeatFrequency45_g777 );
+			float3 temp_output_47_0_g777 = (localMyCustomExpression45_g777).xyz;
+			float3 temp_output_12_0_g777 = (temp_output_47_0_g777).xyz;
+			float temp_output_10_0_g777 = radians( ( 360.0 * _IriHue ) );
+			float temp_output_13_0_g777 = cos( temp_output_10_0_g777 );
+			float3 _k = float3(0.57735,0.57735,0.57735);
+			float dotResult14_g777 = dot( _k , temp_output_12_0_g777 );
+			float3 temp_output_32_0_g777 = ( ( ( ( ( ( temp_output_12_0_g777 * temp_output_13_0_g777 ) + ( cross( _k , temp_output_12_0_g777 ) * sin( temp_output_10_0_g777 ) ) + ( _k * dotResult14_g777 * ( 1.0 - temp_output_13_0_g777 ) ) ) - float3( 0.5,0.5,0.5 ) ) * ( _IriContrast * 2.0 ) ) + float3( 0.5,0.5,0.5 ) ) + ( ( _IriBrightness * 2.0 ) - 1.0 ) );
+			float dotResult34_g777 = dot( temp_output_32_0_g777 , float3(0.39,0.59,0.11) );
+			float3 temp_cast_2 = (dotResult34_g777).xxx;
+			float3 lerpResult35_g777 = lerp( temp_cast_2 , temp_output_32_0_g777 , ( _IriSaturation * 2.0 ));
+			float3 temp_output_1424_0 = lerpResult35_g777;
 			float3 blendOpSrc1428 = temp_output_1424_0;
 			float3 blendOpDest1428 = Diffuse1467;
 			float2 uv_MetallicGlossMap532_g776 = i.uv_texcoord;
@@ -802,29 +808,27 @@ Shader "Hanmen/Clothes True Pantyhose"
 }
 /*ASEBEGIN
 Version=18935
-44;76.4;1221;856;-1192.792;1600.568;1;True;False
+117.2;68;1337;816;-3015.592;2531.288;2.070763;True;False
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1473;2177.35,-1940.101;Inherit;False;OutNormal;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.CommentaryNode;1498;2999.038,-2258.369;Inherit;False;2669.274;1020.429;Comment;20;1486;1444;1443;1440;1437;1447;1442;1439;1433;1448;1438;1428;1435;1497;1483;1424;1431;1430;1427;1496;;1,1,1,1;0;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1467;2177.853,-2022.287;Inherit;False;Diffuse;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1477;2176.772,-1857.735;Inherit;False;OutMet;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.GetLocalVarNode;1496;3049.038,-1630.589;Inherit;False;1473;OutNormal;1;0;OBJECT;;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.ColorNode;1427;3690.849,-1756.404;Inherit;False;Property;_SpecColor;SpecColor;86;0;Fetch;True;0;0;0;True;0;False;0.5,0.5,0.5,1;0.5,0.5,0.5,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.ColorNode;1427;3690.849,-1756.404;Inherit;False;Property;_SpecColor;SpecColor;88;0;Fetch;True;0;0;0;True;0;False;0.5,0.5,0.5,1;0.5,0.5,0.5,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.ComponentMaskNode;1430;3925.589,-1755.994;Inherit;False;True;True;True;False;1;0;COLOR;0,0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.SamplerNode;1431;3668.781,-1536.66;Inherit;True;Property;_SpecularMap;SpecularMap;83;1;[NoScaleOffset];Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.FunctionNode;1424;3275.464,-1624.484;Inherit;False;Iridiscence;87;;772;70fe6a1ace0a29b439fe6d71982b6fe0;0;1;1;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.SamplerNode;1431;3668.781,-1536.66;Inherit;True;Property;_SpecularMap;SpecularMap;85;1;[NoScaleOffset];Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.GetLocalVarNode;1483;3344.497,-1410.559;Inherit;False;1477;OutMet;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1497;3304.947,-2067.309;Inherit;False;1467;Diffuse;1;0;OBJECT;;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.StaticSwitch;1438;4179.324,-1652.709;Inherit;False;Property;_Iridiscent4;Iridiscent;85;0;Create;True;0;0;0;True;0;False;1;0;0;True;;Toggle;2;Key0;Key1;Reference;1433;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.StaticSwitch;1438;4179.324,-1652.709;Inherit;False;Property;_Iridiscent4;Iridiscent;87;0;Create;True;0;0;0;True;0;False;1;0;0;True;;Toggle;2;Key0;Key1;Reference;1433;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.ComponentMaskNode;1435;3971.674,-1536.588;Inherit;False;True;True;True;False;1;0;COLOR;0,0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.BlendOpsNode;1428;3593.823,-1985.932;Inherit;False;Multiply;True;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT;1;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1448;3538.037,-2130.599;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.StaticSwitch;1433;3834.931,-2070.927;Inherit;False;Property;_Iridiscent;Iridiscent;85;0;Create;True;0;0;0;True;0;False;1;0;0;True;;Toggle;2;Key0;Key1;Create;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.StaticSwitch;1433;3834.931,-2070.927;Inherit;False;Property;_Iridiscent;Iridiscent;87;0;Create;True;0;0;0;True;0;False;1;0;0;True;;Toggle;2;Key0;Key1;Create;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;1439;4443.274,-1553.21;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.DiffuseAndSpecularFromMetallicNode;1442;4599.401,-1433.267;Inherit;False;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;3;FLOAT3;0;FLOAT3;1;FLOAT;2
 Node;AmplifyShaderEditor.WireNode;1447;3588.74,-2157.641;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.DiffuseAndSpecularFromMetallicNode;1437;4088.999,-1972.487;Inherit;False;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;3;FLOAT3;0;FLOAT3;1;FLOAT;2
-Node;AmplifyShaderEditor.StaticSwitch;1440;4452.619,-2208.169;Inherit;False;Property;_SpecularSetup4;SpecularSetup;84;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;1444;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.StaticSwitch;1444;5023.821,-1953.157;Inherit;False;Property;_SpecularSetup;SpecularSetup;84;0;Create;True;0;0;0;False;0;False;1;0;0;True;;Toggle;2;Key0;Key1;Create;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.StaticSwitch;1440;4452.619,-2208.169;Inherit;False;Property;_SpecularSetup4;SpecularSetup;86;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;1444;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.StaticSwitch;1444;5023.821,-1953.157;Inherit;False;Property;_SpecularSetup;SpecularSetup;86;0;Create;True;0;0;0;False;0;False;1;0;0;True;;Toggle;2;Key0;Key1;Create;False;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1640;1978.591,-1327.81;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1443;4743.488,-2208.369;Inherit;False;OutAlbedo;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1471;2178.917,-1775.02;Inherit;False;OutSmoothness;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
@@ -841,23 +845,24 @@ Node;AmplifyShaderEditor.GetLocalVarNode;1490;6692.752,-2075.715;Inherit;False;1
 Node;AmplifyShaderEditor.GetLocalVarNode;1468;6735.151,-1657.434;Inherit;False;1467;Diffuse;1;0;OBJECT;;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1489;6735.53,-2162.682;Inherit;False;1486;OutSpec;1;0;OBJECT;;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1476;2428.628,-1328.273;Inherit;False;OutOp;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.FunctionNode;1466;7038.911,-1638.253;Inherit;False;Unity Translucency;0;;773;3081dbcb6ac8af842b2faa561ed4ff52;0;3;6;FLOAT3;0,0,0;False;26;FLOAT3;0,0,1;False;46;FLOAT;1;False;2;FLOAT3;0;FLOAT3;68
-Node;AmplifyShaderEditor.FunctionNode;1635;7122.289,-2203.435;Inherit;False;GGX Specular Light;-1;;775;53564f0ffa5fbe14e85233656c8e0b13;0;5;286;FLOAT3;0,0,0;False;30;FLOAT3;0,0,0;False;146;FLOAT3;0,0,0;False;147;FLOAT;0;False;302;FLOAT;0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.FunctionNode;1466;7038.911,-1638.253;Inherit;False;Unity Translucency;2;;773;3081dbcb6ac8af842b2faa561ed4ff52;0;3;6;FLOAT3;0,0,0;False;26;FLOAT3;0,0,1;False;46;FLOAT;1;False;2;FLOAT3;0;FLOAT3;68
+Node;AmplifyShaderEditor.FunctionNode;1635;7122.289,-2203.435;Inherit;False;GGX Specular Light;0;;775;53564f0ffa5fbe14e85233656c8e0b13;0;5;286;FLOAT3;0,0,0;False;30;FLOAT3;0,0,0;False;146;FLOAT3;0,0,0;False;147;FLOAT;0;False;302;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1557;2180.542,-1603.197;Inherit;False;detsam;-1;True;1;0;SAMPLERSTATE;;False;1;SAMPLERSTATE;0
-Node;AmplifyShaderEditor.SimpleAddOpNode;1457;7561.61,-1835.06;Inherit;False;3;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1482;7411.905,-1587.764;Inherit;False;1476;OutOp;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1562;2177.208,-2106.263;Inherit;False;OutFresnel;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StandardSurfaceOutputNode;0;7758.838,-2062.943;Float;False;True;-1;7;ASEMaterialInspector;0;0;CustomLighting;Hanmen/Clothes True Pantyhose;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;False;False;False;False;False;False;Back;2;True;1419;3;False;-1;False;0;False;-1;0;False;-1;False;0;Transparent;0.1;True;True;-1;False;Transparent;2600;Transparent;All;2;d3d11_9x;d3d11;True;True;True;True;0;False;-1;False;119;False;-1;122;False;-1;104;False;-1;6;False;-1;1;False;-1;1;False;-1;3;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;False;0;32;1;2;True;1;True;2;5;False;-1;10;False;-1;0;1;False;-1;10;False;-1;0;False;-1;6;False;-1;0;False;0;0,0,0,0;VertexOffset;True;False;Cylindrical;False;True;Relative;0;;-1;-1;-1;-1;0;False;0;0;True;1385;-1;0;True;1418;0;0;0;False;0.1;False;-1;0;False;-1;True;15;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT;0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT;0;False;9;FLOAT;0;False;10;FLOAT;0;False;13;FLOAT3;0,0,0;False;11;FLOAT3;0,0,0;False;12;FLOAT3;0,0,0;False;14;FLOAT4;0,0,0,0;False;15;FLOAT3;0,0,0;False;0
-Node;AmplifyShaderEditor.FunctionNode;1643;1645.265,-1871.037;Inherit;False;AIT Anisotropic Pantyhose;8;;776;08af0a6459a452e4fb71b757a6dcf124;0;0;13;FLOAT;998;FLOAT;881;FLOAT;882;FLOAT3;0;FLOAT3;557;FLOAT;990;FLOAT;991;FLOAT3;558;FLOAT;992;SAMPLERSTATE;996;FLOAT;561;FLOAT;617;FLOAT;799
+Node;AmplifyShaderEditor.FunctionNode;1643;1645.265,-1871.037;Inherit;False;AIT Anisotropic Pantyhose;10;;776;08af0a6459a452e4fb71b757a6dcf124;0;0;13;FLOAT;998;FLOAT;881;FLOAT;882;FLOAT3;0;FLOAT3;557;FLOAT;990;FLOAT;991;FLOAT3;558;FLOAT;992;SAMPLERSTATE;996;FLOAT;561;FLOAT;617;FLOAT;799
 Node;AmplifyShaderEditor.RangedFloatNode;1638;1965.308,-1224.281;Inherit;False;Constant;_Float21;Float 21;10;0;Create;True;0;0;0;False;0;False;0.002;0;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;1481;7054.065,-1818.771;Inherit;False;1475;OutEmission;1;0;OBJECT;;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.RangedFloatNode;1385;7103.383,-1341.941;Inherit;False;Property;_CullMode;CullMode;93;1;[IntRange];Create;True;0;0;0;True;0;False;2;2;0;2;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;1418;1474.464,-1236.876;Inherit;False;Property;_Cutoff;Cutoff;92;1;[Header];Create;True;1;Cutout Setting;0;0;True;0;False;0.1;0.1;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;1385;7103.383,-1341.941;Inherit;False;Property;_CullMode;CullMode;96;1;[IntRange];Create;True;0;0;0;True;0;False;2;2;0;2;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;1418;1085.875,-1092.509;Inherit;False;Property;_Cutoff;Cutoff;95;1;[Header];Create;True;1;Cutout Setting;0;0;True;0;False;0.1;0.1;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.StandardSurfaceOutputNode;0;7999.825,-2064.253;Float;False;True;-1;7;ASEMaterialInspector;0;0;CustomLighting;Hanmen/Clothes True Pantyhose;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;False;False;False;False;False;False;Back;2;True;1419;3;False;-1;False;0;False;-1;0;False;-1;False;0;Transparent;0.1;True;True;-1;False;Transparent;2600;Transparent;All;2;d3d11_9x;d3d11;True;True;True;True;0;False;-1;False;119;False;-1;122;False;-1;104;False;-1;6;False;-1;1;False;-1;1;False;-1;3;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;False;0;32;1;2;True;1;True;2;5;False;-1;10;False;-1;0;1;False;-1;10;False;-1;0;False;-1;6;False;-1;0;False;0;0,0,0,0;VertexOffset;True;False;Cylindrical;False;True;Relative;0;;-1;-1;-1;-1;0;False;0;0;True;1385;-1;0;True;1418;0;0;0;False;0.1;False;-1;0;False;-1;True;15;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT;0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT;0;False;9;FLOAT;0;False;10;FLOAT;0;False;13;FLOAT3;0,0,0;False;11;FLOAT3;0,0,0;False;12;FLOAT3;0,0,0;False;14;FLOAT4;0,0,0,0;False;15;FLOAT3;0,0,0;False;0
+Node;AmplifyShaderEditor.SimpleAddOpNode;1457;7551.133,-1841.609;Inherit;False;3;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.FunctionNode;1424;3276.464,-1624.484;Inherit;False;Iridiscence;89;;777;70fe6a1ace0a29b439fe6d71982b6fe0;0;1;1;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.GetLocalVarNode;1496;3003.038,-1624.589;Inherit;False;1473;OutNormal;1;0;OBJECT;;False;1;FLOAT3;0
 WireConnection;1473;0;1643;557
 WireConnection;1467;0;1643;0
 WireConnection;1477;0;1643;990
 WireConnection;1430;0;1427;0
-WireConnection;1424;1;1496;0
 WireConnection;1438;1;1430;0
 WireConnection;1438;0;1424;0
 WireConnection;1435;0;1431;0
@@ -896,11 +901,12 @@ WireConnection;1635;146;1489;0
 WireConnection;1635;147;1490;0
 WireConnection;1635;302;1480;0
 WireConnection;1557;0;1643;996
-WireConnection;1457;0;1635;0
-WireConnection;1457;1;1481;0
-WireConnection;1457;2;1466;68
 WireConnection;1562;0;1643;998
 WireConnection;0;9;1482;0
 WireConnection;0;13;1457;0
+WireConnection;1457;0;1635;0
+WireConnection;1457;1;1481;0
+WireConnection;1457;2;1466;68
+WireConnection;1424;1;1496;0
 ASEEND*/
-//CHKSM=FC3CE7B0A3A2D18448E3B1232C5859545B2C5A93
+//CHKSM=331C1E5E16CF9D01C4F82141D42D5C834FE30760

@@ -113,7 +113,6 @@ Shader "Hanmen/Item Alpha"
 		#pragma multi_compile __ _EMISSIONCOLORTEXBASE_ON
 		#pragma multi_compile __ _SPECULARSETUP_ON
 		#pragma multi_compile __ _IRIDISCENT_ON
-		#include "Assets/HeightFog/HeightFog.cginc"
 		#define ASE_USING_SAMPLING_MACROS 1
 		#if defined(SHADER_API_D3D11) || defined(SHADER_API_XBOXONE) || defined(UNITY_COMPILER_HLSLCC) || defined(SHADER_API_PSSL) || (defined(SHADER_TARGET_SURFACE_ANALYSIS) && !defined(SHADER_TARGET_SURFACE_ANALYSIS_MOJOSHADER))//ASE Sampler Macros
 		#define SAMPLE_TEXTURE2D(tex,samplerTex,coord) tex.Sample(samplerTex,coord)
@@ -157,11 +156,6 @@ Shader "Hanmen/Item Alpha"
 			UnityGIInput GIData;
 		};
 
-		uniform float _IriBrightness;
-		uniform float _IriSaturation;
-		uniform float _IriContrast;
-		uniform float _IriHue;
-		uniform float _IriScale;
 		uniform float _TransDirect;
 		uniform float _TransNormalDistortion;
 		uniform float _TransAmbient;
@@ -232,6 +226,11 @@ Shader "Hanmen/Item Alpha"
 		UNITY_DECLARE_TEX2D_NOSAMPLER(_DetailGlossMap2);
 		SamplerState sampler_DetailGlossMap2;
 		uniform float _EmissionStrength;
+		uniform float _IriBrightness;
+		uniform float _IriSaturation;
+		uniform float _IriContrast;
+		uniform float _IriHue;
+		uniform float _IriScale;
 		uniform float _NormalBackDirInvert;
 		uniform float4 _BumpMap_ST;
 		SamplerState sampler_trilinear_repeat;
@@ -308,7 +307,7 @@ Shader "Hanmen/Item Alpha"
 		}
 
 
-		float4 MyCustomExpression45_g180( Gradient gradient, float time, float repeatFrequency )
+		float4 MyCustomExpression45_g188( Gradient gradient, float time, float repeatFrequency )
 		{
 			time = fmod(time * repeatFrequency, 1.0);
 			    
@@ -344,13 +343,6 @@ Shader "Hanmen/Item Alpha"
 		float3 GI2_g184( float3 normal )
 		{
 			return ShadeSH9(half4(normal, 1.0));
-		}
-
-
-		float4 ApplyHeightFog4_g187( float4 color, float3 worldpos )
-		{
-			color = FogVolume_Apply(worldpos, color, fog_blend_fade );
-			return color;
 		}
 
 
@@ -439,7 +431,6 @@ Shader "Hanmen/Item Alpha"
 			float fresnelNdotV1495 = dot( normalize( normalize( (WorldNormalVector( i , NormalFace1493 )) ) ), ase_worldViewDir );
 			float fresnelNode1495 = ( ( saturate( ( lerpResult478_g185 * AlphaInput137_g185 ) ) * _alpha ) + _FresnelScale * pow( max( 1.0 - fresnelNdotV1495 , 0.0001 ), _FresnelPower ) );
 			float outAlpha1475 = fresnelNode1495;
-			float temp_output_1476_0 = outAlpha1475;
 			float3 temp_output_182_0_g185 = (tex2DNode119_g185).rgb;
 			float2 uv_TexCoord446_g185 = i.uv_texcoord * ( _patternuv1 * UVScalePattern459_g185 );
 			float cos471_g185 = cos( ( _patternuv1Rotator * UNITY_PI ) );
@@ -467,23 +458,23 @@ Shader "Hanmen/Item Alpha"
 			float3 lerpResult313_g185 = lerp( lerpResult289_g185 , ( lerpResult289_g185 * _WetAlbedoOffset ) , ExGloss255_g185);
 			float3 DiffuseMix326_g185 = lerpResult313_g185;
 			float3 temp_output_1482_345 = DiffuseMix326_g185;
-			Gradient gradient37_g180 = NewGradient( 0, 7, 2, float4( 1, 0, 0, 0 ), float4( 1, 0.5313669, 0, 0.1499962 ), float4( 0.9518073, 1, 0, 0.3176471 ), float4( 0, 0.9381461, 1, 0.5911803 ), float4( 0.1839623, 0.3384229, 1, 0.7588311 ), float4( 0.838, 0, 1, 0.9264668 ), float4( 1, 0, 0, 1 ), 0, float2( 1, 0 ), float2( 1, 1 ), 0, 0, 0, 0, 0, 0 );
-			Gradient gradient45_g180 =(Gradient)gradient37_g180;
-			float dotResult7_g180 = dot( ase_worldViewDir , (WorldNormalVector( i , temp_output_1482_342 )) );
-			float time45_g180 = dotResult7_g180;
-			float repeatFrequency45_g180 = _IriScale;
-			float4 localMyCustomExpression45_g180 = MyCustomExpression45_g180( gradient45_g180 , time45_g180 , repeatFrequency45_g180 );
-			float3 temp_output_47_0_g180 = (localMyCustomExpression45_g180).xyz;
-			float3 temp_output_12_0_g180 = (temp_output_47_0_g180).xyz;
-			float temp_output_10_0_g180 = radians( ( 360.0 * _IriHue ) );
-			float temp_output_13_0_g180 = cos( temp_output_10_0_g180 );
+			Gradient gradient37_g188 = NewGradient( 0, 7, 2, float4( 1, 0, 0, 0 ), float4( 1, 0.5313669, 0, 0.1499962 ), float4( 0.9518073, 1, 0, 0.3176471 ), float4( 0, 0.9381461, 1, 0.5911803 ), float4( 0.1839623, 0.3384229, 1, 0.7588311 ), float4( 0.838, 0, 1, 0.9264668 ), float4( 1, 0, 0, 1 ), 0, float2( 1, 0 ), float2( 1, 1 ), 0, 0, 0, 0, 0, 0 );
+			Gradient gradient45_g188 =(Gradient)gradient37_g188;
+			float dotResult7_g188 = dot( ase_worldViewDir , (WorldNormalVector( i , temp_output_1482_342 )) );
+			float time45_g188 = dotResult7_g188;
+			float repeatFrequency45_g188 = _IriScale;
+			float4 localMyCustomExpression45_g188 = MyCustomExpression45_g188( gradient45_g188 , time45_g188 , repeatFrequency45_g188 );
+			float3 temp_output_47_0_g188 = (localMyCustomExpression45_g188).xyz;
+			float3 temp_output_12_0_g188 = (temp_output_47_0_g188).xyz;
+			float temp_output_10_0_g188 = radians( ( 360.0 * _IriHue ) );
+			float temp_output_13_0_g188 = cos( temp_output_10_0_g188 );
 			float3 _k = float3(0.57735,0.57735,0.57735);
-			float dotResult14_g180 = dot( _k , temp_output_12_0_g180 );
-			float3 temp_output_32_0_g180 = ( ( ( ( ( ( temp_output_12_0_g180 * temp_output_13_0_g180 ) + ( cross( _k , temp_output_12_0_g180 ) * sin( temp_output_10_0_g180 ) ) + ( _k * dotResult14_g180 * ( 1.0 - temp_output_13_0_g180 ) ) ) - float3( 0.5,0.5,0.5 ) ) * ( _IriContrast * 2.0 ) ) + float3( 0.5,0.5,0.5 ) ) + ( ( _IriBrightness * 2.0 ) - 1.0 ) );
-			float dotResult34_g180 = dot( temp_output_32_0_g180 , float3(0.39,0.59,0.11) );
-			float3 temp_cast_1 = (dotResult34_g180).xxx;
-			float3 lerpResult35_g180 = lerp( temp_cast_1 , temp_output_32_0_g180 , ( _IriSaturation * 2.0 ));
-			float3 temp_output_1433_0 = lerpResult35_g180;
+			float dotResult14_g188 = dot( _k , temp_output_12_0_g188 );
+			float3 temp_output_32_0_g188 = ( ( ( ( ( ( temp_output_12_0_g188 * temp_output_13_0_g188 ) + ( cross( _k , temp_output_12_0_g188 ) * sin( temp_output_10_0_g188 ) ) + ( _k * dotResult14_g188 * ( 1.0 - temp_output_13_0_g188 ) ) ) - float3( 0.5,0.5,0.5 ) ) * ( _IriContrast * 2.0 ) ) + float3( 0.5,0.5,0.5 ) ) + ( ( _IriBrightness * 2.0 ) - 1.0 ) );
+			float dotResult34_g188 = dot( temp_output_32_0_g188 , float3(0.39,0.59,0.11) );
+			float3 temp_cast_1 = (dotResult34_g188).xxx;
+			float3 lerpResult35_g188 = lerp( temp_cast_1 , temp_output_32_0_g188 , ( _IriSaturation * 2.0 ));
+			float3 temp_output_1433_0 = lerpResult35_g188;
 			float3 blendOpSrc1434 = temp_output_1433_0;
 			float3 blendOpDest1434 = temp_output_1482_345;
 			float2 uv_MetallicGlossMap = i.uv_texcoord * _MetallicGlossMap_ST.xy + _MetallicGlossMap_ST.zw;
@@ -647,12 +638,8 @@ Shader "Hanmen/Item Alpha"
 			float thicjk1483 = tex2DNode139_g185.b;
 			float temp_output_59_0_g183 = ( _Translucency * thicjk1483 );
 			float3 temp_output_6_0_g183 = OutAlbedo1438;
-			float4 appendResult5_g187 = (float4(( ( ( OutAlbedo1438 * ( ( Diffuseterm281_g186 * lightAtten296_g186 ) + ( indirectDiffuse203_g186 * occlusion306_g186 ) ) ) + ( SpecularTerm34_g186 * lightAtten296_g186 * FresnelTerm130_g186 ) + staticSwitch305_g186 ) + outEmission1463 + ( ( temp_output_69_15_g183 * _TransAmbient ) * temp_output_59_0_g183 * temp_output_6_0_g183 ) ) , outAlpha1475));
-			float4 color4_g187 = appendResult5_g187;
-			float3 worldpos4_g187 = ase_worldPos;
-			float4 localApplyHeightFog4_g187 = ApplyHeightFog4_g187( color4_g187 , worldpos4_g187 );
-			c.rgb = localApplyHeightFog4_g187.xyz;
-			c.a = temp_output_1476_0;
+			c.rgb = ( ( ( OutAlbedo1438 * ( ( Diffuseterm281_g186 * lightAtten296_g186 ) + ( indirectDiffuse203_g186 * occlusion306_g186 ) ) ) + ( SpecularTerm34_g186 * lightAtten296_g186 * FresnelTerm130_g186 ) + staticSwitch305_g186 ) + outEmission1463 + ( ( temp_output_69_15_g183 * _TransAmbient ) * temp_output_59_0_g183 * temp_output_6_0_g183 ) );
+			c.a = outAlpha1475;
 			return c;
 		}
 
@@ -762,7 +749,7 @@ Shader "Hanmen/Item Alpha"
 }
 /*ASEBEGIN
 Version=18935
-6;6;1337;878;4965.182;2902.84;1;True;False
+69.2;74;1337;810;2753.972;3278.963;2.513923;True;False
 Node;AmplifyShaderEditor.ColorNode;1441;-3816.678,-2408.3;Inherit;False;Property;_SpecColor;SpecColor;94;0;Fetch;True;0;0;0;True;0;False;0.5,0.5,0.5,1;0,0,0,0;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.WireNode;1448;-3949.412,-2279.099;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WireNode;1449;-3907.649,-2235.138;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
@@ -783,7 +770,7 @@ Node;AmplifyShaderEditor.StaticSwitch;1439;-2778.777,-2810.056;Inherit;False;Pro
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1460;-4292.047,-2259.522;Inherit;False;outAO;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1462;-4288.758,-2352.268;Inherit;False;outSmoothness;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1480;-4351.441,-3035.49;Inherit;False;Diffuse;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.CommentaryNode;1477;-1546.095,-2782.501;Inherit;False;1607.087;852.9313;Comment;16;1494;1484;1469;1481;1465;1476;1466;0;1478;1467;1472;1468;1471;1470;1509;1511;ForwardBase;1,1,1,1;0;0
+Node;AmplifyShaderEditor.CommentaryNode;1477;-1546.095,-2782.501;Inherit;False;1607.087;852.9313;Comment;15;1494;1484;1469;1481;1465;1476;1466;0;1478;1467;1472;1468;1471;1470;1509;ForwardBase;1,1,1,1;0;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1440;-2463.491,-2809.51;Inherit;False;OutSpecular;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1461;-4294.626,-2521.722;Inherit;False;outNormal;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;1463;-4290.011,-2440.397;Inherit;False;outEmission;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
@@ -826,11 +813,10 @@ Node;AmplifyShaderEditor.FunctionNode;1482;-4816.063,-2615.977;Inherit;False;AIT
 Node;AmplifyShaderEditor.RangedFloatNode;1506;-4371.706,-1892.308;Inherit;False;Property;_alpha;alpha;4;0;Create;True;0;0;0;False;0;False;1;1;0;1;0;1;FLOAT;0
 Node;AmplifyShaderEditor.FunctionNode;1467;-1211.73,-2713.421;Inherit;False;GGX Specular Light;0;;186;53564f0ffa5fbe14e85233656c8e0b13;0;5;286;FLOAT3;0,0,0;False;30;FLOAT3;0,0,0;False;146;FLOAT3;0,0,0;False;147;FLOAT;0;False;302;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.WorldPosInputsNode;1509;-1152.024,-2154.029;Inherit;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
-Node;AmplifyShaderEditor.FunctionNode;1511;-732.2646,-2329.444;Inherit;False;New ShaderFunction;-1;;187;f48a8878221a6eb4e950e5152c586346;0;2;1;FLOAT3;0,0,0;False;2;FLOAT;0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.SimpleAddOpNode;1465;-898.5637,-2605.471;Inherit;False;3;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.StandardSurfaceOutputNode;0;-336.7387,-2619.296;Float;False;True;-1;7;ASEMaterialInspector;0;0;CustomLighting;Hanmen/Item Alpha;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;False;False;False;False;False;False;Off;2;True;1413;3;False;-1;False;0;False;-1;0;False;-1;False;0;Transparent;0.1;True;True;0;False;Transparent;2600;Transparent;ForwardOnly;2;d3d11_9x;d3d11;True;True;True;True;0;False;-1;False;0;False;-1;255;False;-1;255;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;False;0;32;1;2;True;1;True;2;5;True;1415;10;True;1412;0;5;False;-1;8;False;-1;0;False;-1;6;False;-1;0;False;0;0,0,0,0;VertexOffset;True;False;Cylindrical;False;True;Relative;0;Legacy Shaders/Diffuse;-1;-1;-1;-1;0;False;0;0;True;1344;-1;0;True;1424;1;Include;;True;c467eed981df49dba07cd9b741545b92;Custom;0;0;False;0.1;False;-1;0;False;1414;True;15;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT;0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT;0;False;9;FLOAT;0;False;10;FLOAT;0;False;13;FLOAT3;0,0,0;False;11;FLOAT3;0,0,0;False;12;FLOAT3;0,0,0;False;14;FLOAT4;0,0,0,0;False;15;FLOAT3;0,0,0;False;0
+Node;AmplifyShaderEditor.StandardSurfaceOutputNode;0;-336.7387,-2619.296;Float;False;True;-1;7;ASEMaterialInspector;0;0;CustomLighting;Hanmen/Item Alpha;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;False;False;False;False;False;False;Off;2;True;1413;3;False;-1;False;0;False;-1;0;False;-1;False;0;Transparent;0.1;True;True;0;False;Transparent;2600;Transparent;ForwardOnly;2;d3d11_9x;d3d11;True;True;True;True;0;False;-1;False;0;False;-1;255;False;-1;255;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;False;0;32;1;2;True;1;True;2;5;True;1415;10;True;1412;0;5;False;-1;8;False;-1;0;False;-1;6;False;-1;0;False;0;0,0,0,0;VertexOffset;True;False;Cylindrical;False;True;Relative;0;Legacy Shaders/Diffuse;-1;-1;-1;-1;0;False;0;0;True;1344;-1;0;True;1424;0;0;0;False;0.1;False;-1;0;False;1414;True;15;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT;0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT;0;False;9;FLOAT;0;False;10;FLOAT;0;False;13;FLOAT3;0,0,0;False;11;FLOAT3;0,0,0;False;12;FLOAT3;0,0,0;False;14;FLOAT4;0,0,0,0;False;15;FLOAT3;0,0,0;False;0
 Node;AmplifyShaderEditor.SamplerNode;1451;-3878.938,-2167.773;Inherit;True;Property;_SpecularMap;SpecularMap;95;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.FunctionNode;1433;-4224.16,-2821.338;Inherit;False;Iridiscence;87;;180;70fe6a1ace0a29b439fe6d71982b6fe0;0;1;1;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.FunctionNode;1433;-4224.16,-2821.338;Inherit;False;Iridiscence;87;;188;70fe6a1ace0a29b439fe6d71982b6fe0;0;1;1;FLOAT3;0,0,0;False;1;FLOAT3;0
 WireConnection;1448;0;1433;0
 WireConnection;1449;0;1448;0
 WireConnection;1442;0;1441;0
@@ -893,13 +879,11 @@ WireConnection;1467;30;1469;0
 WireConnection;1467;146;1470;0
 WireConnection;1467;147;1471;0
 WireConnection;1467;302;1468;0
-WireConnection;1511;1;1465;0
-WireConnection;1511;2;1476;0
 WireConnection;1465;0;1467;0
 WireConnection;1465;1;1466;0
 WireConnection;1465;2;1478;68
 WireConnection;0;9;1476;0
-WireConnection;0;13;1511;0
+WireConnection;0;13;1465;0
 WireConnection;1433;1;1482;342
 ASEEND*/
-//CHKSM=DFDA58088C0DBA02D38DA81916C15E882B9FDFEF
+//CHKSM=3D685F43176D2518657FBCC82FE43C1FE0034B05
